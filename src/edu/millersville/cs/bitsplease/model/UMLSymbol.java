@@ -6,9 +6,6 @@ import javafx.event.EventDispatchChain;
 
 public abstract class UMLSymbol implements EventDispatcher {
 	
-	public Event dispatchEvent(Event event, EventDispatchChain tail){
-		
-		return event;
-	}
+	public abstract Event dispatchEvent(Event event, EventDispatchChain tail);
 
 }
