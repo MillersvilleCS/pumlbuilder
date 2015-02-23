@@ -6,6 +6,10 @@
 
 package edu.millersville.cs.bitsplease.model;
 
+import javafx.event.Event;
+import javafx.event.EventDispatcher;
+import javafx.event.EventDispatchChain;
+
 public class UMLRelationSymbol extends UMLSymbol {
 	
 	private	UMLRelationType relationType;
@@ -87,5 +91,10 @@ public class UMLRelationSymbol extends UMLSymbol {
 	 */
 	public void setTargetObject(UMLObjectSymbol targetObject) {
 		this.targetObject = targetObject;
+	}
+	 
+	
+	public Event dispatchEvent(Event event, EventDispatchChain tail){
+		return event;
 	}
 }

@@ -5,6 +5,7 @@
  */
 package edu.millersville.cs.bitsplease.model;
 
+import javafx.geometry.Point2D;
 
 
 
@@ -54,9 +55,13 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	 * Accessor Methods
 	 */
 	
+	/** 
+	 * @return className String representing the name of the class object.
+	 */
 	public String getClassName(){
 		return this.className;
 	}
+	
 	/**
 	 * Get a single attribute from UMLClassSymbol object. Returns null if attribute does not exist.
 	 * @param attribute attribute to get retrieved
@@ -79,5 +84,106 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	public String[] getAttributes(){
 		return this.classAttributes;
 	}
+	
+	/**
+	 * @param function function name to search for 
+	 * @return s function name, or null if it does not exist
+	 */
+	public String getFunction(String function){
 		
+		for(String s:this.classFunctions){
+			if(s == function){
+				return s;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @return classFunctions array of class functions held within a UMLClassSymbol object
+	 */
+	public String[] getFunctions(){
+		return this.classFunctions;
+	}
+	
+	/**
+	 * @return double height height of the classbox to be drawn
+	 */
+	public double getHeight(){
+		return super.getHeight();
+	}
+	
+	/**
+	 * @return double width width of the classbox to be drawn
+	 */
+	public double getWidth(){
+		return super.getWidth();
+	}
+	
+	/**
+	 * @return double x value of x coordinate in UMLObjectSymbol origin point
+	 */
+	public double getX(){
+		return super.getX();
+	}
+	
+	/**
+	 * @return double y value of y coordinate in UMLObjectSymbol origin point
+	 */
+	public double getY(){
+		return super.getY();
+	}
+	
+	/**
+	 * @return Point2D origin point representing the origin of the classbox to be drawn.
+	 */
+	public Point2D getOrigin(){
+		return super.getOrigin();
+	}
+	
+	/**
+	 * 
+	 * Mutator Methods
+	 * 
+	 */
+	
+	/**
+	 * 
+	 * @param name name to assign to UMLClassObject instance
+	 */
+	public void setClassName(String name){
+		this.className = name;
+	}
+	
+	/**
+	 * set an individual attribute within a UMLClassObject instance
+	 * @param attr attribute to set 
+	 */
+	public void setAttribute(String attr){
+		//TODO add ability to add individual attributes
+	}
+	
+	/**
+	 * 
+	 * @param attr array of attributes to assign to class attribute array
+	 */
+	public void setAttributes(String[] attr){
+		this.classAttributes = attr;
+	}
+	
+	/**
+	 * 
+	 * @param function function to add to UMLClassSymbol object
+	 */
+	public void setFunction(String function){
+		//TODO add ability to set individual functions.
+	}
+	
+	/**
+	 * 
+	 * @param func array of functions to assign to UMLClassSymbol object
+	 */
+	public void setFunctions(String[] func){
+		this.classFunctions = func;
+	}
 }
