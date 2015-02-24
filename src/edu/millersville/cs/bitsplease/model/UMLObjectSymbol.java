@@ -18,7 +18,7 @@ public class UMLObjectSymbol extends UMLSymbol {
 	private Point2D origin = new Point2D(0,0);
 	private double height = 100;
 	private double width = 100;
-	
+	private boolean isSelected = false;
 	/**
 	 *  Empty UMLObjectSymbol Constructor 
 	 */
@@ -111,6 +111,10 @@ public class UMLObjectSymbol extends UMLSymbol {
 		return origin.getY();
 	}
 	
+	public boolean isSelected(){
+		return this.isSelected;
+	}
+	
 	/**
 	 * Mutator classes
 	 */
@@ -136,6 +140,10 @@ public class UMLObjectSymbol extends UMLSymbol {
 	 */
 	public void setOrigin(Point2D newPoint){
 		origin = newPoint;
+	}
+	
+	public void setSelectedStatus(boolean status){
+		this.isSelected = status;
 	}
 
 	
