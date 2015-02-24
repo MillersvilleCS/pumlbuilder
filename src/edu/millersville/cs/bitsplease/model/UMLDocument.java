@@ -13,14 +13,15 @@ public class UMLDocument {
 	
 private ArrayList<UMLSymbol> objectList;
 private String fileName;
+private UMLObjectSymbol selectedObject;
 
 public UMLDocument(){
-	this.objectList = null;
+	this.objectList = new ArrayList<UMLSymbol>();
 	this.fileName = "Untitled Document";
 }
 
 public UMLDocument(String file){
-	this.objectList = null;
+	this.objectList = new ArrayList<UMLSymbol>();
 	this.fileName = file;
 }
 
@@ -82,12 +83,26 @@ public ArrayList<UMLRelationSymbol> getRelations(){
 	return relations;
 }
 
+public UMLObjectSymbol getSelectedObject(){
+	return this.selectedObject;
+}
+
 public void setFileName(String fileName){
 	this.fileName = fileName;
 }
 
 public void setObjectList(ArrayList<UMLSymbol> obj){
 	this.objectList = obj;
+}
+
+public void setSelectedObject(UMLObjectSymbol object){
+	this.selectedObject = object;
+	this.selectedObject.setSelectedStatus(true);
+}
+
+public void deselectObject(){
+	this.selectedObject.setSelectedStatus(false);
+	this.selectedObject = null;
 }
 
 public UMLRelationSymbol createRelation(UMLRelationType relationType,
