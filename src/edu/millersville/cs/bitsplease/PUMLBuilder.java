@@ -11,7 +11,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
 /**
  * Main entry point class for Application.
  *
@@ -21,8 +20,8 @@ public class PUMLBuilder extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
-		UMLEditorPane editorPane = new UMLEditorPane();
-		Scene scene = new Scene(editorPane, 800, 600);
+		GUIController voltron = new GUIController();
+		Scene scene = new Scene(voltron.getEditorPane(), 800, 600);
 		
 		primaryStage.setTitle("Penultimate UML Builder");
 		primaryStage.setScene(scene);
