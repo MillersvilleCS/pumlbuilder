@@ -6,7 +6,6 @@
 
 package edu.millersville.cs.bitsplease;
 
-import edu.millersville.cs.bitsplease.view.UMLEditorPane;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
