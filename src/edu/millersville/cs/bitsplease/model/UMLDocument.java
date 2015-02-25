@@ -41,7 +41,7 @@ public UMLDocument(ArrayList<UMLSymbol> objects, String file){
 
 /**
  * 
- * @return
+ * @return List of UMLSymbols currently held by the UMLDocument object
  */
 public ArrayList<UMLSymbol> getObjectList(){
 	return this.objectList;
@@ -68,7 +68,8 @@ public ArrayList<UMLObjectSymbol> getObjects(){
 }
 
 /**
- * 
+ * Method to filter list of UMLSymbols to return 
+ * all instances of UMLRelationSymbols held by a UMLDocument.
  * @return ArrayList<UMLObjectSymbol> relations: List of all UMLRelationSymbol instances in UMLDocument.
  */
 public ArrayList<UMLRelationSymbol> getRelations(){
@@ -83,36 +84,61 @@ public ArrayList<UMLRelationSymbol> getRelations(){
 	return relations;
 }
 
+/**
+ * 
+ * @return currently selected UMLSymbol
+ */
 public UMLObjectSymbol getSelectedObject(){
 	return this.selectedObject;
 }
 
+/**
+ * 
+ * @param fileName plaintext name of UMLDocument
+ */
 public void setFileName(String fileName){
 	this.fileName = fileName;
 }
 
+/**
+ * Assign a list of UMLSymbols to current UMLDocument object
+ * @param obj list of UMLSymbols to assign to current UMLDocument object
+ */
 public void setObjectList(ArrayList<UMLSymbol> obj){
 	this.objectList = obj;
 }
 
-public void setSelectedObject(UMLObjectSymbol object){
-	this.selectedObject = object;
-	this.selectedObject.setSelectedStatus(true);
-}
-
-public void deselectObject(){
-	this.selectedObject.setSelectedStatus(false);
-	this.selectedObject = null;
-}
-
-public UMLRelationSymbol createRelation(UMLRelationType relationType,
+/******************************************
+ * List operations
+ ******************************************/
+/**
+ * 
+ * @param relationType Type of relation to assign to newly created relation
+ * @param source UMLObjectSymbol from which the relation originates
+ * @param target UMLObjectSymbol to which the relation points
+ */
+public void addRelation(UMLRelationType relationType,
 		UMLObjectSymbol source, UMLObjectSymbol target){
 	
-	return new UMLRelationSymbol(source, target, relationType); 
+	 objectList.add(new UMLRelationSymbol(source, target, relationType)); 
 }
 
-public UMLObjectSymbol createObject(Point2D origin, double height, double width){
-	return new UMLObjectSymbol(origin, height, width);
+/**
+ * Add a UMLObjectSymbol to the UMLDocument
+ * @param origin point at which to instantiate object symbol
+ * @param height height of instantiated object symbol.
+ * @param width width of instantiated object symbol.
+ */
+public void addObject(Point2D origin, double height, double width){
+	
+	objectList.add(new UMLObjectSymbol(origin, height, width));
+}
+/**
+ * Remove UMLSymbol from UMLDocuments symbol list at specified index.
+ * @param i index at which to remove UMLSymbol.
+ */
+public void removeSymbol(int i){
+	objectList.remove(i);
 }
 
 }
