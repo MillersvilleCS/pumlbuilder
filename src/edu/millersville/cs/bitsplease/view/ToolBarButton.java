@@ -8,7 +8,6 @@ package edu.millersville.cs.bitsplease.view;
 
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 

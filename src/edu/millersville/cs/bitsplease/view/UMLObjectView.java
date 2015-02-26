@@ -1,5 +1,6 @@
 /**
  * @author Joe Martello
+ * @author Merv Fansler
  * @since February 25, 2015
  * @version 0.1.0
  */
@@ -8,40 +9,39 @@
 package edu.millersville.cs.bitsplease.view;
 
 import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
+import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.geometry.Point2D;
-import javafx.scene.Group;
 
 
-public class UMLObjectView {
-	private Rectangle umlBox; 
+public class UMLObjectView extends Group {
+	private Rectangle umlBox;
 	private Line ltop;
 	private Line lbot;
 	private Label name;
 	private Label attributes;
 	private Label functions;
-	private Group root;
 	
 		
-	UMLObjectView(UMLClassSymbol umlSymbol, Group g){
+	UMLObjectView(UMLClassSymbol umlSymbol){
+		super();
 		Point2D origin = umlSymbol.getOrigin();
-		umlBox = new Rectangle(origin.getX(), origin.getY(), umlSymbol.getWidth(), umlSymbol.getHeight());
+		umlBox = new Rectangle(0, 0, umlSymbol.getWidth(), umlSymbol.getHeight());
 		umlBox.setFill(Color.TRANSPARENT);
-    umlBox.setStroke(Color.BLACK);
-		root = g;
-		root.getChildren().add(umlBox);
+		umlBox.setStroke(Color.BLACK);
+		this.getChildren().add(umlBox);
 		
 		name = new Label(umlSymbol.getClassName());
 		name.setMaxWidth(umlSymbol.getWidth() - 10);
 		name.relocate(origin.getX() + 10, origin.getY() + 5);
-		root.getChildren().add(name);
+		this.getChildren().add(name);
 		
 		double y = name.getBoundsInParent().getMinY() + 20; //will only work for 1 line names
 		ltop = new Line(origin.getX(), y, origin.getX() + umlSymbol.getWidth(), y);
-		root.getChildren().add(ltop);
+		this.getChildren().add(ltop);
 		
 		
 		String label = "";
@@ -57,11 +57,11 @@ public class UMLObjectView {
 		attributes = new Label(label);
 		attributes.setMaxWidth(umlSymbol.getWidth() - 10);
 		attributes.relocate(origin.getX() + 10, ltop.getEndY() + 5);
-		root.getChildren().add(attributes);
+		this.getChildren().add(attributes);
 		
 		y = attributes.getBoundsInParent().getMinY() + length;
 		lbot = new Line(origin.getX(), y, origin.getX() + umlSymbol.getWidth(), y);
-		root.getChildren().add(lbot);
+		this.getChildren().add(lbot);
 		
 		
 		label = "";
@@ -75,8 +75,7 @@ public class UMLObjectView {
 		functions = new Label(label);
 		functions.setMaxWidth(umlSymbol.getWidth() - 10);
 		functions.relocate(origin.getX() + 10, lbot.getEndY() + 5);
-		root.getChildren().add(functions);
-		
+		this.getChildren().add(functions);
 	}
 	
 	
@@ -84,12 +83,7 @@ public class UMLObjectView {
 	 * removes all elements of the UML diagram from the scene
 	 */
 	public void delete(){
-		root.getChildren().remove(umlBox);
-		root.getChildren().remove(ltop);
-		root.getChildren().remove(lbot);
-		root.getChildren().remove(name);
-		root.getChildren().remove(attributes);
-		root.getChildren().remove(functions);
+		this.getChildren().removeAll(umlBox, ltop, lbot, name, attributes, functions);
 	}
 	
 	/**
