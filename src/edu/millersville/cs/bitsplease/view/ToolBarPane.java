@@ -1,5 +1,6 @@
 /**
  * @author Merv Fansler	
+ * @author Josh Wakefield
  * @version 0.1.0
  */
 package edu.millersville.cs.bitsplease.view;
@@ -9,6 +10,7 @@ import javafx.application.Application;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
@@ -33,18 +35,44 @@ public class ToolBarPane extends VBox {
 		
 		tbToggleGroup = new ToggleGroup();
 		
-		for (EditorAction a : EditorAction.values()) {
-			ToolBarButton button = new ToolBarButton("\uf016");
-			
-			// store action info for event processing
-			button.setUserData(a);
-			
-			button.setToggleGroup(tbToggleGroup);
-			
-			// add to toolbar
-			this.getChildren().add(button);
-		}
+		//create the button with icon
+		ToolBarButton moveSelectButton = new ToolBarButton("\uf047");
+		moveSelectButton.setTooltip(new Tooltip("Move/Select"));
 		
+		ToolBarButton newClassButton = new ToolBarButton("\uf022");
+		newClassButton.setTooltip(new Tooltip("New Class"));
+		
+		ToolBarButton newRelationButton = new ToolBarButton("\uf040");
+		newRelationButton.setTooltip(new Tooltip("New Relation"));
+		
+		ToolBarButton newDependencyButton = new ToolBarButton("\uf062");
+		newDependencyButton.setTooltip(new Tooltip("New Dependency"));
+		
+		ToolBarButton deleteObjectButton = new ToolBarButton("\uf014");
+		deleteObjectButton.setTooltip(new Tooltip("Delete Object"));
+		
+		
+		// store action info for event processing
+		moveSelectButton.setUserData(EditorAction.SELECT);
+		newClassButton.setUserData(EditorAction.CREATE_CLASS);
+		newRelationButton.setUserData(EditorAction.CREATE_ASSOCIATION);
+		newDependencyButton.setUserData(EditorAction.CREATE_DEPENDENCY);
+		deleteObjectButton.setUserData(EditorAction.DELETE);
+		
+		moveSelectButton.setToggleGroup(tbToggleGroup);
+		newClassButton.setToggleGroup(tbToggleGroup);
+		newRelationButton.setToggleGroup(tbToggleGroup);
+		newDependencyButton.setToggleGroup(tbToggleGroup);
+		deleteObjectButton.setToggleGroup(tbToggleGroup);
+		
+		
+		// add to toolbar
+		this.getChildren().add(moveSelectButton);
+		this.getChildren().add(newClassButton);
+		this.getChildren().add(newRelationButton);
+		this.getChildren().add(newDependencyButton);
+		this.getChildren().add(deleteObjectButton);
+				
 		tbToggleGroup.getToggles().filtered(t -> t.getUserData() == EditorAction.SELECT);
 	}
 	
