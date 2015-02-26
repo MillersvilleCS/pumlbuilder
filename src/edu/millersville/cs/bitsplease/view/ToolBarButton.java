@@ -41,10 +41,11 @@ public class ToolBarButton extends ToggleButton {
 
 	// prevent MOUSE_PRESSED from propagating when already selected
 	private void addPersistentToggle() {
+		ToolBarButton that = this;
 		this.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				if (((Toggle)event.getTarget()).isSelected())
+				if (that.isSelected())
 					event.consume();
 			}
 		});
