@@ -25,30 +25,37 @@ public class UMLObjectView extends Group {
 	private Label attributes;
 	private Label functions;
 	
-		
+		/**
+		 * UMLObjectSymbol Constructor displaying UMLClassSymbol location and attributes
+		 * This constructor assumes that the width and height are large enough to encompass all of its attributes
+		 * @param umlClassSymbol that will be displayed
+		 */
 	public UMLObjectView(UMLClassSymbol umlSymbol){
 		super();
 		Point2D origin = umlSymbol.getOrigin();
+		this.setLayoutX(origin.getX());
+		this.setLayoutY(origin.getY());
 		umlBox = new Rectangle(0, 0, umlSymbol.getWidth(), umlSymbol.getHeight());
 		umlBox.setFill(Color.TRANSPARENT);
 		umlBox.setStroke(Color.BLACK);
 		this.getChildren().add(umlBox);
 		
-		name = new Label(umlSymbol.getClassName());
-		name.setMaxWidth(umlSymbol.getWidth() - 10);
-		name.relocate(origin.getX() + 10, origin.getY() + 5);
+		double y = 20;
+		name = new Label(" " + umlSymbol.getClassName());
+		name.setMaxWidth(umlBox.getWidth() - 10);
+		name.setPrefHeight(y);
 		this.getChildren().add(name);
 		
-		double y = name.getBoundsInParent().getMinY() + 20; //will only work for 1 line names
-		ltop = new Line(origin.getX(), y, origin.getX() + umlSymbol.getWidth(), y);
+		y = name.getBoundsInParent().getMinY() + name.getPrefHeight(); //will only work for 1 line names
+		ltop = new Line(0, y, umlBox.getWidth(), y);
 		this.getChildren().add(ltop);
 		
 		
-		String label = "";
+		String label = " ";
 		int length = 0;
 		for (String s: umlSymbol.getAttributes()){
 			if (s != null){
-				label += s + "\n";
+				label += s + "\n ";
 				length += 20;
 			}
 		}
@@ -56,15 +63,16 @@ public class UMLObjectView extends Group {
 			length = 20;
 		attributes = new Label(label);
 		attributes.setMaxWidth(umlSymbol.getWidth() - 10);
-		attributes.relocate(origin.getX() + 10, ltop.getEndY() + 5);
+		attributes.setLayoutY(ltop.getStartY());
+		attributes.setPrefHeight(length);
 		this.getChildren().add(attributes);
 		
-		y = attributes.getBoundsInParent().getMinY() + length;
-		lbot = new Line(origin.getX(), y, origin.getX() + umlSymbol.getWidth(), y);
+		y = attributes.getBoundsInParent().getMinY() + attributes.getPrefHeight();
+		lbot = new Line(0, y, umlSymbol.getWidth(), y);
 		this.getChildren().add(lbot);
 		
 		
-		label = "";
+		label = " ";
 		length = 0;
 		for (String s: umlSymbol.getFunctions()){
 			if (s != null){
@@ -74,7 +82,8 @@ public class UMLObjectView extends Group {
 		}
 		functions = new Label(label);
 		functions.setMaxWidth(umlSymbol.getWidth() - 10);
-		functions.relocate(origin.getX() + 10, lbot.getEndY() + 5);
+		functions.setPrefHeight(length);
+		functions.setLayoutY(lbot.getStartY());
 		this.getChildren().add(functions);
 	}
 	
@@ -87,37 +96,15 @@ public class UMLObjectView extends Group {
 	}
 	
 	/**
-	 * moves all attributes of the UML diagram to a new location on the GUI
+	 * moves all attributes of the UML diagram to a new location on the GUI and resets its translate values
 	 * @param Point2D origin coordinate to move the UML diagram to
 	 */
 	public void UpdatePosition(Point2D newOrigin){
-		double newX = newOrigin.getX();
-		double newY = newOrigin.getY();
+		this.setLayoutX(newOrigin.getX());
+		this.setLayoutY(newOrigin.getY());
 		
-		double oldy = umlBox.getY();
-		umlBox.setX(newX);
-		umlBox.setY(newY);
-		
-		double ydist = newY + ltop.getStartY() - oldy;
-		ltop.setStartX(newX);
-		ltop.setStartY(ydist);
-		ltop.setEndX(newX + umlBox.getWidth());
-		ltop.setEndY(ydist);
-		
-		ydist = newY + lbot.getStartY() - oldy;
-		lbot.setStartX(newX);
-		lbot.setStartY(ydist);
-		lbot.setEndX(newX + umlBox.getWidth());
-		lbot.setEndY(ydist);
-		
-		ydist = newY + name.getBoundsInParent().getMinY() - oldy;
-		name.relocate(newX + 10, ydist);
-		
-		ydist = newY + attributes.getBoundsInParent().getMinY() - oldy;
-		attributes.relocate(newX + 10, ydist);
-		
-		ydist = newY + functions.getBoundsInParent().getMinY() - oldy;
-		functions.relocate(newX + 10, ydist);
+		this.setTranslateX(0);
+		this.setTranslateY(0);
 	}
 	
 	/**
@@ -129,11 +116,44 @@ public class UMLObjectView extends Group {
 	}
 	/**
 	 * 
-	 * @param width
-	 * @param height
+	 * @param width width of the classbox being drawn
+	 * @param height height of the classbox being drawn
 	 */
 	public void resize(double width, double height){
+		umlBox.setWidth(width);
+		name.setMaxWidth(width);
+		attributes.setMaxWidth(width);
+		functions.setMaxWidth(width);
+		ltop.setEndX(width);
+		lbot.setEndX(width);
 		
+		umlBox.setHeight(height);
+		
+		if (functions.getLayoutY() + functions.getPrefHeight() > height)
+			functions.setVisible(false);
+		else
+			functions.setVisible(true);
+		
+		if (attributes.getLayoutY() + attributes.getPrefHeight() > height)
+			attributes.setVisible(false);
+		else
+			attributes.setVisible(true);
+		
+		if (name.getLayoutY() + name.getPrefHeight() > height)
+			name.setVisible(false);
+		else
+			name.setVisible(true);
+		
+		if (ltop.getStartY() > height)
+			ltop.setVisible(false);
+		else
+			ltop.setVisible(true);
+		
+		
+		if (lbot.getStartY() > height)
+			lbot.setVisible(false);
+		else
+			lbot.setVisible(true);
 		
 	}
 	
