@@ -6,6 +6,9 @@
 
 package edu.millersville.cs.bitsplease;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.Toggle;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
 import edu.millersville.cs.bitsplease.view.EditorAction;
 import edu.millersville.cs.bitsplease.view.UMLEditorPane;
@@ -24,6 +27,9 @@ public class GUIController {
 	public GUIController() {
 		editorPane = new UMLEditorPane();
 		selectedUMLSymbol = null;
+		
+		addToolBarEventListening();
+		setCurrentEditorAction(currentEditorAction);
 	}
 
 	/**
@@ -55,10 +61,26 @@ public class GUIController {
 	}
 
 	/**
-	 * @param currentEditorAction the currentEditorAction to set
+	 * @param newEditorAction the currentEditorAction to set
 	 */
-	public void setCurrentEditorAction(EditorAction currentEditorAction) {
-		this.currentEditorAction = currentEditorAction;
+	public void setCurrentEditorAction(EditorAction newEditorAction) {
+		this.currentEditorAction = newEditorAction;
+		editorPane.getToolBarPane().setSelectedEditorAction(newEditorAction);
 	}
 	
+	private void addToolBarEventListening() {
+		editorPane.getToolBarPane().selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Toggle> observable,
+					Toggle oldValue, Toggle newValue) {
+				if (newValue != null) {
+					currentEditorAction = (EditorAction) newValue.getUserData();
+					System.out.println(newValue.getUserData());
+				}
+					
+			}
+		});
+		
+	}
 }

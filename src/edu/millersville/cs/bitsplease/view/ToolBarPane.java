@@ -4,8 +4,7 @@
  */
 package edu.millersville.cs.bitsplease.view;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
@@ -16,11 +15,14 @@ import javafx.scene.layout.VBox;
 public class ToolBarPane extends VBox {
 
 	private ToggleGroup tbToggleGroup;
+	
 	/**
 	 * 
 	 */
 	public ToolBarPane() {
 		super();
+		
+		// TODO: move style code to CSS files
 		this.setStyle("-fx-background-color: #444; -fx-padding: 20;");
 		this.setMaxWidth(100);
 		
@@ -38,16 +40,19 @@ public class ToolBarPane extends VBox {
 			this.getChildren().add(button);
 		}
 		
-		// TEST CODE!!!
-		// this demonstrates how the action can be propagated
-		tbToggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Toggle> observable,
-					Toggle oldValue, Toggle newValue) {
-				if (newValue != null)
-					System.out.println(newValue.getUserData());
-			}
-		});
+		tbToggleGroup.getToggles().filtered(t -> t.getUserData() == EditorAction.SELECT);
+	}
+	
+	/**
+	 * @return selectedToggleProperty object from internal toggle group
+	 */
+	public ReadOnlyObjectProperty<Toggle> selectedToggleProperty() {
+		return tbToggleGroup.selectedToggleProperty();
+	}
+	
+	public void setSelectedEditorAction(EditorAction action) {
+		tbToggleGroup.getToggles().filtered(
+				t -> t.getUserData() == action
+				).get(0).setSelected(true);
 	}
 }
