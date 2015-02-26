@@ -26,7 +26,7 @@ public class UMLObjectView extends Group {
 	private Label functions;
 	
 		
-	UMLObjectView(UMLClassSymbol umlSymbol){
+	public UMLObjectView(UMLClassSymbol umlSymbol){
 		super();
 		Point2D origin = umlSymbol.getOrigin();
 		umlBox = new Rectangle(0, 0, umlSymbol.getWidth(), umlSymbol.getHeight());
