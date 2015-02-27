@@ -163,6 +163,13 @@ public class UMLObjectView extends Group {
 			lbot.setVisible(true);
 		
 	}
+	
+	public void refreshSymbolPosition() {
+		Point2D origin = umlClassSymbol.getOrigin();
+		
+		this.setLayoutX(origin.getX());
+		this.setLayoutY(origin.getY());
+	}
 
 	/**
 	 * @return the umlClassSymbol
