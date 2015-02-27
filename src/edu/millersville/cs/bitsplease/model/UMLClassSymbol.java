@@ -11,7 +11,6 @@ import javafx.geometry.Point2D;
 
 public class UMLClassSymbol extends UMLObjectSymbol {
 	
-	private String className = "Untitled Class";
 	private String[] classAttributes = new String[10];
 	private String[] classFunctions = new String[10];
 	
@@ -50,19 +49,16 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	 * @param className title of the UML classbox
 	 */
 	public UMLClassSymbol(String className){
-		super();
-		this.className = className;
+		super(className);
 	}
 	
 	public UMLClassSymbol(String className, String[] attr){
-		super();
-		this.className = className;
+		super(className);
 		this.classAttributes = attr;
 	}
 	
 	public UMLClassSymbol(String className, String[] attr, String[] func){
-		super();
-		this.className = className;
+		super(className);
 		this.classAttributes = attr;
 		this.classFunctions = func;
 	}
@@ -75,7 +71,7 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	 * @return className String representing the name of the class object.
 	 */
 	public String getClassName(){
-		return this.className;
+		return super.getName();
 	}
 	
 	/**
@@ -168,7 +164,7 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	 * @param name name to assign to UMLClassObject instance
 	 */
 	public void setClassName(String name){
-		this.className = name;
+		super.setName(name);
 	}
 	
 	/**
@@ -201,5 +197,26 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	 */
 	public void setFunctions(String[] func){
 		this.classFunctions = func;
+	}
+	
+	public void setOrigin(Point2D p){
+		super.setOrigin(p);
+	}
+	
+	public void setX(double x){
+		
+	}
+	
+	public void setY(double y){
+		
+	}
+	
+	
+	public void setHeight(double h){
+		super.setHeight(h);
+	}
+	
+	public void setWidth(double w){
+		super.setWidth(w);
 	}
 }

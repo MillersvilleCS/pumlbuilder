@@ -1,6 +1,9 @@
 /**
- * @author Merv Fansler	Kevin Fisher
+ * @author Merv Fansler	
+ * @author Kevin Fisher
+ * @since  February 24, 2015
  * @version 0.1.0
+ * 
  */
 
 package edu.millersville.cs.bitsplease.view;
@@ -8,38 +11,49 @@ package edu.millersville.cs.bitsplease.view;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
+
 
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
+import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
+import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
+import edu.millersville.cs.bitsplease.model.UMLRelationType;
+import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
 
 public class PropertiesPane extends StackPane {
+	
 	private ObjectViewPane objectPane;
 	private RelationViewPane relationPane;
-	private VBox activePane;
 	private Label paneTitle = new Label("Properties");
+	
+	//State variables
+	private VBox activePane;
 	/**
 	 * 
 	 */
 	public PropertiesPane() {
 		super();
 		
+		
 		setAlignment(paneTitle, Pos.TOP_CENTER);
 		getChildren().add(paneTitle);
 		createObjectPane();
 		createRelationPane();
 		setActivePane(objectPane);
-		setActivePane(relationPane);
-		
-
-		
-		
+		UMLClassSymbol u = new UMLClassSymbol("Kevin is Stinky.");
+		UMLClassSymbol m = new UMLClassSymbol("Kevin Smells Beautiful");
+		UMLRelationSymbol l = new UMLRelationSymbol(u,m, UMLRelationType.ASSOCIATION);
+		UMLClassSymbol j = new UMLClassSymbol();
+		j.setHeight(12);
+		j.setWidth(20);
+		updatePane(j);
 		this.setStyle("-fx-background-color: #444; -fx-padding: 20");
 	}
 	
 	/**
-	 * Method to create Object Properties pane and add it to the Stack Pane
+	 * Method to create Object Properties pane and add it to the Properties Pane
 	 */
 	public void createObjectPane(){
 		objectPane = new ObjectViewPane();
@@ -48,6 +62,9 @@ public class PropertiesPane extends StackPane {
 		objectPane.setVisible(false);
 	}
 	
+	/**
+	 * Method to create Relation Properties pane and add it to the Properties Pane
+	 */
 	public void createRelationPane(){
 		relationPane = new RelationViewPane();
 		setMargin(relationPane, new Insets(20,20,20,20));
@@ -55,14 +72,41 @@ public class PropertiesPane extends StackPane {
 		relationPane.setVisible(false);
 	}
 	
+	/**
+	 * Method to handle updating the properties pane based on the currently selected UMLSymbol.
+	 * WARNING: Spaghetti code ahead.
+	 * @param uml Currently selected UMLSymbol object passed in by the GUIController
+	 */
 	public void updatePane(UMLSymbol uml){
-		//TODO implement action Listener
+		//TODO add support for Interface, etc., clean up terrible terrible code
+		
+		if(uml instanceof UMLClassSymbol){
+			objectPane.setObjectNameField(((UMLClassSymbol)uml).getName());
+			objectPane.setXField(((UMLClassSymbol)uml).getX());
+			objectPane.setYField(((UMLClassSymbol)uml).getY());
+			objectPane.setHField(((UMLClassSymbol)uml).getHeight());
+			objectPane.setWField(((UMLClassSymbol)uml).getWidth());
+			setActivePane(objectPane);
+			
+		}else if( uml instanceof UMLRelationSymbol){
+			relationPane.setSourceField(((UMLRelationSymbol)uml).getSourceObject().getName());
+			relationPane.setTargetField(((UMLRelationSymbol)uml).getTargetObject().getName());
+			setActivePane(relationPane);
+		}
+		
 	}
 	
+	/**
+	 * 
+	 * @return the View Pane that is currently active
+	 */
 	public VBox getActivePane(){
 		return this.activePane;
 	}
-	
+	/**
+	 * Method to handle switching focus between pane objects
+	 * @param pane the View pane to be set as the active pane
+	 */
 	public void setActivePane(VBox pane){
 		if(activePane == null){
 			activePane = pane;

@@ -14,11 +14,13 @@ import javafx.event.EventDispatchChain;
  * A class model to represent a UML Object symbol
  */
 
+//TODO add ArrayList<UMLRelationSymbol> to keep track of relations.
 public class UMLObjectSymbol extends UMLSymbol {
 	private Point2D origin = new Point2D(0,0);
 	private double height = 100;
 	private double width = 100;
 	private boolean isSelected = false;
+	private String identifier = "";
 	/**
 	 *  Empty UMLObjectSymbol Constructor 
 	 */
@@ -33,6 +35,10 @@ public class UMLObjectSymbol extends UMLSymbol {
 	public UMLObjectSymbol(Point2D origin){
 		super();
 		this.origin = origin;
+	}
+	
+	public UMLObjectSymbol(String name){
+		this.identifier = name;
 	}
 	/** 
 	 * Construct a UMLObjectSymbol with user-defined height, width
@@ -111,6 +117,10 @@ public class UMLObjectSymbol extends UMLSymbol {
 		return origin.getY();
 	}
 	
+	public String getName(){
+		return this.identifier;
+	}
+	
 	public boolean isSelected(){
 		return this.isSelected;
 	}
@@ -119,19 +129,22 @@ public class UMLObjectSymbol extends UMLSymbol {
 	 * Mutator classes
 	 */
 	
+	public void setName(String name){
+		this.identifier = name;
+	}
 	/**
 	 * 
 	 * @param double newHeight updated height for UMLObjectSymbol instance
 	 */
 	public void setHeight(double newHeight){
-		height = newHeight;
+		this.height = newHeight;
 	}
 	/**
 	 * 
 	 * @param double newWidth updated width for UMLObjectSymbol instance
 	 */
 	public void setWidth(double newWidth){
-		width = newWidth;
+		this.width = newWidth;
 	}
 	
 	/**
@@ -139,12 +152,13 @@ public class UMLObjectSymbol extends UMLSymbol {
 	 * @param Point2D newPoint updated Point2D origin for UMLObjectSymbol instance 
 	 */
 	public void setOrigin(Point2D newPoint){
-		origin = newPoint;
+		this.origin = newPoint;
 	}
 	
 	public void setSelectedStatus(boolean status){
 		this.isSelected = status;
 	}
+	
 
 	
 

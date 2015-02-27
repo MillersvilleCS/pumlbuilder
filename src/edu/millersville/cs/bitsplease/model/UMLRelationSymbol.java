@@ -66,7 +66,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 	}
 
 	/**
-	 * @return the sourceObject
+	 * @return the UMLObjectSymbol that the relation originated from
 	 */
 	public UMLObjectSymbol getSourceObject() {
 		return sourceObject;
