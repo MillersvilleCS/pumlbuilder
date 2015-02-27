@@ -115,11 +115,11 @@ public class UMLObjectView extends Group {
 	}
 	
 	/**
-	 * 
-	 * @param umlSymbol
+	 * updates the graphical title on the UMLSymbol
+	 * @param newTitle newTitle of the UMLSymbol
 	 */
-	public void UpdateText(UMLClassSymbol umlSymbol){
-		
+	public void UpdateTitle(String newTitle){
+		name.setText(" " + newTitle);
 	}
 	/**
 	 * 
