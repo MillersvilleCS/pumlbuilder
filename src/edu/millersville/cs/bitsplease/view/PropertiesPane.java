@@ -87,6 +87,8 @@ public class PropertiesPane extends StackPane {
 			relationPane.setSourceField(((UMLRelationSymbol)uml).getSourceObject().getName());
 			relationPane.setTargetField(((UMLRelationSymbol)uml).getTargetObject().getName());
 			setActivePane(relationPane);
+		}else{
+			setActivePaneVisible(false);//UMLSymbol is null
 		}
 		
 	}
@@ -111,7 +113,13 @@ public class PropertiesPane extends StackPane {
 			activePane = pane;
 			activePane.setVisible(true);
 		}else{
-			System.out.println("Selected pane already active");
+			activePane.setVisible(true);
+		}
+	}
+	
+	public void setActivePaneVisible(boolean vis){
+		if(activePane != null){
+		activePane.setVisible(vis);
 		}
 	}
 
