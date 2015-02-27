@@ -1,5 +1,5 @@
 /**
- * 
+ * @author Merv Fansler
  */
 package edu.millersville.cs.bitsplease.view;
 

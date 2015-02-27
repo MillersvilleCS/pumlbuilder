@@ -13,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 public class UMLEditorPane extends BorderPane {
 
 	private ToolBarPane toolBarPane;
+	private DocumentViewPane documentViewPane;
 	
 	public UMLEditorPane() {
 		super();
@@ -22,8 +23,10 @@ public class UMLEditorPane extends BorderPane {
 		toolBarPane = new ToolBarPane();
 		this.setLeft(toolBarPane);
 		
+		documentViewPane = new DocumentViewPane();
+		this.setCenter(documentViewPane);
+		
 		this.setRight(new PropertiesPane());
-		this.setCenter(new DocumentViewPane());
 	}
 	
 	private MenuBar createMenu() {
@@ -40,5 +43,9 @@ public class UMLEditorPane extends BorderPane {
 	
 	public ToolBarPane getToolBarPane() {
 		return toolBarPane;
+	}
+	
+	public DocumentViewPane getDocumentViewPane() {
+		return documentViewPane;
 	}
 }

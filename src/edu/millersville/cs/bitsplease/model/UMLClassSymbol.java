@@ -10,11 +10,35 @@ import javafx.geometry.Point2D;
 
 
 public class UMLClassSymbol extends UMLObjectSymbol {
-
+	
 	private String className = "Untitled Class";
 	private String[] classAttributes = new String[10];
 	private String[] classFunctions = new String[10];
 	
+	/**
+	 * @param prefHeight
+	 * @param prefWidth
+	 */
+	public UMLClassSymbol(double prefHeight, double prefWidth) {
+		super(prefHeight, prefWidth);
+	}
+
+	/**
+	 * @param origin
+	 * @param prefHeight
+	 * @param prefWidth
+	 */
+	public UMLClassSymbol(Point2D origin, double prefHeight, double prefWidth) {
+		super(origin, prefHeight, prefWidth);
+	}
+
+	/**
+	 * @param origin
+	 */
+	public UMLClassSymbol(Point2D origin) {
+		super(origin);
+	}
+
 	/**
 	 * Empty UMLClassSymbol constructor
 	 */
@@ -23,20 +47,12 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	}
 	
 	/**
-	 * 
-	 * Constructor Methods
-	 * 
-	 */
-	
-	/**
-	 * className Constructor
 	 * @param className title of the UML classbox
 	 */
 	public UMLClassSymbol(String className){
 		super();
 		this.className = className;
 	}
-	
 	
 	public UMLClassSymbol(String className, String[] attr){
 		super();

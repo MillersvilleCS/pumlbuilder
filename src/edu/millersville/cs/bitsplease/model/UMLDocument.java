@@ -141,4 +141,8 @@ public void removeSymbol(int i){
 	objectList.remove(i);
 }
 
+public void addClass(double x, double y, int prefWidth, int prefHeight) {
+	objectList.add(new UMLClassSymbol(new Point2D(x, y), prefWidth, prefHeight));
+}
+
 }
