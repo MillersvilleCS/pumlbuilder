@@ -19,8 +19,7 @@ import javafx.geometry.Point2D;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
 import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
 import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
-import edu.millersville.cs.bitsplease.model.UMLRelationType;
-import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
+
 
 public class PropertiesPane extends StackPane {
 	
@@ -42,13 +41,7 @@ public class PropertiesPane extends StackPane {
 		createObjectPane();
 		createRelationPane();
 		setActivePane(objectPane);
-		UMLClassSymbol u = new UMLClassSymbol("Kevin is Stinky.");
-		UMLClassSymbol m = new UMLClassSymbol("Kevin Smells Beautiful");
-		UMLRelationSymbol l = new UMLRelationSymbol(u,m, UMLRelationType.ASSOCIATION);
-		UMLClassSymbol j = new UMLClassSymbol();
-		j.setHeight(12);
-		j.setWidth(20);
-		updatePane(j);
+		
 		this.setStyle("-fx-background-color: #444; -fx-padding: 20");
 	}
 	
