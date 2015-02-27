@@ -3,7 +3,14 @@
  */
 package edu.millersville.cs.bitsplease.view;
 
+import java.util.EventListener;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -36,4 +43,14 @@ public class DocumentViewPane extends Pane {
 		});*/
 	}
 
+	public void addUMLSymbol(UMLObjectView objView) {
+		objView.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				
+			}
+		});
+		this.getChildren().add(objView);
+	}
 }

@@ -9,16 +9,19 @@ package edu.millersville.cs.bitsplease;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
+import javafx.event.EventTarget;
+import javafx.scene.Node;
 import javafx.scene.control.Toggle;
 import javafx.scene.input.MouseEvent;
 import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
 import edu.millersville.cs.bitsplease.model.UMLDocument;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
+import edu.millersville.cs.bitsplease.view.DocumentViewPane;
 import edu.millersville.cs.bitsplease.view.EditorAction;
 import edu.millersville.cs.bitsplease.view.UMLEditorPane;
 import edu.millersville.cs.bitsplease.view.UMLObjectView;
 
-public class GUIController implements ChangeListener<Toggle> {
+public class GUIController implements ChangeListener<Toggle>, EventHandler<MouseEvent> {
 	
 	private UMLEditorPane editorPane;
 	
@@ -39,18 +42,7 @@ public class GUIController implements ChangeListener<Toggle> {
 		editorPane.getToolBarPane().selectedToggleProperty().addListener(this);
 		setCurrentEditorAction(currentEditorAction);
 		
-		editorPane.getDocumentViewPane().addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent e) {
-				if (currentEditorAction == EditorAction.CREATE_CLASS) {
-					currentDocument.addClass(e.getX(),e.getY(), 100, 100);
-					
-					UMLObjectView objView = new UMLObjectView((UMLClassSymbol) currentDocument.getObjectList().get(currentDocument.getObjectList().size()-1));
-					editorPane.getDocumentViewPane().getChildren().add(objView);
-				}
-			}
-		});
+		editorPane.getDocumentViewPane().addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 	}
 
 	/**
@@ -95,5 +87,39 @@ public class GUIController implements ChangeListener<Toggle> {
 		if (newValue != null) {
 			currentEditorAction = (EditorAction) newValue.getUserData();
 		}
+	}
+
+	@Override
+	public void handle(MouseEvent e) {
+		switch (currentEditorAction) {
+		case CREATE_CLASS:
+			currentDocument.addClass(e.getX(),e.getY(), 100, 100);
+			UMLObjectView objView = new UMLObjectView((UMLClassSymbol) currentDocument.getObjectList().get(currentDocument.getObjectList().size()-1));
+			editorPane.getDocumentViewPane().addUMLSymbol(objView);;
+			break;
+		case SELECT:
+			selectedUMLSymbol = resolveUMLSymbolObject((Node) e.getTarget());
+			System.out.println(selectedUMLSymbol);
+		default:
+			break;
+		}
+	}
+	
+	private UMLSymbol resolveUMLSymbolObject(Node target) {
+		UMLSymbol result;
+		
+		if (target != null) {
+			if (target instanceof UMLObjectView) {
+				result = ((UMLObjectView)target).getUmlClassSymbol();
+			} else if (target instanceof DocumentViewPane) {
+				result = null;
+			} else {
+				result = resolveUMLSymbolObject(target.getParent());
+			}
+		} else {
+			result = null;
+		}
+		
+		return result;
 	}
 }

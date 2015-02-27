@@ -18,6 +18,7 @@ import javafx.geometry.Point2D;
 
 
 public class UMLObjectView extends Group {
+	private UMLClassSymbol umlClassSymbol;
 	private Rectangle umlBox;
 	private Line ltop;
 	private Line lbot;
@@ -32,9 +33,13 @@ public class UMLObjectView extends Group {
 		 */
 	public UMLObjectView(UMLClassSymbol umlSymbol){
 		super();
+		this.umlClassSymbol = umlSymbol;
+		
 		Point2D origin = umlSymbol.getOrigin();
+		
 		this.setLayoutX(origin.getX());
 		this.setLayoutY(origin.getY());
+		
 		umlBox = new Rectangle(0, 0, umlSymbol.getWidth(), umlSymbol.getHeight());
 		umlBox.setFill(Color.TRANSPARENT);
 		umlBox.setStroke(Color.BLACK);
@@ -85,6 +90,8 @@ public class UMLObjectView extends Group {
 		functions.setPrefHeight(length);
 		functions.setLayoutY(lbot.getStartY());
 		this.getChildren().add(functions);
+		
+		//this.getChildren().forEach(n -> n.setMouseTransparent(true));
 	}
 	
 	
@@ -156,7 +163,13 @@ public class UMLObjectView extends Group {
 			lbot.setVisible(true);
 		
 	}
-	
+
+	/**
+	 * @return the umlClassSymbol
+	 */
+	public UMLClassSymbol getUmlClassSymbol() {
+		return umlClassSymbol;
+	}
 }
 
 
