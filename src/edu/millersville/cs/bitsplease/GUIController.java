@@ -95,12 +95,25 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 		switch (currentEditorAction) {
 		case CREATE_CLASS:
 			currentDocument.addClass(e.getX(),e.getY(), 100, 100);
+			
+			//TODO: add a method in UMLDocument to add created object
 			UMLObjectView objView = new UMLObjectView((UMLClassSymbol) currentDocument.getObjectList().get(currentDocument.getObjectList().size()-1));
-			editorPane.getDocumentViewPane().addUMLSymbol(objView);;
+			editorPane.getDocumentViewPane().addUMLSymbol(objView);
+			setSelectedUMLSymbol(objView.getUmlClassSymbol());
+			
 			break;
 		case SELECT:
 			setSelectedUMLSymbol(resolveUMLSymbolObject((Node) e.getTarget()));
 			//System.out.println(selectedUMLSymbol);
+			break;
+		case DELETE:
+			setSelectedUMLSymbol(null);
+			UMLObjectView toDelete = resolveUMLObjectView((Node)e.getTarget());
+			if (toDelete != null) {
+				currentDocument.getObjects().remove(toDelete.getUmlClassSymbol());
+				editorPane.getDocumentViewPane().getChildren().remove(toDelete);
+				e.consume();
+			}
 		default:
 			break;
 		}
@@ -116,6 +129,24 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 				result = null;
 			} else {
 				result = resolveUMLSymbolObject(target.getParent());
+			}
+		} else {
+			result = null;
+		}
+		
+		return result;
+	}
+	
+	private UMLObjectView resolveUMLObjectView(Node target) {
+		UMLObjectView result;
+		
+		if (target != null) {
+			if (target instanceof UMLObjectView) {
+				result = (UMLObjectView)target;
+			} else if (target instanceof DocumentViewPane) {
+				result = null;
+			} else {
+				result = resolveUMLObjectView(target.getParent());
 			}
 		} else {
 			result = null;
