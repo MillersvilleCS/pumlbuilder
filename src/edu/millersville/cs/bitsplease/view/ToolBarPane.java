@@ -5,14 +5,13 @@
  */
 package edu.millersville.cs.bitsplease.view;
 
-import edu.millersville.cs.bitsplease.PUMLBuilder;
-import javafx.application.Application;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import edu.millersville.cs.bitsplease.PUMLBuilder;
 
 /**
  * 
@@ -27,11 +26,10 @@ public class ToolBarPane extends VBox {
 	public ToolBarPane() {
 		super();
 		
-		Font.loadFont(PUMLBuilder.class.getResource("fontawesome-webfont.ttf").toExternalForm(), 12);
+		Font.loadFont(PUMLBuilder.class.getResource("fontawesome-webfont.ttf").toExternalForm(), 24);
 		
 		// TODO: move style code to CSS files
-		this.setStyle("-fx-background-color: #444; -fx-padding: 20; -fx-font-family: FontAwesome");
-		this.setMaxWidth(100);
+		this.setStyle("-fx-background-color: #444; -fx-font-family: FontAwesome");
 		
 		tbToggleGroup = new ToggleGroup();
 		

@@ -8,17 +8,14 @@
 
 package edu.millersville.cs.bitsplease.view;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Label;
-import javafx.geometry.Pos;
-import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
-
-
-import edu.millersville.cs.bitsplease.model.UMLSymbol;
 import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
 import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
+import edu.millersville.cs.bitsplease.model.UMLSymbol;
 
 
 public class PropertiesPane extends StackPane {
@@ -29,13 +26,13 @@ public class PropertiesPane extends StackPane {
 	
 	//State variables
 	private VBox activePane;
+	
 	/**
-	 * 
+	 * Constructor
 	 */
 	public PropertiesPane() {
 		
 		super();
-		
 		
 		setAlignment(paneTitle, Pos.TOP_CENTER);
 		getChildren().add(paneTitle);
@@ -43,7 +40,7 @@ public class PropertiesPane extends StackPane {
 		createRelationPane();
 		setActivePane(objectPane);
 		
-		this.setStyle("-fx-background-color: #444; -fx-padding: 20");
+		this.setStyle("-fx-background-color: #aaa; -fx-padding: 20; -fx-text-fill: white; -fx-font-weight: bold");
 	}
 	
 	/**
@@ -51,7 +48,7 @@ public class PropertiesPane extends StackPane {
 	 */
 	public void createObjectPane(){
 		objectPane = new ObjectViewPane();
-		setMargin(objectPane, new Insets(20,20,20,20));
+		setMargin(objectPane, new Insets(20));
 		getChildren().add(objectPane);
 		objectPane.setVisible(false);
 	}

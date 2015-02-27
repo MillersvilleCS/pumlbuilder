@@ -9,11 +9,9 @@ package edu.millersville.cs.bitsplease;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
-import javafx.event.EventTarget;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Toggle;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
 import edu.millersville.cs.bitsplease.model.UMLDocument;
@@ -28,10 +26,14 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 	
 	private UMLEditorPane editorPane;
 	
-	// State Variables
-	private UMLSymbol selectedUMLSymbol;
-	private EditorAction currentEditorAction = EditorAction.SELECT;
+	// Model
 	private UMLDocument currentDocument;
+	
+	// View State Variables
+	private EditorAction currentEditorAction = EditorAction.SELECT;
+	private UMLSymbol selectedUMLSymbol;
+	
+	// Drag State Variables
 	private Boolean isMoving = false;
 	private UMLObjectView movingObjectView;
 	private double dragOffsetX = 0.0;
@@ -99,21 +101,27 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 		}
 	}
 
+	// EVENT HANDLERS
+	
+	/** 
+	 * Provides MouseEvent handling for DocumentViewPane
+	 * @see javafx.event.EventHandler#handle(javafx.event.Event)
+	 */
 	@Override
 	public void handle(MouseEvent e) {
 		
 		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 			switch (currentEditorAction) {
 			case CREATE_CLASS:
-				currentDocument.addClass(e.getX(),e.getY(), 100, 100);
-				
-				//TODO: add a method in UMLDocument to add created object
-				UMLObjectView objView = new UMLObjectView((UMLClassSymbol) currentDocument.getObjectList().get(currentDocument.getObjectList().size()-1));
+
+				UMLClassSymbol c = new UMLClassSymbol(new Point2D(e.getX(),e.getY()), 100, 100);
+				currentDocument.addClass(c);
+				UMLObjectView objView = new UMLObjectView(c);
 				editorPane.getDocumentViewPane().addUMLSymbol(objView);
 				setSelectedUMLSymbol(objView.getUmlClassSymbol());
 				
 				break;
-			case SELECT:
+			case SELECT: // selecting items
 				setSelectedUMLSymbol(resolveUMLSymbolObject((Node) e.getTarget()));
 				
 				break;
@@ -136,12 +144,15 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 			case SELECT:
 				if (!isMoving) {
 					movingObjectView = resolveUMLObjectView((Node)e.getTarget());
-					if (movingObjectView != null) {
+					
+					if (movingObjectView != null) { // begin dragging object
 						setSelectedUMLSymbol(movingObjectView.getUmlClassSymbol());
 						
 						// compute offsets, so drag does not snap to origin
 						dragOffsetX = ((UMLObjectSymbol)selectedUMLSymbol).getX() - e.getX();
 						dragOffsetY = ((UMLObjectSymbol)selectedUMLSymbol).getY() - e.getY();
+						
+						// set state
 						isMoving = true;
 					}
 				} else {
@@ -160,24 +171,29 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 		}
 	}
 	
+	/**
+	 * Utility to traverse scene graph and identify UMLSymbolObject of
+	 *   ancestor UMLObjectView
+	 * @author Merv Fansler
+	 * @param target initial node to test for ancestor UMLObjectView
+	 * @return UMLSymbolObject of UMLObjectView ancestor, otherwise null
+	 */
 	private UMLSymbol resolveUMLSymbolObject(Node target) {
-		UMLSymbol result;
-		
-		if (target != null) {
-			if (target instanceof UMLObjectView) {
-				result = ((UMLObjectView)target).getUmlClassSymbol();
-			} else if (target instanceof DocumentViewPane) {
-				result = null;
-			} else {
-				result = resolveUMLSymbolObject(target.getParent());
-			}
+		UMLObjectView result = resolveUMLObjectView(target);
+
+		if (result != null) {
+			return result.getUmlClassSymbol();
 		} else {
-			result = null;
+			return null;
 		}
-		
-		return result;
 	}
 	
+	/**
+	 * Utility to traverse scene graph and identify ancestor UMLObjectView
+	 * @author Merv Fansler
+	 * @param target initial node to test for ancestor UMLObjectView
+	 * @return UMLObjectView ancestor, otherwise null
+	 */
 	private UMLObjectView resolveUMLObjectView(Node target) {
 		UMLObjectView result;
 		
