@@ -33,6 +33,7 @@ public class PropertiesPane extends StackPane {
 	 * 
 	 */
 	public PropertiesPane() {
+		
 		super();
 		
 		
@@ -74,6 +75,7 @@ public class PropertiesPane extends StackPane {
 		//TODO add support for Interface, etc., clean up terrible terrible code
 		
 		if(uml instanceof UMLClassSymbol){
+			
 			objectPane.setObjectNameField(((UMLClassSymbol)uml).getName());
 			objectPane.setXField(((UMLClassSymbol)uml).getX());
 			objectPane.setYField(((UMLClassSymbol)uml).getY());

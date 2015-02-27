@@ -17,6 +17,7 @@ public class UMLEditorPane extends BorderPane {
 
 	private ToolBarPane toolBarPane;
 	private DocumentViewPane documentViewPane;
+	private PropertiesPane propertiesPane;
 	
 	public UMLEditorPane() {
 		super();
@@ -29,7 +30,8 @@ public class UMLEditorPane extends BorderPane {
 		documentViewPane = new DocumentViewPane();
 		this.setCenter(documentViewPane);
 		
-		this.setRight(new PropertiesPane());
+		propertiesPane = new PropertiesPane();
+		this.setRight(propertiesPane);
 	}
 	
 	private MenuBar createMenu() {
@@ -60,5 +62,9 @@ public class UMLEditorPane extends BorderPane {
 	
 	public DocumentViewPane getDocumentViewPane() {
 		return documentViewPane;
+	}
+	
+	public PropertiesPane getPropertiesPane() {
+		return propertiesPane;
 	}
 }

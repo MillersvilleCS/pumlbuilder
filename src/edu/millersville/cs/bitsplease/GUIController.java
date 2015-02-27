@@ -37,7 +37,7 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 		currentDocument = new UMLDocument();
 		
 		editorPane = new UMLEditorPane();
-		selectedUMLSymbol = null;
+		setSelectedUMLSymbol(null);
 		
 		editorPane.getToolBarPane().selectedToggleProperty().addListener(this);
 		setCurrentEditorAction(currentEditorAction);
@@ -64,6 +64,7 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 	 */
 	public void setSelectedUMLSymbol(UMLSymbol selectedUMLSymbol) {
 		this.selectedUMLSymbol = selectedUMLSymbol;
+		editorPane.getPropertiesPane().updatePane(selectedUMLSymbol);
 	}
 
 	/**
@@ -98,8 +99,8 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 			editorPane.getDocumentViewPane().addUMLSymbol(objView);;
 			break;
 		case SELECT:
-			selectedUMLSymbol = resolveUMLSymbolObject((Node) e.getTarget());
-			System.out.println(selectedUMLSymbol);
+			setSelectedUMLSymbol(resolveUMLSymbolObject((Node) e.getTarget()));
+			//System.out.println(selectedUMLSymbol);
 		default:
 			break;
 		}

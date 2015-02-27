@@ -20,7 +20,7 @@ public class UMLObjectSymbol extends UMLSymbol {
 	private double height = 100;
 	private double width = 100;
 	private boolean isSelected = false;
-	private String identifier = "";
+	private String identifier = "Untitled";
 	/**
 	 *  Empty UMLObjectSymbol Constructor 
 	 */
