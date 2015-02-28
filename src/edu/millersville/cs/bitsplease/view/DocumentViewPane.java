@@ -5,6 +5,8 @@
  */
 package edu.millersville.cs.bitsplease.view;
 
+import java.util.function.Predicate;
+
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
@@ -35,10 +37,30 @@ public class DocumentViewPane extends Pane {
 	}
 	
 	public void refreshRelations(UMLObjectSymbol obj) {
-		for (Node relView : getChildren().filtered(n -> n instanceof UMLRelationView)) {
-			if (((UMLRelationView)relView).getSourceObject() == obj ||
-				((UMLRelationView)relView).getTargetObject() == obj)
-				((UMLRelationView)relView).refresh();
+		for (Node relView : getChildren().filtered(referencesUMLObject(obj))) {
+			((UMLRelationView)relView).refresh();
 		}
+	}
+
+	public void removeUMLSymbol(UMLSymbolView toDelete) {
+		
+		// remove all relation symbols that references an object being removed
+		if (toDelete instanceof UMLObjectView) {
+			getChildren().removeIf(
+					referencesUMLObject(((UMLObjectView) toDelete).getUmlClassSymbol()));
+		}
+		
+		getChildren().remove(toDelete);
+	}
+	
+	/**
+	 * Provides a means for finding relations of a given object
+	 * @param obj an object
+	 * @return predicate that selects for relating UMLRelationViews
+	 */
+	private Predicate<Node> referencesUMLObject (UMLObjectSymbol obj) {
+		return n -> n instanceof UMLRelationView && 
+				(((UMLRelationView)n).getSourceObject() == obj ||
+				((UMLRelationView)n).getTargetObject() == obj);
 	}
 }

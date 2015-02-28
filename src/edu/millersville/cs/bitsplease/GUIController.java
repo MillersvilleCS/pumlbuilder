@@ -126,7 +126,9 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 				UMLSymbolView toDelete = resolveUMLSymbolView((Node)e.getTarget());
 				if (toDelete != null) {
 					currentDocument.getObjects().remove(toDelete.getUMLSymbol());
+					editorPane.getDocumentViewPane().removeUMLSymbol(toDelete);
 					editorPane.getDocumentViewPane().getChildren().remove(toDelete);
+					
 					
 					// destroy event, since target object is now removed
 					e.consume();
