@@ -16,11 +16,14 @@ import javafx.scene.input.MouseEvent;
 import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
 import edu.millersville.cs.bitsplease.model.UMLDocument;
 import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
+import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
+import edu.millersville.cs.bitsplease.model.UMLRelationType;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
 import edu.millersville.cs.bitsplease.view.DocumentViewPane;
 import edu.millersville.cs.bitsplease.view.EditorAction;
 import edu.millersville.cs.bitsplease.view.UMLEditorPane;
 import edu.millersville.cs.bitsplease.view.UMLObjectView;
+import edu.millersville.cs.bitsplease.view.UMLRelationView;
 
 public class GUIController implements ChangeListener<Toggle>, EventHandler<MouseEvent> {
 	
@@ -35,9 +38,11 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 	
 	// Drag State Variables
 	private Boolean isMoving = false;
-	private UMLObjectView movingObjectView;
+	private UMLObjectView dragTarget;
 	private double dragOffsetX = 0.0;
 	private double dragOffsetY = 0.0;
+
+	private boolean isRelating = false;
 	
 	/**
 	 * Default constructor for class.
@@ -143,10 +148,10 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 			switch (currentEditorAction) {
 			case SELECT:
 				if (!isMoving) {
-					movingObjectView = resolveUMLObjectView((Node)e.getTarget());
+					dragTarget = resolveUMLObjectView((Node)e.getTarget());
 					
-					if (movingObjectView != null) { // begin dragging object
-						setSelectedUMLSymbol(movingObjectView.getUmlClassSymbol());
+					if (dragTarget != null) { // begin dragging object
+						setSelectedUMLSymbol(dragTarget.getUmlClassSymbol());
 						
 						// compute offsets, so drag does not snap to origin
 						dragOffsetX = ((UMLObjectSymbol)selectedUMLSymbol).getX() - e.getX();
@@ -157,17 +162,56 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 					}
 				} else {
 					((UMLClassSymbol) selectedUMLSymbol).setOrigin(new Point2D(e.getX() + dragOffsetX, e.getY() + dragOffsetY));
-					movingObjectView.refreshSymbolPosition();
+					dragTarget.refreshSymbolPosition();
 					editorPane.getPropertiesPane().updatePane(selectedUMLSymbol);
+				}
+				break;
+			case CREATE_ASSOCIATION:
+			case CREATE_DEPENDENCY:
+				if (!isRelating) {
+					dragTarget = resolveUMLObjectView((Node)e.getTarget());
+					isRelating  = (dragTarget != null);
 				}
 				break;
 			default:
 				isMoving = false;
-				movingObjectView = null;
+				isRelating = false;
+				dragTarget = null;
 			}
 		} else if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
+			switch (currentEditorAction) {
+			case CREATE_ASSOCIATION:
+				if (isRelating) {
+					UMLSymbol dragRelease = resolveUMLSymbolObject((Node)e.getPickResult().getIntersectedNode());
+					if (dragRelease != null && dragRelease instanceof UMLClassSymbol) {
+						UMLRelationSymbol relation = new UMLRelationSymbol(
+								dragTarget.getUmlClassSymbol(), 
+								(UMLObjectSymbol) dragRelease, 
+								UMLRelationType.ASSOCIATION);
+						currentDocument.addRelation(relation);
+						editorPane.getDocumentViewPane().addUMLSymbol(new UMLRelationView(relation));
+					}					
+				}
+				break;
+			case CREATE_DEPENDENCY:
+				if (isRelating) {
+					UMLSymbol dragRelease = resolveUMLSymbolObject((Node)e.getPickResult().getIntersectedNode());
+					if (dragRelease != null && dragRelease instanceof UMLClassSymbol) {
+						UMLRelationSymbol relation = new UMLRelationSymbol(
+								dragTarget.getUmlClassSymbol(), 
+								(UMLObjectSymbol) dragRelease, 
+								UMLRelationType.DEPENDENCY);
+						currentDocument.addRelation(relation);
+						editorPane.getDocumentViewPane().addUMLSymbol(new UMLRelationView(relation));
+					}					
+				}
+				break;
+			default:
+				break;
+			}
+			isRelating = false;
 			isMoving = false;
-			movingObjectView = null;
+			dragTarget = null;
 		}
 	}
 	

@@ -20,7 +20,7 @@ public class UMLRelationView extends Group {
 	private UMLRelationSymbol umlRelationSymbol;
 	private Line rLine;
 	
-	UMLRelationView(UMLRelationSymbol umlRelation){
+	public UMLRelationView(UMLRelationSymbol umlRelation){
 		super();
 		umlRelationSymbol = umlRelation;
 

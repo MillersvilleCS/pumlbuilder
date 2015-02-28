@@ -35,4 +35,12 @@ public class DocumentViewPane extends Pane {
 	public void addUMLSymbol(UMLObjectView objView) {
 		this.getChildren().add(objView);
 	}
+
+	/**
+	 * Add UML elements to view.
+	 * @param objView UML element view to add to display
+	 */
+	public void addUMLSymbol(UMLRelationView relView) {
+		this.getChildren().add(relView);
+	}
 }

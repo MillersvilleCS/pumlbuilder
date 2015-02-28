@@ -123,6 +123,10 @@ public void addRelation(UMLRelationType relationType,
 	 objectList.add(new UMLRelationSymbol(source, target, relationType)); 
 }
 
+public void addRelation(UMLRelationSymbol relation) {
+	objectList.add(relation);
+}
+
 /**
  * Add a UMLObjectSymbol to the UMLDocument
  * @param origin point at which to instantiate object symbol
