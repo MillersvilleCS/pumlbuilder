@@ -117,6 +117,28 @@ public class UMLObjectSymbol extends UMLSymbol {
 		return origin.getY();
 	}
 	
+	public Point2D getCenter() {
+		return new Point2D(origin.getX() + width/2, origin.getY() + height/2);
+	}
+	
+	public Point2D getTopCenter() {
+		return new Point2D(origin.getX() + width/2, origin.getY());
+	}
+	
+	public Point2D getMiddleLeft() {
+		return new Point2D(origin.getX(), origin.getY() + height/2);
+	}
+	
+	public Point2D getMiddleRight() {
+		return new Point2D(origin.getX() + width, origin.getY() + height/2);
+	}
+	
+	public Point2D getBottomCenter() {
+		return new Point2D(origin.getX() + width/2, origin.getY() + height);
+	}
+	
+	
+	
 	public String getName(){
 		return this.identifier;
 	}
