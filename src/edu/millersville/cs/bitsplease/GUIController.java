@@ -123,9 +123,9 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 				break;
 			case DELETE:
 				setSelectedUMLSymbol(null);
-				UMLObjectView toDelete = resolveUMLObjectView((Node)e.getTarget());
+				UMLSymbolView toDelete = resolveUMLSymbolView((Node)e.getTarget());
 				if (toDelete != null) {
-					currentDocument.getObjects().remove(toDelete.getUmlClassSymbol());
+					currentDocument.getObjects().remove(toDelete.getUMLSymbol());
 					editorPane.getDocumentViewPane().getChildren().remove(toDelete);
 					
 					// destroy event, since target object is now removed
@@ -139,7 +139,7 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 			switch (currentEditorAction) {
 			case SELECT:
 				if (!isMoving) {
-					dragTarget = resolveUMLObjectView((Node)e.getTarget());
+					dragTarget = (UMLObjectView) resolveUMLSymbolView((Node)e.getTarget());
 					
 					if (dragTarget != null) { // begin dragging object
 						setSelectedUMLSymbol(dragTarget.getUmlClassSymbol());
@@ -161,7 +161,8 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 			case CREATE_ASSOCIATION:
 			case CREATE_DEPENDENCY:
 				if (!isRelating) {
-					dragTarget = resolveUMLObjectView((Node)e.getTarget());
+					
+					dragTarget = (UMLObjectView) resolveUMLSymbolView((Node)e.getTarget());
 					isRelating  = (dragTarget != null);
 				}
 				break;
@@ -208,38 +209,38 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 	}
 	
 	/**
-	 * Utility to traverse scene graph and identify UMLSymbolObject of
-	 *   ancestor UMLObjectView
+	 * Utility to traverse scene graph and identify UMLSymbol of
+	 *   ancestor UMLSymbolView
 	 * @author Merv Fansler
-	 * @param target initial node to test for ancestor UMLObjectView
-	 * @return UMLSymbolObject of UMLObjectView ancestor, otherwise null
+	 * @param target initial node to test for ancestor UMLSymbolView
+	 * @return UMLSymbol of UMLSymbolView ancestor, otherwise null
 	 */
 	private UMLSymbol resolveUMLSymbolObject(Node target) {
-		UMLObjectView result = resolveUMLObjectView(target);
+		UMLSymbolView result = resolveUMLSymbolView(target);
 
 		if (result != null) {
-			return result.getUmlClassSymbol();
+			return result.getUMLSymbol();
 		} else {
 			return null;
 		}
 	}
 	
 	/**
-	 * Utility to traverse scene graph and identify ancestor UMLObjectView
+	 * Utility to traverse scene graph and identify ancestor UMLSymbolView
 	 * @author Merv Fansler
-	 * @param target initial node to test for ancestor UMLObjectView
-	 * @return UMLObjectView ancestor, otherwise null
+	 * @param target initial node to test for ancestor UMLSymbolView
+	 * @return UMLSymbolView ancestor, otherwise null
 	 */
-	private UMLObjectView resolveUMLObjectView(Node target) {
-		UMLObjectView result;
+	private UMLSymbolView resolveUMLSymbolView(Node target) {
+		UMLSymbolView result;
 		
 		if (target != null) {
-			if (target instanceof UMLObjectView) {
-				result = (UMLObjectView)target;
+			if (target instanceof UMLSymbolView) {
+				result = (UMLSymbolView)target;
 			} else if (target instanceof DocumentViewPane) {
 				result = null;
 			} else {
-				result = resolveUMLObjectView(target.getParent());
+				result = resolveUMLSymbolView(target.getParent());
 			}
 		} else {
 			result = null;

@@ -7,13 +7,13 @@
 
 package edu.millersville.cs.bitsplease.view;
 
-import javafx.scene.Group;
 import javafx.scene.shape.Line;
 import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
 import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
 import edu.millersville.cs.bitsplease.model.UMLRelationType;
+import edu.millersville.cs.bitsplease.model.UMLSymbol;
 
-public class UMLRelationView extends Group {
+public class UMLRelationView extends UMLSymbolView {
 
 	private UMLRelationSymbol umlRelationSymbol;
 	private Line rLine;
@@ -107,5 +107,10 @@ public class UMLRelationView extends Group {
 
 	public void refresh() {
 		refreshLine();
+	}
+
+	@Override
+	public UMLSymbol getUMLSymbol() {
+		return umlRelationSymbol;
 	}
 }

@@ -1,6 +1,5 @@
 /**
- * @author Joe Martello
- * @author Merv Fansler
+ * @author Joe Martello; Merv Fansler
  * @since February 25, 2015
  * @version 0.1.0
  */
@@ -8,16 +7,16 @@
 
 package edu.millersville.cs.bitsplease.view;
 
-import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
-import javafx.scene.Group;
+import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import javafx.geometry.Point2D;
+import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
+import edu.millersville.cs.bitsplease.model.UMLSymbol;
 
 
-public class UMLObjectView extends Group {
+public class UMLObjectView extends UMLSymbolView {
 	private UMLClassSymbol umlClassSymbol;
 	private Rectangle umlBox;
 	private Line ltop;
@@ -175,6 +174,11 @@ public class UMLObjectView extends Group {
 	 * @return the umlClassSymbol
 	 */
 	public UMLClassSymbol getUmlClassSymbol() {
+		return umlClassSymbol;
+	}
+
+	@Override
+	public UMLSymbol getUMLSymbol() {
 		return umlClassSymbol;
 	}
 }
