@@ -13,17 +13,8 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Toggle;
 import javafx.scene.input.MouseEvent;
-import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
-import edu.millersville.cs.bitsplease.model.UMLDocument;
-import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
-import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
-import edu.millersville.cs.bitsplease.model.UMLRelationType;
-import edu.millersville.cs.bitsplease.model.UMLSymbol;
-import edu.millersville.cs.bitsplease.view.DocumentViewPane;
-import edu.millersville.cs.bitsplease.view.EditorAction;
-import edu.millersville.cs.bitsplease.view.UMLEditorPane;
-import edu.millersville.cs.bitsplease.view.UMLObjectView;
-import edu.millersville.cs.bitsplease.view.UMLRelationView;
+import edu.millersville.cs.bitsplease.model.*;
+import edu.millersville.cs.bitsplease.view.*;
 
 public class GUIController implements ChangeListener<Toggle>, EventHandler<MouseEvent> {
 	
@@ -164,6 +155,7 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 					((UMLClassSymbol) selectedUMLSymbol).setOrigin(new Point2D(e.getX() + dragOffsetX, e.getY() + dragOffsetY));
 					dragTarget.refreshSymbolPosition();
 					editorPane.getPropertiesPane().updatePane(selectedUMLSymbol);
+					editorPane.getDocumentViewPane().refreshRelations((UMLObjectSymbol) selectedUMLSymbol);
 				}
 				break;
 			case CREATE_ASSOCIATION:
