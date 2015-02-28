@@ -1,4 +1,3 @@
-
 /**
  * @author Michael Sims
  * @since February 25, 2015
@@ -47,6 +46,8 @@ public class UMLRelationView extends UMLSymbolView {
 		UMLObjectSymbol s1 = umlRelationSymbol.getSourceObject(),
 						s2 = umlRelationSymbol.getTargetObject();
 		
+		// the follow computes the edge center pair between the two objects
+		// which has the shortest distance
 		double[] distances = {
 				s1.getTopCenter().distance(s2.getBottomCenter()),
 				s1.getMiddleRight().distance(s2.getMiddleLeft()),
@@ -103,7 +104,6 @@ public class UMLRelationView extends UMLSymbolView {
 	public UMLObjectSymbol getTargetObject() {
 		return umlRelationSymbol.getTargetObject();
 	}
-
 
 	public void refresh() {
 		refreshLine();

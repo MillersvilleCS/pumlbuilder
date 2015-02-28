@@ -3,6 +3,7 @@
  * @author Josh Wakefield
  * @version 0.1.0
  */
+
 package edu.millersville.cs.bitsplease.view;
 
 import javafx.beans.property.ReadOnlyObjectProperty;

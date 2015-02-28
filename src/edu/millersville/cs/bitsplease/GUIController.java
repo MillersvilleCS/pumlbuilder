@@ -16,6 +16,11 @@ import javafx.scene.input.MouseEvent;
 import edu.millersville.cs.bitsplease.model.*;
 import edu.millersville.cs.bitsplease.view.*;
 
+
+/**
+ * Controls the state of the GUI, listens to user events, and coordinates 
+ * the propagation of responses throughout the rest of the application.
+ */
 public class GUIController implements ChangeListener<Toggle>, EventHandler<MouseEvent> {
 	
 	private UMLEditorPane editorPane;
@@ -89,6 +94,8 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 		editorPane.getToolBarPane().setSelectedEditorAction(newEditorAction);
 	}
 
+	// EVENT HANDLERS
+	
 	@Override
 	public void changed(ObservableValue<? extends Toggle> observable,
 			Toggle oldValue, Toggle newValue) {
@@ -96,8 +103,6 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 			currentEditorAction = (EditorAction) newValue.getUserData();
 		}
 	}
-
-	// EVENT HANDLERS
 	
 	/** 
 	 * Provides MouseEvent handling for DocumentViewPane

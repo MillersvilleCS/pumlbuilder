@@ -7,8 +7,6 @@ package edu.millersville.cs.bitsplease.model;
 
 import javafx.geometry.Point2D;
 
-
-
 public class UMLClassSymbol extends UMLObjectSymbol {
 	
 	private String[] classAttributes = new String[10];
@@ -204,13 +202,12 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	}
 	
 	public void setX(double x){
-		
+		setOrigin(new Point2D(x, getY()));
 	}
 	
 	public void setY(double y){
-		
+		setOrigin(new Point2D(getX(), y));
 	}
-	
 	
 	public void setHeight(double h){
 		super.setHeight(h);

@@ -13,6 +13,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 
+/***
+ * Primary GUI component where all user interact occurs. All other view
+ * components are owned by UMLEditorPane.
+ */
 public class UMLEditorPane extends BorderPane {
 
 	private ToolBarPane toolBarPane;

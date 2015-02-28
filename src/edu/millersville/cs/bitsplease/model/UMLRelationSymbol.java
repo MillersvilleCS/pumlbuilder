@@ -45,8 +45,6 @@ public class UMLRelationSymbol extends UMLSymbol {
 		this.relationType = UMLRelationType.ASSOCIATION;
 	}
 
-
-
 	/********************************************************************/
 	// Getters & Setters
 	
@@ -91,7 +89,6 @@ public class UMLRelationSymbol extends UMLSymbol {
 	public void setTargetObject(UMLObjectSymbol targetObject) {
 		this.targetObject = targetObject;
 	}
-	 
 	
 	public Event dispatchEvent(Event event, EventDispatchChain tail){
 		return event;

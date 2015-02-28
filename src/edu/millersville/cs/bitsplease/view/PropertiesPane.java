@@ -87,7 +87,6 @@ public class PropertiesPane extends StackPane {
 		}else{
 			setActivePaneVisible(false);//UMLSymbol is null
 		}
-		
 	}
 	
 	/**

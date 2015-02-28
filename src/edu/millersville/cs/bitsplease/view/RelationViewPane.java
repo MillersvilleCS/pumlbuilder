@@ -1,3 +1,8 @@
+/***
+ * @author Kevin Fisher
+ * @version 0.1.0
+ */
+
 package edu.millersville.cs.bitsplease.view;
 
 import javafx.scene.layout.VBox;

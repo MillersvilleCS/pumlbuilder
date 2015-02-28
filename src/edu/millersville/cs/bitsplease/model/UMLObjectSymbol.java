@@ -181,7 +181,4 @@ public class UMLObjectSymbol extends UMLSymbol {
 		this.isSelected = status;
 	}
 	
-
-	
-
 }

@@ -4,7 +4,6 @@
  * @version 0.1.0
  */
 
-
 package edu.millersville.cs.bitsplease.view;
 
 import javafx.geometry.Point2D;
@@ -14,7 +13,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
-
 
 public class UMLObjectView extends UMLSymbolView {
 	private UMLClassSymbol umlClassSymbol;
@@ -54,7 +52,6 @@ public class UMLObjectView extends UMLSymbolView {
 		ltop = new Line(0, y, umlBox.getWidth(), y);
 		this.getChildren().add(ltop);
 		
-		
 		String label = " ";
 		int length = 0;
 		for (String s: umlSymbol.getAttributes()){
@@ -89,10 +86,7 @@ public class UMLObjectView extends UMLSymbolView {
 		functions.setPrefHeight(length);
 		functions.setLayoutY(lbot.getStartY());
 		this.getChildren().add(functions);
-		
-		//this.getChildren().forEach(n -> n.setMouseTransparent(true));
 	}
-	
 	
 	/**
 	 * removes all elements of the UML diagram from the scene
@@ -182,5 +176,3 @@ public class UMLObjectView extends UMLSymbolView {
 		return umlClassSymbol;
 	}
 }
-
-

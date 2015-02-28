@@ -3,6 +3,7 @@
  * @since February 25, 2015
  * @version 0.1.0
  */
+
 package edu.millersville.cs.bitsplease.view;
 
 import java.util.function.Predicate;

@@ -7,7 +7,7 @@ Our first iteration aimed to include object creation, editing, resizing, copy/pa
 
 Features Left Out
 -----------------
- During the first iteration, we were unable to implement object editing, object resizing, and copy-paste operation. These features proved to be a bit more involved than initially thought, and were thus unable to be implemented in a meaningful manner for this iteration. However the infrastructure is in place such that iteration two should be able to accomodate these features.
+During the first iteration, we were unable to implement object editing, object resizing, and copy-paste operation. These features proved to be a bit more involved than initially thought, and were thus unable to be implemented in a meaningful manner for this iteration. However the infrastructure is in place such that iteration two should be able to accomodate these features.  Keyboard commands and menu items were originally intended to be in the first iteration, but did not reach the deadline.
 
 Test Cases
 ----------
@@ -42,4 +42,17 @@ Status:Passed
 Status:Failed
 Reason for Failure: Pane not properly coded to allow updating of object model.
 Objects do not update on changes.
- 
+
+Relations
+11) Create association by dragging between two class objects while in Create Association mode.
+Status: Passed
+12) Create dependency by dragging between two class objects while in Create Dependency mode.
+Status: Passed
+13) Delete relation by clicking on relation while in Delete mode.
+Status: Effective Failure
+Reason for Failure: For deletion to occur, the user must click exactly on the line, which is impractical.
+A means of expanding the clickable area for lines must be identified in future iterations.
+14) Dragging of objects that have relations properly drags associated relations.
+Status: Passed
+15) Deletion of objects with relations results in deletion of associated relations.
+Status: Passed
