@@ -1,0 +1,45 @@
+Team Bits, Please
+
+
+Features Added
+--------------
+Our first iteration aimed to include object creation, editing, resizing, copy/paste, and translation. The Penultimate UML Builder in its current iteration is able to create and show objects, drag objects across the pane, select individual objects, delete objects, and track objects through the object pane. Though we were unable to implement editing or resizing of object views, we were able to enable object deletion in its place.  
+
+Features Left Out
+-----------------
+ During the first iteration, we were unable to implement object editing, object resizing, and copy-paste operation. These features proved to be a bit more involved than initially thought, and were thus unable to be implemented in a meaningful manner for this iteration. However the infrastructure is in place such that iteration two should be able to accomodate these features.
+
+Test Cases
+----------
+Creation
+1) Create a single class instance.
+Status: Pass
+2) Create 100 class instances within the DocumentView. Be sure they move and
+change focus correctly
+Status: Pass
+3) Create multiple class occupying the same coordinates.
+Status: Pass
+
+Deletion
+4) Delete only enacts on selected object. Object no longer exists or is referenced
+Status: Pass
+
+Object Dragging
+5) Selected object drags correctly without snapping to mouse point
+Status: Passed
+6)Only selected object drags on click
+Status: Passed
+7) Selected object stays within the document pane.
+Status: Failed
+Reason for Failure: Objects can be dragged over top of the menu bar.
+
+Properties Pane
+8)Pane updates with correct object info based on currently selected class
+Status: Passed
+9)Pane hides object info when class is clicked away from
+Status:Passed 
+10)Properties pane updates object when fields are edited
+Status:Failed
+Reason for Failure: Pane not properly coded to allow updating of object model.
+Objects do not update on changes.
+ 
