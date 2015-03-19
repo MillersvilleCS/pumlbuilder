@@ -26,13 +26,13 @@ public class UMLEditorPane extends BorderPane {
 	public UMLEditorPane() {
 		super();
 		
+		documentViewPane = new DocumentViewPane();
+		this.setCenter(documentViewPane);
+		
 		this.setTop(createMenu());
 		
 		toolBarPane = new ToolBarPane();
 		this.setLeft(toolBarPane);
-		
-		documentViewPane = new DocumentViewPane();
-		this.setCenter(documentViewPane);
 		
 		propertiesPane = new PropertiesPane();
 		this.setRight(propertiesPane);
