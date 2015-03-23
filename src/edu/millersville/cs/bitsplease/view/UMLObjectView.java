@@ -6,6 +6,9 @@
 
 package edu.millersville.cs.bitsplease.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -20,8 +23,9 @@ public class UMLObjectView extends UMLSymbolView {
 	private Line ltop;
 	private Line lbot;
 	private Label name;
-	private Label attributes;
-	private Label functions;
+	private List<Label> attributes;
+	private List<Label> functions;
+	private final int offset = 20;
 	
 		/**
 		 * UMLObjectSymbol Constructor displaying UMLClassSymbol location and attributes
@@ -49,50 +53,55 @@ public class UMLObjectView extends UMLSymbolView {
 		this.getChildren().add(name);
 		
 		y = name.getBoundsInParent().getMinY() + name.getPrefHeight(); //will only work for 1 line names
-		ltop = new Line(0, y, umlBox.getWidth(), y);
+		ltop = new Line(0, 0, umlBox.getWidth(), 0);
+		ltop.setLayoutY(name.getPrefHeight());
 		this.getChildren().add(ltop);
 		
-		String label = " ";
+		attributes = new ArrayList<Label>(0);
 		int length = 0;
 		for (String s: umlSymbol.getAttributes()){
 			if (s != null){
-				label += s + "\n ";
-				length += 20;
+				Label l = new Label(" " + s);
+				l.setMaxWidth(umlSymbol.getWidth() - 10);
+				l.setLayoutY(ltop.getStartY() + length + offset);
+				l.setPrefHeight(offset);
+				length += offset;
+				attributes.add(l);
+				this.getChildren().add(attributes.get(attributes.size() - 1));
 			}
 		}
-		if (length == 0)
-			length = 20;
-		attributes = new Label(label);
-		attributes.setMaxWidth(umlSymbol.getWidth() - 10);
-		attributes.setLayoutY(ltop.getStartY());
-		attributes.setPrefHeight(length);
-		this.getChildren().add(attributes);
 		
-		y = attributes.getBoundsInParent().getMinY() + attributes.getPrefHeight();
-		lbot = new Line(0, y, umlSymbol.getWidth(), y);
+		if (attributes.size() == 0)
+			length = 20;
+		
+		lbot = new Line(0, 0, umlSymbol.getWidth(), 0);
+		lbot.setLayoutY(ltop.getLayoutY() + length);
 		this.getChildren().add(lbot);
 		
-		
-		label = " ";
+		functions = new ArrayList<Label>(0);
 		length = 0;
 		for (String s: umlSymbol.getFunctions()){
 			if (s != null){
-				label += s + "\n";
-				length += 20;
+				Label l = new Label(" " + s);
+				l.setMaxWidth(umlSymbol.getWidth() - 10);
+				l.setLayoutY(lbot.getLayoutY() + length);
+				l.setPrefHeight(offset);
+				length += offset;
+				functions.add(l);
+				this.getChildren().add(functions.get(functions.size() - 1));
 			}
 		}
-		functions = new Label(label);
-		functions.setMaxWidth(umlSymbol.getWidth() - 10);
-		functions.setPrefHeight(length);
-		functions.setLayoutY(lbot.getStartY());
-		this.getChildren().add(functions);
 	}
 	
 	/**
 	 * removes all elements of the UML diagram from the scene
 	 */
 	public void delete(){
-		this.getChildren().removeAll(umlBox, ltop, lbot, name, attributes, functions);
+		this.getChildren().removeAll(umlBox, ltop, lbot, name);
+		for (Label l: attributes)
+			this.getChildren().remove(l);
+		for (Label l: functions)
+			this.getChildren().remove(l);
 	}
 	
 	/**
@@ -109,48 +118,102 @@ public class UMLObjectView extends UMLSymbolView {
 	
 	/**
 	 * updates the graphical title on the UMLSymbol
-	 * @param newTitle newTitle of the UMLSymbol
 	 */
-	public void UpdateTitle(String newTitle){
-		name.setText(" " + newTitle);
+	public void UpdateTitle(){
+		name.setText(" " + umlClassSymbol.getClassName());
 	}
+	
+	/**
+	 * updates the selected attribute or will add an attribute if it is the last one in the list
+	 * @param index index of the attribute to be updated in the view
+	 */
+	public void UpdateAttributes(int index){
+		if (index > attributes.size() - 1){
+				addAttribute(index);
+		} else {
+			attributes.get(index).setText(" " + umlClassSymbol.getAttributes()[index]);
+		}
+	}
+	
+	/**
+	 * adds an attribute label to the end of the attributes section of the UMLObjectView
+	 * @param i index of the attribute to be added
+	 */
+	private void addAttribute(int i){
+		//TODO make it generic to work with constructor too
+		
+		Label l = new Label(" " + umlClassSymbol.getAttributes()[i]);
+		l.setMaxWidth(umlClassSymbol.getWidth() - 10);
+		l.setLayoutY(lbot.getLayoutY());
+		l.setPrefHeight(offset);
+		attributes.add(l);
+		this.getChildren().add(attributes.get(attributes.size() - 1));
+		
+		int length = offset * attributes.size();
+		lbot.setLayoutY(ltop.getLayoutY() + length);
+		length = 0;
+		for (Label f: functions){
+			f.setLayoutY(lbot.getLayoutY() + length);
+			length += offset;
+		}
+		
+	}
+	
+	
 	/**
 	 * 
-	 * @param width width of the classbox being drawn
-	 * @param height height of the classbox being drawn
+	 * @param s String to be found in UMLClassSymbol
+	 * @return the index of the first instance of the given string in the UMLClassSymbol, -1 if not found
 	 */
-	public void resize(double width, double height){
+	public int getAttributeIndex(String s){
+		for (int i = 0; i < umlClassSymbol.getAttributes().length; i ++){
+			if (umlClassSymbol.getAttributes()[i] == s)
+				return i;
+		}
+		return -1;
+	}
+	
+	/**
+	 * updates the height and width of the UMLObjectView to the size of its ClassSymbol
+	 */
+	public void resize(){
+		double width = umlClassSymbol.getWidth();
+		double height = umlClassSymbol.getHeight();
+		
 		umlBox.setWidth(width);
 		name.setMaxWidth(width);
-		attributes.setMaxWidth(width);
-		functions.setMaxWidth(width);
 		ltop.setEndX(width);
 		lbot.setEndX(width);
 		
 		umlBox.setHeight(height);
 		
-		if (functions.getLayoutY() + functions.getPrefHeight() > height)
-			functions.setVisible(false);
-		else
-			functions.setVisible(true);
+		for (Label l: attributes){
+			l.setMaxWidth(width);
+			if (l.getLayoutY() + l.getPrefHeight() > height)
+				l.setVisible(false);
+			else
+				l.setVisible(true);
+		}
+		for (Label l: functions){
+			l.setMaxWidth(width);
+			if (l.getLayoutY() + l.getPrefHeight() > height)
+				l.setVisible(false);
+			else
+				l.setVisible(true);
+		}
 		
-		if (attributes.getLayoutY() + attributes.getPrefHeight() > height)
-			attributes.setVisible(false);
-		else
-			attributes.setVisible(true);
 		
 		if (name.getLayoutY() + name.getPrefHeight() > height)
 			name.setVisible(false);
 		else
 			name.setVisible(true);
 		
-		if (ltop.getStartY() > height)
+		if (ltop.getLayoutY() > height)
 			ltop.setVisible(false);
 		else
 			ltop.setVisible(true);
 		
-		
-		if (lbot.getStartY() > height)
+		if (ltop.getLayoutY() + lbot.getLayoutY() > height)
 			lbot.setVisible(false);
 		else
 			lbot.setVisible(true);
