@@ -8,12 +8,17 @@ package edu.millersville.cs.bitsplease.view;
 
 import java.util.function.Predicate;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
+import edu.millersville.cs.bitsplease.model.UMLSymbol;
 
 public class DocumentViewPane extends Pane {
 
+	private ObjectProperty<UMLSymbol> selectedUMLSymbol = new SimpleObjectProperty<UMLSymbol>();
+	
 	/**
 	 * Constructor
 	 */
@@ -63,5 +68,19 @@ public class DocumentViewPane extends Pane {
 		return n -> n instanceof UMLRelationView && 
 				(((UMLRelationView)n).getSourceObject() == obj ||
 				((UMLRelationView)n).getTargetObject() == obj);
+	}
+
+	/**
+	 * @return the selectedUMLSymbol
+	 */
+	public ObjectProperty<UMLSymbol> getSelectedUMLSymbol() {
+		return selectedUMLSymbol;
+	}
+
+	/**
+	 * @param selectedUMLSymbol the selectedUMLSymbol to set
+	 */
+	public void setSelectedUMLSymbol(UMLSymbol umlSymbol) {
+		this.selectedUMLSymbol.setValue(umlSymbol);
 	}
 }
