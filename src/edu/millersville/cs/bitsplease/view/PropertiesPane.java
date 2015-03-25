@@ -2,12 +2,15 @@
  * @author Merv Fansler	
  * @author Kevin Fisher
  * @since  February 24, 2015
- * @version 0.1.0
+ * @version 0.1.1
  * 
  */
 
 package edu.millersville.cs.bitsplease.view;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -18,7 +21,7 @@ import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
 
 
-public class PropertiesPane extends StackPane {
+public class PropertiesPane extends StackPane implements ChangeListener<UMLSymbol> {
 	
 	private ObjectViewPane objectPane;
 	private RelationViewPane relationPane;
@@ -30,7 +33,7 @@ public class PropertiesPane extends StackPane {
 	/**
 	 * Constructor
 	 */
-	public PropertiesPane() {
+	public PropertiesPane(ObjectProperty<UMLSymbol> selectedSymbol) {
 		
 		super();
 		
@@ -41,6 +44,8 @@ public class PropertiesPane extends StackPane {
 		setActivePane(objectPane);
 		
 		this.setStyle("-fx-background-color: #aaa; -fx-padding: 20; -fx-text-fill: white; -fx-font-weight: bold");
+	
+		selectedSymbol.addListener(this);
 	}
 	
 	/**
@@ -58,7 +63,7 @@ public class PropertiesPane extends StackPane {
 	 */
 	public void createRelationPane(){
 		relationPane = new RelationViewPane();
-		setMargin(relationPane, new Insets(20,20,20,20));
+		setMargin(relationPane, new Insets(20));
 		getChildren().add(relationPane);
 		relationPane.setVisible(false);
 	}
@@ -117,6 +122,12 @@ public class PropertiesPane extends StackPane {
 		if(activePane != null){
 		activePane.setVisible(vis);
 		}
+	}
+
+	@Override
+	public void changed(ObservableValue<? extends UMLSymbol> observable,
+			UMLSymbol oldValue, UMLSymbol newValue) {
+		updatePane(newValue);
 	}
 
 }

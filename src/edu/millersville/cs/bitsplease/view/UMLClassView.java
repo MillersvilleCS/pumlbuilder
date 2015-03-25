@@ -17,7 +17,7 @@ import javafx.scene.shape.Rectangle;
 import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
 
-public class UMLObjectView extends UMLSymbolView {
+public class UMLClassView extends UMLSymbolView {
 	private UMLClassSymbol umlClassSymbol;
 	private Rectangle umlBox;
 	private Line ltop;
@@ -32,7 +32,7 @@ public class UMLObjectView extends UMLSymbolView {
 		 * This constructor assumes that the width and height are large enough to encompass all of its attributes
 		 * @param umlClassSymbol that will be displayed
 		 */
-	public UMLObjectView(UMLClassSymbol umlSymbol){
+	public UMLClassView(UMLClassSymbol umlSymbol){
 		super();
 		this.umlClassSymbol = umlSymbol;
 		
@@ -136,7 +136,7 @@ public class UMLObjectView extends UMLSymbolView {
 	}
 	
 	/**
-	 * adds an attribute label to the end of the attributes section of the UMLObjectView
+	 * adds an attribute label to the end of the attributes section of the UMLClassView
 	 * @param i index of the attribute to be added
 	 */
 	private void addAttribute(int i){
@@ -174,7 +174,7 @@ public class UMLObjectView extends UMLSymbolView {
 	}
 	
 	/**
-	 * updates the height and width of the UMLObjectView to the size of its ClassSymbol
+	 * updates the height and width of the UMLClassView to the size of its ClassSymbol
 	 */
 	public void resize(){
 		double width = umlClassSymbol.getWidth();

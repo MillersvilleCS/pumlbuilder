@@ -33,7 +33,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 	
 	// Drag State Variables
 	private Boolean isMoving = false;
-	private UMLObjectView dragTarget;
+	private UMLClassView dragTarget;
 	private double dragOffsetX = 0.0;
 	private double dragOffsetY = 0.0;
 
@@ -53,7 +53,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		toolbarPane = new ToolbarPane();
 		this.setLeft(toolbarPane);
 		
-		propertiesPane = new PropertiesPane();
+		propertiesPane = new PropertiesPane(documentViewPane.getSelectedUMLSymbol());
 		this.setRight(propertiesPane);
 	}
 	
@@ -103,7 +103,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			case CREATE_CLASS:
 
 				UMLClassSymbol c = new UMLClassSymbol(new Point2D(e.getX(),e.getY()), 100, 100);
-				UMLObjectView objView = new UMLObjectView(c);
+				UMLClassView objView = new UMLClassView(c);
 				documentViewPane.addUMLSymbol(objView);
 				documentViewPane.setSelectedUMLSymbol(objView.getUmlClassSymbol());
 				
@@ -119,7 +119,6 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 					documentViewPane.removeUMLSymbol(toDelete);
 					documentViewPane.getChildren().remove(toDelete);
 					
-					
 					// destroy event, since target object is now removed
 					e.consume();
 				}
@@ -131,7 +130,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			switch (toolbarPane.getCurrentEditorMode().getValue()) {
 			case SELECT:
 				if (!isMoving) {
-					dragTarget = (UMLObjectView) resolveUMLSymbolView((Node)e.getTarget());
+					dragTarget = (UMLClassView) resolveUMLSymbolView((Node)e.getTarget());
 					
 					if (dragTarget != null) { // begin dragging object
 						documentViewPane.setSelectedUMLSymbol(dragTarget.getUmlClassSymbol());
@@ -146,7 +145,6 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 				} else {
 					((UMLClassSymbol) documentViewPane.getSelectedUMLSymbol().getValue()).setOrigin(new Point2D(e.getX() + dragOffsetX, e.getY() + dragOffsetY));
 					dragTarget.refreshSymbolPosition();
-					propertiesPane.updatePane(documentViewPane.getSelectedUMLSymbol().getValue());
 					documentViewPane.refreshRelations((UMLObjectSymbol) documentViewPane.getSelectedUMLSymbol().getValue());
 				}
 				break;
@@ -154,7 +152,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			case CREATE_DEPENDENCY:
 				if (!isRelating) {
 					
-					dragTarget = (UMLObjectView) resolveUMLSymbolView((Node)e.getTarget());
+					dragTarget = (UMLClassView) resolveUMLSymbolView((Node)e.getTarget());
 					isRelating  = (dragTarget != null);
 				}
 				break;

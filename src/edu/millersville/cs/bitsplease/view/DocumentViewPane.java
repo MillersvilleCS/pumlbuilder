@@ -30,7 +30,7 @@ public class DocumentViewPane extends Pane {
 	 * Add UML elements to view.
 	 * @param objView UML element view to add to display
 	 */
-	public void addUMLSymbol(UMLObjectView objView) {
+	public void addUMLSymbol(UMLClassView objView) {
 		this.getChildren().add(objView);
 	}
 
@@ -51,9 +51,9 @@ public class DocumentViewPane extends Pane {
 	public void removeUMLSymbol(UMLSymbolView toDelete) {
 		
 		// remove all relation symbols that references an object being removed
-		if (toDelete instanceof UMLObjectView) {
+		if (toDelete instanceof UMLClassView) {
 			getChildren().removeIf(
-					referencesUMLObject(((UMLObjectView) toDelete).getUmlClassSymbol()));
+					referencesUMLObject(((UMLClassView) toDelete).getUmlClassSymbol()));
 		}
 		
 		getChildren().remove(toDelete);
