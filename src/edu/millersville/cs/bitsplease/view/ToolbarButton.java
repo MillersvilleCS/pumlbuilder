@@ -10,12 +10,12 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 
-public class ToolBarButton extends ToggleButton {
+public class ToolbarButton extends ToggleButton {
 
 	/**
 	 * @param label
 	 */
-	public ToolBarButton(String label) {
+	public ToolbarButton(String label) {
 		super(label);
 		addPersistentToggle();
 		setPrefWidth(40);
@@ -25,7 +25,7 @@ public class ToolBarButton extends ToggleButton {
 
 	// prevent MOUSE_PRESSED from propagating when already selected
 	private void addPersistentToggle() {
-		final ToolBarButton that = this;
+		final ToolbarButton that = this;
 		this.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {

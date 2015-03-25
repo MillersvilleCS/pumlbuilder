@@ -19,7 +19,7 @@ import javafx.event.ActionEvent;
  */
 public class UMLEditorPane extends BorderPane {
 
-	private ToolBarPane toolBarPane;
+	private ToolbarPane toolbarPane;
 	private DocumentViewPane documentViewPane;
 	private PropertiesPane propertiesPane;
 	
@@ -31,8 +31,8 @@ public class UMLEditorPane extends BorderPane {
 		
 		this.setTop(createMenu());
 		
-		toolBarPane = new ToolBarPane();
-		this.setLeft(toolBarPane);
+		toolbarPane = new ToolbarPane();
+		this.setLeft(toolbarPane);
 		
 		propertiesPane = new PropertiesPane();
 		this.setRight(propertiesPane);
@@ -60,8 +60,8 @@ public class UMLEditorPane extends BorderPane {
 		return menuBar;
 	}
 	
-	public ToolBarPane getToolBarPane() {
-		return toolBarPane;
+	public ToolbarPane getToolBarPane() {
+		return toolbarPane;
 	}
 	
 	public DocumentViewPane getDocumentViewPane() {

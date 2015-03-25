@@ -6,22 +6,28 @@
 
 package edu.millersville.cs.bitsplease;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.control.Toggle;
 import javafx.scene.input.MouseEvent;
-import edu.millersville.cs.bitsplease.model.*;
-import edu.millersville.cs.bitsplease.view.*;
+import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
+import edu.millersville.cs.bitsplease.model.UMLDocument;
+import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
+import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
+import edu.millersville.cs.bitsplease.model.UMLRelationType;
+import edu.millersville.cs.bitsplease.model.UMLSymbol;
+import edu.millersville.cs.bitsplease.view.DocumentViewPane;
+import edu.millersville.cs.bitsplease.view.UMLEditorPane;
+import edu.millersville.cs.bitsplease.view.UMLObjectView;
+import edu.millersville.cs.bitsplease.view.UMLRelationView;
+import edu.millersville.cs.bitsplease.view.UMLSymbolView;
 
 
 /**
  * Controls the state of the GUI, listens to user events, and coordinates 
  * the propagation of responses throughout the rest of the application.
  */
-public class GUIController implements ChangeListener<Toggle>, EventHandler<MouseEvent> {
+public class GUIController implements EventHandler<MouseEvent> {
 	
 	private UMLEditorPane editorPane;
 	
@@ -29,7 +35,6 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 	private UMLDocument currentDocument;
 	
 	// View State Variables
-	private EditorAction currentEditorAction = EditorAction.SELECT;
 	private UMLSymbol selectedUMLSymbol;
 	
 	// Drag State Variables
@@ -49,8 +54,7 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 		editorPane = new UMLEditorPane();
 		setSelectedUMLSymbol(null);
 		
-		editorPane.getToolBarPane().selectedToggleProperty().addListener(this);
-		setCurrentEditorAction(currentEditorAction);
+		//editorPane.getToolBarPane().selectedToggleProperty().addListener(this);
 		
 		editorPane.getDocumentViewPane().addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 		editorPane.getDocumentViewPane().addEventHandler(MouseEvent.MOUSE_DRAGGED, this);
@@ -79,31 +83,6 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 		editorPane.getPropertiesPane().updatePane(selectedUMLSymbol);
 	}
 
-	/**
-	 * @return the currentEditorAction
-	 */
-	public EditorAction getCurrentEditorAction() {
-		return currentEditorAction;
-	}
-
-	/**
-	 * @param newEditorAction the currentEditorAction to set
-	 */
-	public void setCurrentEditorAction(EditorAction newEditorAction) {
-		this.currentEditorAction = newEditorAction;
-		editorPane.getToolBarPane().setSelectedEditorAction(newEditorAction);
-	}
-
-	// EVENT HANDLERS
-	
-	@Override
-	public void changed(ObservableValue<? extends Toggle> observable,
-			Toggle oldValue, Toggle newValue) {
-		if (newValue != null) {
-			currentEditorAction = (EditorAction) newValue.getUserData();
-		}
-	}
-	
 	/** 
 	 * Provides MouseEvent handling for DocumentViewPane
 	 * @see javafx.event.EventHandler#handle(javafx.event.Event)
@@ -112,7 +91,7 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 	public void handle(MouseEvent e) {
 		
 		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-			switch (currentEditorAction) {
+			switch (editorPane.getToolBarPane().getCurrentEditorMode().getValue()) {
 			case CREATE_CLASS:
 
 				UMLClassSymbol c = new UMLClassSymbol(new Point2D(e.getX(),e.getY()), 100, 100);
@@ -143,7 +122,7 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 				break;
 			}
 		} else if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-			switch (currentEditorAction) {
+			switch (editorPane.getToolBarPane().getCurrentEditorMode().getValue()) {
 			case SELECT:
 				if (!isMoving) {
 					dragTarget = (UMLObjectView) resolveUMLSymbolView((Node)e.getTarget());
@@ -179,7 +158,7 @@ public class GUIController implements ChangeListener<Toggle>, EventHandler<Mouse
 				dragTarget = null;
 			}
 		} else if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
-			switch (currentEditorAction) {
+			switch (editorPane.getToolBarPane().getCurrentEditorMode().getValue()) {
 			case CREATE_ASSOCIATION:
 				if (isRelating) {
 					UMLSymbol dragRelease = resolveUMLSymbolObject((Node)e.getPickResult().getIntersectedNode());
