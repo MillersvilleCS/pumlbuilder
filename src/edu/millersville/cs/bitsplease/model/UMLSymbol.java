@@ -1,11 +1,38 @@
+/***
+ * @author Merv Fansler
+ * @since February 27, 2015
+ * @version 0.1.1
+ */
 package edu.millersville.cs.bitsplease.model;
 
-import javafx.event.EventDispatcher;
-import javafx.event.Event;
-import javafx.event.EventDispatchChain;
+import javafx.scene.Group;
 
-public abstract class UMLSymbol implements EventDispatcher {
+public abstract class UMLSymbol extends Group {
+	protected boolean isSelected = false;
+	protected String identifier = "Untitled";
 	
-	public abstract Event dispatchEvent(Event event, EventDispatchChain tail);
-
+	/**
+	 * @return the isSelected
+	 */
+	public boolean isSelected() {
+		return isSelected;
+	}
+	/**
+	 * @param isSelected the isSelected to set
+	 */
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
+	}
+	/**
+	 * @return the identifier
+	 */
+	public String getIdentifier() {
+		return identifier;
+	}
+	/**
+	 * @param identifier the identifier to set
+	 */
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
 }

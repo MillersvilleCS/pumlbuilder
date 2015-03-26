@@ -1,96 +1,107 @@
 /**
+ * @author Michael Sims
  * @author Merv Fansler
- * @since February 19, 2015
- * @version 0.1.0
+ * @since February 25, 2015
+ * @version 0.1.1
  */
 
 package edu.millersville.cs.bitsplease.model;
 
-import javafx.event.Event;
-import javafx.event.EventDispatchChain;
+import javafx.scene.shape.Line;
 
 public class UMLRelationSymbol extends UMLSymbol {
-	
+
 	private	UMLRelationType relationType;
 	private UMLObjectSymbol sourceObject;
 	private UMLObjectSymbol targetObject;
+	private Line rLine;
 	
-	/**
-	 * General constructor for UML relation symbols.
-	 * 
-	 * @param sourceObject UML object directed from
-	 * @param targetObject UML object directed to
-	 * @param relationType type of relation between objects
-	 */
 	public UMLRelationSymbol(UMLObjectSymbol sourceObject,
-			UMLObjectSymbol targetObject, UMLRelationType relationType) {
+			UMLObjectSymbol targetObject, UMLRelationType relationType){
 		super();
 		this.sourceObject = sourceObject;
 		this.targetObject = targetObject;
 		this.relationType = relationType;
-	}
 
-	/**
-	 * Constructs UML association relation symbol.
-	 * 
-	 * @param sourceObject UML object directed from
-	 * @param targetObject UML object directed to
-	 * 
-	 */
-	public UMLRelationSymbol(UMLObjectSymbol sourceObject,
-			UMLObjectSymbol targetObject) {
-		super();
-		this.sourceObject = sourceObject;
-		this.targetObject = targetObject;
-		this.relationType = UMLRelationType.ASSOCIATION;
+		this.rLine = new Line();
+		
+		switch (this.relationType) {
+		case ASSOCIATION:
+			break;
+		case DEPENDENCY:
+			rLine.getStrokeDashArray().addAll(25d, 10d);
+			break;
+		default:
+			break;
+		}
+		
+		refreshLine();
+		getChildren().add(rLine);
 	}
-
-	/********************************************************************/
-	// Getters & Setters
 	
 	/**
-	 * @return the relationType
+	 * @param s1 symbol to start line at
+	 * @param s2 symbol to end line at
+	 * @return shortest line connecting the middle edges of the two UMLObjectSymbols
 	 */
-	public UMLRelationType getRelationType() {
-		return relationType;
+	private void refreshLine() {
+		
+		// the follow computes the edge center pair between the two objects
+		// which has the shortest distance
+		double[] distances = {
+				sourceObject.getTopCenter().distance(targetObject.getBottomCenter()),
+				sourceObject.getMiddleRight().distance(targetObject.getMiddleLeft()),
+				sourceObject.getMiddleLeft().distance(targetObject.getMiddleRight()),
+				sourceObject.getBottomCenter().distance(targetObject.getTopCenter())
+		};
+		
+		int minIndex = 0;
+		for (int i = 1; i < 4; i++) {
+			if (distances[i] < distances[minIndex])
+				minIndex = i;
+		}
+		
+		switch (minIndex) {
+		case 0:
+			rLine.setStartX(sourceObject.getTopCenter().getX());
+			rLine.setStartY(sourceObject.getTopCenter().getY());
+			rLine.setEndX(targetObject.getBottomCenter().getX());
+			rLine.setEndY(targetObject.getBottomCenter().getY());
+			break;
+		case 1:
+			rLine.setStartX(sourceObject.getMiddleRight().getX());
+			rLine.setStartY(sourceObject.getMiddleRight().getY());
+			rLine.setEndX(targetObject.getMiddleLeft().getX());
+			rLine.setEndY(targetObject.getMiddleLeft().getY());
+			break;
+		case 2:
+			rLine.setStartX(sourceObject.getMiddleLeft().getX());
+			rLine.setStartY(sourceObject.getMiddleLeft().getY());
+			rLine.setEndX(targetObject.getMiddleRight().getX());
+			rLine.setEndY(targetObject.getMiddleRight().getY());
+			break;
+		case 3:
+			rLine.setStartX(sourceObject.getBottomCenter().getX());
+			rLine.setStartY(sourceObject.getBottomCenter().getY());
+			rLine.setEndX(targetObject.getTopCenter().getX());
+			rLine.setEndY(targetObject.getTopCenter().getY());
+			break;			
+		}
 	}
-
-	/**
-	 * @param relationType the type of relation to set
-	 */
-	public void setRelationType(UMLRelationType relationType) {
-		this.relationType = relationType;
+	
+	public UMLRelationType getUmlRelationType() {
+		return this.relationType;
 	}
-
-	/**
-	 * @return the UMLObjectSymbol that the relation originated from
-	 */
+	
 	public UMLObjectSymbol getSourceObject() {
-		return sourceObject;
-	}
-
-	/**
-	 * @param sourceObject the object the relation should direct from
-	 */
-	public void setSourceObject(UMLObjectSymbol sourceObject) {
-		this.sourceObject = sourceObject;
-	}
-
-	/**
-	 * @return the targetObject
-	 */
-	public UMLObjectSymbol getTargetObject() {
-		return targetObject;
-	}
-
-	/**
-	 * @param targetObject the object the relation should direct to
-	 */
-	public void setTargetObject(UMLObjectSymbol targetObject) {
-		this.targetObject = targetObject;
+		return this.sourceObject;
 	}
 	
-	public Event dispatchEvent(Event event, EventDispatchChain tail){
-		return event;
+	public UMLObjectSymbol getTargetObject() {
+		return this.targetObject;
+	}
+
+	public void refresh() {
+		refreshLine();
 	}
 }

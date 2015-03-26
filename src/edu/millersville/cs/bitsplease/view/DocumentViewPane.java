@@ -1,7 +1,7 @@
 /**
  * @author Merv Fansler
  * @since February 25, 2015
- * @version 0.1.0
+ * @version 0.1.1
  */
 
 package edu.millersville.cs.bitsplease.view;
@@ -12,7 +12,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
 import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
+import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
 
 public class DocumentViewPane extends Pane {
@@ -30,7 +32,7 @@ public class DocumentViewPane extends Pane {
 	 * Add UML elements to view.
 	 * @param objView UML element view to add to display
 	 */
-	public void addUMLSymbol(UMLClassView objView) {
+	public void addUMLSymbol(UMLClassSymbol objView) {
 		this.getChildren().add(objView);
 	}
 
@@ -38,22 +40,22 @@ public class DocumentViewPane extends Pane {
 	 * Add UML elements to view.
 	 * @param objView UML element view to add to display
 	 */
-	public void addUMLSymbol(UMLRelationView relView) {
+	public void addUMLSymbol(UMLRelationSymbol relView) {
 		this.getChildren().add(relView);
 	}
 	
 	public void refreshRelations(UMLObjectSymbol obj) {
 		for (Node relView : getChildren().filtered(referencesUMLObject(obj))) {
-			((UMLRelationView)relView).refresh();
+			((UMLRelationSymbol)relView).refresh();
 		}
 	}
 
-	public void removeUMLSymbol(UMLSymbolView toDelete) {
+	public void removeUMLSymbol(UMLSymbol toDelete) {
 		
 		// remove all relation symbols that references an object being removed
-		if (toDelete instanceof UMLClassView) {
+		if (toDelete instanceof UMLClassSymbol) {
 			getChildren().removeIf(
-					referencesUMLObject(((UMLClassView) toDelete).getUmlClassSymbol()));
+					referencesUMLObject((UMLObjectSymbol) toDelete));
 		}
 		
 		getChildren().remove(toDelete);
@@ -65,9 +67,9 @@ public class DocumentViewPane extends Pane {
 	 * @return predicate that selects for relating UMLRelationViews
 	 */
 	private Predicate<Node> referencesUMLObject (UMLObjectSymbol obj) {
-		return n -> n instanceof UMLRelationView && 
-				(((UMLRelationView)n).getSourceObject() == obj ||
-				((UMLRelationView)n).getTargetObject() == obj);
+		return n -> n instanceof UMLRelationSymbol && 
+				(((UMLRelationSymbol)n).getSourceObject() == obj ||
+				((UMLRelationSymbol)n).getTargetObject() == obj);
 	}
 
 	/**

@@ -16,7 +16,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
+import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
 import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
 
@@ -76,18 +76,18 @@ public class PropertiesPane extends StackPane implements ChangeListener<UMLSymbo
 	public void updatePane(UMLSymbol uml){
 		//TODO add support for Interface, etc., clean up terrible terrible code
 		
-		if(uml instanceof UMLClassSymbol){
+		if(uml instanceof UMLObjectSymbol){
 			
-			objectPane.setObjectNameField(((UMLClassSymbol)uml).getName());
-			objectPane.setXField(((UMLClassSymbol)uml).getX());
-			objectPane.setYField(((UMLClassSymbol)uml).getY());
-			objectPane.setHField(((UMLClassSymbol)uml).getHeight());
-			objectPane.setWField(((UMLClassSymbol)uml).getWidth());
+			objectPane.setObjectNameField(((UMLObjectSymbol)uml).getIdentifier());
+			objectPane.setXField(((UMLObjectSymbol)uml).getX());
+			objectPane.setYField(((UMLObjectSymbol)uml).getY());
+			objectPane.setHField(((UMLObjectSymbol)uml).getHeight());
+			objectPane.setWField(((UMLObjectSymbol)uml).getWidth());
 			setActivePane(objectPane);
 			
 		}else if( uml instanceof UMLRelationSymbol){
-			relationPane.setSourceField(((UMLRelationSymbol)uml).getSourceObject().getName());
-			relationPane.setTargetField(((UMLRelationSymbol)uml).getTargetObject().getName());
+			relationPane.setSourceField(((UMLRelationSymbol)uml).getSourceObject().getIdentifier());
+			relationPane.setTargetField(((UMLRelationSymbol)uml).getTargetObject().getIdentifier());
 			setActivePane(relationPane);
 		}else{
 			setActivePaneVisible(false);//UMLSymbol is null

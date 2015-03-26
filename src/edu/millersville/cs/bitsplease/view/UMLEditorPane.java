@@ -6,20 +6,20 @@
 
 package edu.millersville.cs.bitsplease.view;
 
-import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
-import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
-import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
-import edu.millersville.cs.bitsplease.model.UMLRelationType;
-import edu.millersville.cs.bitsplease.model.UMLSymbol;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.event.EventHandler;
-import javafx.event.ActionEvent;
-import javafx.geometry.Point2D;
+import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
+import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
+import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
+import edu.millersville.cs.bitsplease.model.UMLRelationType;
+import edu.millersville.cs.bitsplease.model.UMLSymbol;
 
 /***
  * Primary GUI component where all user interact occurs. All other view
@@ -33,7 +33,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 	
 	// Drag State Variables
 	private Boolean isMoving = false;
-	private UMLClassView dragTarget;
+	private UMLClassSymbol dragTarget;
 	private double dragOffsetX = 0.0;
 	private double dragOffsetY = 0.0;
 
@@ -103,18 +103,17 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			case CREATE_CLASS:
 
 				UMLClassSymbol c = new UMLClassSymbol(new Point2D(e.getX(),e.getY()), 100, 100);
-				UMLClassView objView = new UMLClassView(c);
-				documentViewPane.addUMLSymbol(objView);
-				documentViewPane.setSelectedUMLSymbol(objView.getUmlClassSymbol());
+				documentViewPane.addUMLSymbol(c);
+				documentViewPane.setSelectedUMLSymbol(c);
 				
 				break;
 			case SELECT: // selecting items
-				documentViewPane.setSelectedUMLSymbol(resolveUMLSymbolObject((Node) e.getTarget()));
+				documentViewPane.setSelectedUMLSymbol(resolveUMLSymbolParent((Node) e.getTarget()));
 				
 				break;
 			case DELETE:
 				documentViewPane.setSelectedUMLSymbol(null);
-				UMLSymbolView toDelete = resolveUMLSymbolView((Node)e.getTarget());
+				UMLSymbol toDelete = resolveUMLSymbolParent((Node)e.getTarget());
 				if (toDelete != null) {
 					documentViewPane.removeUMLSymbol(toDelete);
 					documentViewPane.getChildren().remove(toDelete);
@@ -130,10 +129,10 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			switch (toolbarPane.getCurrentEditorMode().getValue()) {
 			case SELECT:
 				if (!isMoving) {
-					dragTarget = (UMLClassView) resolveUMLSymbolView((Node)e.getTarget());
+					dragTarget = (UMLClassSymbol) resolveUMLSymbolParent((Node)e.getTarget());
 					
 					if (dragTarget != null) { // begin dragging object
-						documentViewPane.setSelectedUMLSymbol(dragTarget.getUmlClassSymbol());
+						documentViewPane.setSelectedUMLSymbol(dragTarget);
 						
 						// compute offsets, so drag does not snap to origin
 						dragOffsetX = ((UMLObjectSymbol)documentViewPane.getSelectedUMLSymbol().getValue()).getX() - e.getX();
@@ -143,8 +142,9 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 						isMoving = true;
 					}
 				} else {
-					((UMLClassSymbol) documentViewPane.getSelectedUMLSymbol().getValue()).setOrigin(new Point2D(e.getX() + dragOffsetX, e.getY() + dragOffsetY));
-					dragTarget.refreshSymbolPosition();
+					dragTarget.setLayoutX(e.getX() + dragOffsetX);
+					dragTarget.setLayoutY(e.getY() + dragOffsetY);
+					//TODO: this should be automatic now
 					documentViewPane.refreshRelations((UMLObjectSymbol) documentViewPane.getSelectedUMLSymbol().getValue());
 				}
 				break;
@@ -152,7 +152,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			case CREATE_DEPENDENCY:
 				if (!isRelating) {
 					
-					dragTarget = (UMLClassView) resolveUMLSymbolView((Node)e.getTarget());
+					dragTarget = (UMLClassSymbol) resolveUMLSymbolParent((Node)e.getTarget());
 					isRelating  = (dragTarget != null);
 				}
 				break;
@@ -165,25 +165,23 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			switch (toolbarPane.getCurrentEditorMode().getValue()) {
 			case CREATE_ASSOCIATION:
 				if (isRelating) {
-					UMLSymbol dragRelease = resolveUMLSymbolObject((Node)e.getPickResult().getIntersectedNode());
-					if (dragRelease != null && dragRelease instanceof UMLClassSymbol) {
-						UMLRelationSymbol relation = new UMLRelationSymbol(
-								dragTarget.getUmlClassSymbol(), 
-								(UMLObjectSymbol) dragRelease, 
-								UMLRelationType.ASSOCIATION);
-						documentViewPane.addUMLSymbol(new UMLRelationView(relation));
+					UMLSymbol dragRelease = resolveUMLSymbolParent((Node)e.getPickResult().getIntersectedNode());
+					if (dragRelease != null && dragRelease instanceof UMLObjectSymbol) {
+						documentViewPane.addUMLSymbol(
+								new UMLRelationSymbol(dragTarget, 
+										(UMLObjectSymbol) dragRelease, 
+										UMLRelationType.ASSOCIATION));
 					}					
 				}
 				break;
 			case CREATE_DEPENDENCY:
 				if (isRelating) {
-					UMLSymbol dragRelease = resolveUMLSymbolObject((Node)e.getPickResult().getIntersectedNode());
-					if (dragRelease != null && dragRelease instanceof UMLClassSymbol) {
-						UMLRelationSymbol relation = new UMLRelationSymbol(
-								dragTarget.getUmlClassSymbol(), 
+					UMLSymbol dragRelease = resolveUMLSymbolParent((Node)e.getPickResult().getIntersectedNode());
+					if (dragRelease != null && dragRelease instanceof UMLObjectSymbol) {
+						documentViewPane.addUMLSymbol(new UMLRelationSymbol(
+								dragTarget, 
 								(UMLObjectSymbol) dragRelease, 
-								UMLRelationType.DEPENDENCY);
-						documentViewPane.addUMLSymbol(new UMLRelationView(relation));
+								UMLRelationType.DEPENDENCY));
 					}					
 				}
 				break;
@@ -197,38 +195,21 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 	}
 	
 	/**
-	 * Utility to traverse scene graph and identify UMLSymbol of
-	 *   ancestor UMLSymbolView
+	 * Utility to traverse scene graph and identify ancestor UMLSymbol
 	 * @author Merv Fansler
-	 * @param target initial node to test for ancestor UMLSymbolView
-	 * @return UMLSymbol of UMLSymbolView ancestor, otherwise null
+	 * @param target initial node to test for ancestor UMLSymbol
+	 * @return UMLSymbol ancestor, otherwise null
 	 */
-	private UMLSymbol resolveUMLSymbolObject(Node target) {
-		UMLSymbolView result = resolveUMLSymbolView(target);
-
-		if (result != null) {
-			return result.getUMLSymbol();
-		} else {
-			return null;
-		}
-	}
-	
-	/**
-	 * Utility to traverse scene graph and identify ancestor UMLSymbolView
-	 * @author Merv Fansler
-	 * @param target initial node to test for ancestor UMLSymbolView
-	 * @return UMLSymbolView ancestor, otherwise null
-	 */
-	private UMLSymbolView resolveUMLSymbolView(Node target) {
-		UMLSymbolView result;
+	private UMLSymbol resolveUMLSymbolParent(Node target) {
+		UMLSymbol result;
 		
 		if (target != null) {
-			if (target instanceof UMLSymbolView) {
-				result = (UMLSymbolView)target;
+			if (target instanceof UMLSymbol) {
+				result = (UMLSymbol)target;
 			} else if (target instanceof DocumentViewPane) {
 				result = null;
 			} else {
-				result = resolveUMLSymbolView(target.getParent());
+				result = resolveUMLSymbolParent(target.getParent());
 			}
 		} else {
 			result = null;

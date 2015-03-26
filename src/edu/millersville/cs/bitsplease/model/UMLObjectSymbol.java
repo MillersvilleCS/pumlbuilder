@@ -1,7 +1,7 @@
 /**
  * @author Kevin Fisher
  * @since February 19, 2015
- * @version 0.1.0
+ * @version 0.1.1
  */
 
 package edu.millersville.cs.bitsplease.model;
@@ -13,14 +13,9 @@ import javafx.event.EventDispatchChain;
 /*
  * A class model to represent a UML Object symbol
  */
-
 //TODO add ArrayList<UMLRelationSymbol> to keep track of relations.
 public class UMLObjectSymbol extends UMLSymbol {
-	private Point2D origin = new Point2D(0,0);
-	private double height = 100;
-	private double width = 100;
-	private boolean isSelected = false;
-	private String identifier = "Untitled";
+	
 	/**
 	 *  Empty UMLObjectSymbol Constructor 
 	 */
@@ -34,7 +29,7 @@ public class UMLObjectSymbol extends UMLSymbol {
 	 */
 	public UMLObjectSymbol(Point2D origin){
 		super();
-		this.origin = origin;
+		setOrigin(origin);
 	}
 	
 	public UMLObjectSymbol(String name){
@@ -47,8 +42,8 @@ public class UMLObjectSymbol extends UMLSymbol {
 	 */
 	public UMLObjectSymbol(double prefHeight, double prefWidth){
 		super();
-		this.height = prefHeight;
-		this.width = prefWidth;
+		this.prefHeight(prefHeight);
+		this.prefWidth(prefWidth);
 	}
 	/**
 	 * General Constructor for UMLObjectSymbol
@@ -58,9 +53,9 @@ public class UMLObjectSymbol extends UMLSymbol {
 	 */
 	public UMLObjectSymbol(Point2D origin, double prefHeight, double prefWidth){
 		super();
-		this.origin = origin;
-		this.height = prefHeight;
-		this.width = prefWidth;
+		setOrigin(origin);
+		this.prefHeight(prefHeight);
+		this.prefWidth(prefWidth);
 	}
 	
 	/**
@@ -76,21 +71,13 @@ public class UMLObjectSymbol extends UMLSymbol {
 	/************************
 	 *Class Accessor methods*
 	 ************************/
-	
-	
-	/**
-	 * @return origin the origin of a UMLObjectSymbol instance
-	 */
-	public Point2D getOrigin(){
-		return origin;
-	}
-	
+		
 	/**
 	 * 
 	 * @return height the height of a UMLObjectSymbol instance
 	 */
 	public double getHeight(){
-		return height;
+		return this.getLayoutBounds().getHeight();
 	}
 	
 	/**
@@ -98,7 +85,7 @@ public class UMLObjectSymbol extends UMLSymbol {
 	 * @return the width of a UMLObjectSymbol instance
 	 */
 	public double getWidth(){
-		return width;
+		return this.getLayoutBounds().getWidth();
 	}
 	
 	/**
@@ -106,7 +93,7 @@ public class UMLObjectSymbol extends UMLSymbol {
 	 * @return double x the x value of the origin for UMLObjectSymbol
 	 */
 	public double getX(){
-		return origin.getX();
+		return this.getLayoutX();
 	}
 	
 	/**
@@ -114,67 +101,40 @@ public class UMLObjectSymbol extends UMLSymbol {
 	 * @return double y the y value of the origin for UMLObjectSymbol
 	 */
 	public double getY(){
-		return origin.getY();
+		return this.getLayoutY();
 	}
 	
 	public Point2D getCenter() {
-		return new Point2D(origin.getX() + width/2, origin.getY() + height/2);
+		return new Point2D(getX() + getWidth()/2, getY() + getHeight()/2);
 	}
 	
 	public Point2D getTopCenter() {
-		return new Point2D(origin.getX() + width/2, origin.getY());
+		return new Point2D(getX() + getWidth()/2, getY());
 	}
 	
 	public Point2D getMiddleLeft() {
-		return new Point2D(origin.getX(), origin.getY() + height/2);
+		return new Point2D(getX(), getY() + getHeight()/2);
 	}
 	
 	public Point2D getMiddleRight() {
-		return new Point2D(origin.getX() + width, origin.getY() + height/2);
+		return new Point2D(getX() + getWidth(), getY() + getHeight()/2);
 	}
 	
 	public Point2D getBottomCenter() {
-		return new Point2D(origin.getX() + width/2, origin.getY() + height);
-	}
-	
-	
-	
-	public String getName(){
-		return this.identifier;
-	}
-	
-	public boolean isSelected(){
-		return this.isSelected;
+		return new Point2D(getX() + getWidth()/2, getY() + getHeight());
 	}
 	
 	/**
 	 * Mutator classes
 	 */
 	
-	public void setName(String name){
-		this.identifier = name;
-	}
-	/**
-	 * 
-	 * @param double newHeight updated height for UMLObjectSymbol instance
-	 */
-	public void setHeight(double newHeight){
-		this.height = newHeight;
-	}
-	/**
-	 * 
-	 * @param double newWidth updated width for UMLObjectSymbol instance
-	 */
-	public void setWidth(double newWidth){
-		this.width = newWidth;
-	}
-	
 	/**
 	 * 
 	 * @param Point2D newPoint updated Point2D origin for UMLObjectSymbol instance 
 	 */
 	public void setOrigin(Point2D newPoint){
-		this.origin = newPoint;
+		this.setLayoutX(newPoint.getX());
+		this.setLayoutY(newPoint.getY());
 	}
 	
 	public void setSelectedStatus(boolean status){

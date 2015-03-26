@@ -1,219 +1,224 @@
 /**
  * @author Kevin Fisher
- * @since  February 19, 2015
- * @version 0.1.0
+ * @author Joe Martello
+ * @author Merv Fansler
+ * @since February 25, 2015
+ * @version 0.1.1
  */
+
 package edu.millersville.cs.bitsplease.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javafx.geometry.Point2D;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 
 public class UMLClassSymbol extends UMLObjectSymbol {
+	private Rectangle umlBox;
+	private Line ltop;
+	private Line lbot;
+	private Label name;
+	private List<Label> attributes;
+	private List<Label> functions;
+	private final int offset = 20;
 	
-	private String[] classAttributes = new String[10];
-	private String[] classFunctions = new String[10];
-	
-	/**
-	 * @param prefHeight
-	 * @param prefWidth
-	 */
-	public UMLClassSymbol(double prefHeight, double prefWidth) {
-		super(prefHeight, prefWidth);
-	}
-
-	/**
-	 * @param origin
-	 * @param prefHeight
-	 * @param prefWidth
-	 */
-	public UMLClassSymbol(Point2D origin, double prefHeight, double prefWidth) {
-		super(origin, prefHeight, prefWidth);
-	}
-
-	/**
-	 * @param origin
-	 */
-	public UMLClassSymbol(Point2D origin) {
-		super(origin);
-	}
-
-	/**
-	 * Empty UMLClassSymbol constructor
-	 */
-	public UMLClassSymbol(){
-		super();
-	}
-	
-	/**
-	 * @param className title of the UML classbox
-	 */
-	public UMLClassSymbol(String className){
-		super(className);
-	}
-	
-	public UMLClassSymbol(String className, String[] attr){
-		super(className);
-		this.classAttributes = attr;
-	}
-	
-	public UMLClassSymbol(String className, String[] attr, String[] func){
-		super(className);
-		this.classAttributes = attr;
-		this.classFunctions = func;
-	}
-	
-	/**
-	 * Accessor Methods
-	 */
-	
-	/** 
-	 * @return className String representing the name of the class object.
-	 */
-	public String getClassName(){
-		return super.getName();
-	}
-	
-	/**
-	 * Get a single attribute from UMLClassSymbol object. Returns null if attribute does not exist.
-	 * @param attribute attribute to get retrieved
-	 * @return s matching String within the classAttribute array, or null if does not exist
-	 */
-	public String getAttribute(String attribute){
+		/**
+		 * UMLObjectSymbol Constructor displaying UMLClassSymbol location and attributes
+		 * This constructor assumes that the width and height are large enough to encompass all of its attributes
+		 * @param umlClassSymbol that will be displayed
+		 */
+	public UMLClassSymbol(Point2D origin, double height, double width){
+		super(origin, height, width);
 		
-		for(String s: this.classAttributes){
-			if(s == attribute){
-				return s;
+		umlBox = new Rectangle(0, 0, width, height);
+		umlBox.setFill(Color.TRANSPARENT);
+		umlBox.setStroke(Color.BLACK);
+		this.getChildren().add(umlBox);
+		
+		double y = 20;
+		name = new Label(" " + getIdentifier());
+		name.setMaxWidth(umlBox.getWidth() - 10);
+		name.setPrefHeight(y);
+		this.getChildren().add(name);
+		
+		y = name.getBoundsInParent().getMinY() + name.getPrefHeight(); //will only work for 1 line names
+		ltop = new Line(0, 0, umlBox.getWidth(), 0);
+		ltop.setLayoutY(name.getPrefHeight());
+		this.getChildren().add(ltop);
+		
+		attributes = new ArrayList<Label>(0);
+		int length = 0;
+		// TODO: need to add means to set attributes
+		for (String s: Arrays.asList("Attribute1","Attribute2")){
+			if (s != null){
+				Label l = new Label(" " + s);
+				l.setMaxWidth(getWidth() - 10);
+				l.setLayoutY(ltop.getStartY() + length + offset);
+				l.setPrefHeight(offset);
+				length += offset;
+				attributes.add(l);
+				this.getChildren().add(attributes.get(attributes.size() - 1));
 			}
 		}
-		return null;
-	}
-	
-	/**
-	 * Get all attributes held within a UMLClassSymbol object as an array of Strings.
-	 * @return classAttributes an array of attributes held by the UMLClassSymbol object
-	 */
-	public String[] getAttributes(){
-		return this.classAttributes;
-	}
-	
-	/**
-	 * @param function function name to search for 
-	 * @return s function name, or null if it does not exist
-	 */
-	public String getFunction(String function){
 		
-		for(String s:this.classFunctions){
-			if(s == function){
-				return s;
+		if (attributes.size() == 0)
+			length = 20;
+		
+		lbot = new Line(0, 0, getWidth(), 0);
+		lbot.setLayoutY(ltop.getLayoutY() + length);
+		this.getChildren().add(lbot);
+		
+		functions = new ArrayList<Label>(0);
+		length = 0;
+		for (String s: Arrays.asList("Operation1()","Operation2()")){
+			if (s != null){
+				Label l = new Label(" " + s);
+				l.setMaxWidth(getWidth() - 10);
+				l.setLayoutY(lbot.getLayoutY() + length);
+				l.setPrefHeight(offset);
+				length += offset;
+				functions.add(l);
+				this.getChildren().add(functions.get(functions.size() - 1));
 			}
 		}
-		return null;
 	}
 	
 	/**
-	 * @return classFunctions array of class functions held within a UMLClassSymbol object
+	 * removes all elements of the UML diagram from the scene
 	 */
-	public String[] getFunctions(){
-		return this.classFunctions;
+	public void delete(){
+		this.getChildren().removeAll(umlBox, ltop, lbot, name);
+		for (Label l: attributes)
+			this.getChildren().remove(l);
+		for (Label l: functions)
+			this.getChildren().remove(l);
 	}
 	
 	/**
-	 * @return double height height of the classbox to be drawn
+	 * moves all attributes of the UML diagram to a new location on the GUI and resets its translate values
+	 * @param Point2D origin coordinate to move the UML diagram to
 	 */
-	public double getHeight(){
-		return super.getHeight();
+	public void UpdatePosition(Point2D newOrigin){
+		this.setLayoutX(newOrigin.getX());
+		this.setLayoutY(newOrigin.getY());
+		
+		this.setTranslateX(0);
+		this.setTranslateY(0);
 	}
+//	
+//	/**
+//	 * updates the graphical title on the UMLSymbol
+//	 */
+//	public void UpdateTitle(){
+//		name.setText(" " + getIdentifier());
+//	}
+//	
+//	/**
+//	 * updates the selected attribute or will add an attribute if it is the last one in the list
+//	 * @param index index of the attribute to be updated in the view
+//	 */
+//	public void UpdateAttributes(int index){
+//		if (index > attributes.size() - 1){
+//				addAttribute(index);
+//		} else {
+//			attributes.get(index).setText(" " + umlClassSymbol.getAttributes()[index]);
+//		}
+//	}
 	
 	/**
-	 * @return double width width of the classbox to be drawn
+	 * adds an attribute label to the end of the attributes section of the UMLClassSymbol
+	 * @param i index of the attribute to be added
 	 */
-	public double getWidth(){
-		return super.getWidth();
-	}
+//	private void addAttribute(String attributeText){
+//		//TODO make it generic to work with constructor too
+//		
+//		Label l = new Label(" " + attributeText);
+//		l.setMaxWidth(getWidth() - 10);
+//		l.setLayoutY(lbot.getLayoutY());
+//		l.setPrefHeight(offset);
+//		attributes.add(l);
+//		this.getChildren().add(attributes.get(attributes.size() - 1));
+//		
+//		int length = offset * attributes.size();
+//		lbot.setLayoutY(ltop.getLayoutY() + length);
+//		length = 0;
+//		for (Label f: functions){
+//			f.setLayoutY(lbot.getLayoutY() + length);
+//			length += offset;
+//		}
+//		
+//	}
+	
+	
+//	/**
+//	 * 
+//	 * @param s String to be found in UMLClassSymbol
+//	 * @return the index of the first instance of the given string in the UMLClassSymbol, -1 if not found
+//	 */
+//	public int getAttributeIndex(String s){
+//		for (int i = 0; i < umlClassSymbol.getAttributes().length; i ++){
+//			if (umlClassSymbol.getAttributes()[i] == s)
+//				return i;
+//		}
+//		return -1;
+//	}
 	
 	/**
-	 * @return double x value of x coordinate in UMLObjectSymbol origin point
+	 * updates the height and width of the UMLClassSymbol to the size of its ClassSymbol
 	 */
-	public double getX(){
-		return super.getX();
+	public void resize(){
+		double width = getWidth();
+		double height = getHeight();
+		
+		umlBox.setWidth(width);
+		name.setMaxWidth(width);
+		ltop.setEndX(width);
+		lbot.setEndX(width);
+		
+		umlBox.setHeight(height);
+		
+		for (Label l: attributes){
+			l.setMaxWidth(width);
+			if (l.getLayoutY() + l.getPrefHeight() > height)
+				l.setVisible(false);
+			else
+				l.setVisible(true);
+		}
+		for (Label l: functions){
+			l.setMaxWidth(width);
+			if (l.getLayoutY() + l.getPrefHeight() > height)
+				l.setVisible(false);
+			else
+				l.setVisible(true);
+		}
+		
+		
+		if (name.getLayoutY() + name.getPrefHeight() > height)
+			name.setVisible(false);
+		else
+			name.setVisible(true);
+		
+		if (ltop.getLayoutY() > height)
+			ltop.setVisible(false);
+		else
+			ltop.setVisible(true);
+		
+		if (ltop.getLayoutY() + lbot.getLayoutY() > height)
+			lbot.setVisible(false);
+		else
+			lbot.setVisible(true);
+		
 	}
-	
-	/**
-	 * @return double y value of y coordinate in UMLObjectSymbol origin point
-	 */
-	public double getY(){
-		return super.getY();
-	}
-	
-	/**
-	 * @return Point2D origin point representing the origin of the classbox to be drawn.
-	 */
-	public Point2D getOrigin(){
-		return super.getOrigin();
-	}
-	
-	/**
-	 * 
-	 * Mutator Methods
-	 * 
-	 */
-	
-	/**
-	 * 
-	 * @param name name to assign to UMLClassObject instance
-	 */
-	public void setClassName(String name){
-		super.setName(name);
-	}
-	
-	/**
-	 * set an individual attribute within a UMLClassObject instance
-	 * @param attr attribute to set 
-	 */
-	public void setAttribute(String attr){
-		//TODO add ability to add individual attributes
-	}
-	
-	/**
-	 * 
-	 * @param attr array of attributes to assign to class attribute array
-	 */
-	public void setAttributes(String[] attr){
-		this.classAttributes = attr;
-	}
-	
-	/**
-	 * 
-	 * @param function function to add to UMLClassSymbol object
-	 */
-	public void setFunction(String function){
-		//TODO add ability to set individual functions.
-	}
-	
-	/**
-	 * 
-	 * @param func array of functions to assign to UMLClassSymbol object
-	 */
-	public void setFunctions(String[] func){
-		this.classFunctions = func;
-	}
-	
-	public void setOrigin(Point2D p){
-		super.setOrigin(p);
-	}
-	
-	public void setX(double x){
-		setOrigin(new Point2D(x, getY()));
-	}
-	
-	public void setY(double y){
-		setOrigin(new Point2D(getX(), y));
-	}
-	
-	public void setHeight(double h){
-		super.setHeight(h);
-	}
-	
-	public void setWidth(double w){
-		super.setWidth(w);
-	}
+//	
+//	public void refreshSymbolPosition() {
+//		Point2D origin = umlClassSymbol.getOrigin();
+//		
+//		this.setLayoutX(origin.getX());
+//		this.setLayoutY(origin.getY());
+//	}
 }
