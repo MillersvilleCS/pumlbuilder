@@ -1,6 +1,7 @@
 /**
  * @author Merv Fansler	
  * @author Josh Wakefield
+ * @author Mike Sims
  * @version 0.1.1
  */
 
