@@ -33,7 +33,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 	
 	// Drag State Variables
 	private Boolean isMoving = false;
-	private UMLClassSymbol dragTarget;
+	private UMLObjectSymbol dragTarget;
 	private double dragOffsetX = 0.0;
 	private double dragOffsetY = 0.0;
 
@@ -129,7 +129,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			switch (toolbarPane.getCurrentEditorMode().getValue()) {
 			case SELECT:
 				if (!isMoving) {
-					dragTarget = (UMLClassSymbol) resolveUMLSymbolParent((Node)e.getTarget());
+					dragTarget = resolveUMLObjectSymbolParent((Node)e.getTarget());
 					
 					if (dragTarget != null) { // begin dragging object
 						documentViewPane.setSelectedUMLSymbol(dragTarget);
@@ -152,7 +152,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			case CREATE_DEPENDENCY:
 				if (!isRelating) {
 					
-					dragTarget = (UMLClassSymbol) resolveUMLSymbolParent((Node)e.getTarget());
+					dragTarget = resolveUMLObjectSymbolParent((Node)e.getTarget());
 					isRelating  = (dragTarget != null);
 				}
 				break;
@@ -165,22 +165,22 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			switch (toolbarPane.getCurrentEditorMode().getValue()) {
 			case CREATE_ASSOCIATION:
 				if (isRelating) {
-					UMLSymbol dragRelease = resolveUMLSymbolParent((Node)e.getPickResult().getIntersectedNode());
-					if (dragRelease != null && dragRelease instanceof UMLObjectSymbol) {
+					UMLObjectSymbol dragRelease = resolveUMLObjectSymbolParent((Node)e.getPickResult().getIntersectedNode());
+					if (dragRelease != null) {
 						documentViewPane.addUMLSymbol(
 								new UMLRelationSymbol(dragTarget, 
-										(UMLObjectSymbol) dragRelease, 
+										dragRelease, 
 										UMLRelationType.ASSOCIATION));
 					}					
 				}
 				break;
 			case CREATE_DEPENDENCY:
 				if (isRelating) {
-					UMLSymbol dragRelease = resolveUMLSymbolParent((Node)e.getPickResult().getIntersectedNode());
-					if (dragRelease != null && dragRelease instanceof UMLObjectSymbol) {
+					UMLObjectSymbol dragRelease = resolveUMLObjectSymbolParent((Node)e.getPickResult().getIntersectedNode());
+					if (dragRelease != null) {
 						documentViewPane.addUMLSymbol(new UMLRelationSymbol(
 								dragTarget, 
-								(UMLObjectSymbol) dragRelease, 
+								dragRelease, 
 								UMLRelationType.DEPENDENCY));
 					}					
 				}
@@ -210,6 +210,30 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 				result = null;
 			} else {
 				result = resolveUMLSymbolParent(target.getParent());
+			}
+		} else {
+			result = null;
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Utility to traverse scene graph and identify ancestor UMLSymbol
+	 * @author Merv Fansler
+	 * @param target initial node to test for ancestor UMLSymbol
+	 * @return UMLSymbol ancestor, otherwise null
+	 */
+	private UMLObjectSymbol resolveUMLObjectSymbolParent(Node target) {
+		UMLObjectSymbol result;
+		
+		if (target != null) {
+			if (target instanceof UMLObjectSymbol) {
+				result = (UMLObjectSymbol)target;
+			} else if (target instanceof DocumentViewPane) {
+				result = null;
+			} else {
+				result = resolveUMLObjectSymbolParent(target.getParent());
 			}
 		} else {
 			result = null;

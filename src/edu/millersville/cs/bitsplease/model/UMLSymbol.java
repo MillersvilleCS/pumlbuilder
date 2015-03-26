@@ -5,11 +5,22 @@
  */
 package edu.millersville.cs.bitsplease.model;
 
-import javafx.scene.Group;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.layout.Region;
 
-public abstract class UMLSymbol extends Group {
+public abstract class UMLSymbol extends Region {
 	protected boolean isSelected = false;
-	protected String identifier = "Untitled";
+	protected StringProperty identifier = new SimpleStringProperty("Untitled");
+	
+	public ObservableList<Property<? extends Object>> getFields() {
+		ObservableList<Property<? extends Object>> fields = FXCollections.emptyObservableList();
+		fields.add(identifier);
+		return fields;
+	}
 	
 	/**
 	 * @return the isSelected
@@ -24,15 +35,23 @@ public abstract class UMLSymbol extends Group {
 		this.isSelected = isSelected;
 	}
 	/**
+	 * @return a StringProperty of the identifier
+	 */
+	public StringProperty getIdentifierProperty() {
+		return identifier;
+	}
+	/**
 	 * @return the identifier
 	 */
 	public String getIdentifier() {
-		return identifier;
+		return identifier.getValue();
 	}
 	/**
 	 * @param identifier the identifier to set
 	 */
 	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
+		this.identifier.setValue(identifier);
 	}
+	
+	
 }

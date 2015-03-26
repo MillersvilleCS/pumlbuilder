@@ -6,15 +6,16 @@
 
 package edu.millersville.cs.bitsplease.model;
 
-import javafx.geometry.Point2D;
+import javafx.beans.property.Property;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventDispatchChain;
+import javafx.geometry.Point2D;
 
 /*
  * A class model to represent a UML Object symbol
  */
-//TODO add ArrayList<UMLRelationSymbol> to keep track of relations.
-public class UMLObjectSymbol extends UMLSymbol {
+public abstract class UMLObjectSymbol extends UMLSymbol {
 	
 	/**
 	 *  Empty UMLObjectSymbol Constructor 
@@ -33,7 +34,7 @@ public class UMLObjectSymbol extends UMLSymbol {
 	}
 	
 	public UMLObjectSymbol(String name){
-		this.identifier = name;
+		this.identifier.setValue(name);
 	}
 	/** 
 	 * Construct a UMLObjectSymbol with user-defined height, width
@@ -71,22 +72,6 @@ public class UMLObjectSymbol extends UMLSymbol {
 	/************************
 	 *Class Accessor methods*
 	 ************************/
-		
-	/**
-	 * 
-	 * @return height the height of a UMLObjectSymbol instance
-	 */
-	public double getHeight(){
-		return this.getLayoutBounds().getHeight();
-	}
-	
-	/**
-	 * 
-	 * @return the width of a UMLObjectSymbol instance
-	 */
-	public double getWidth(){
-		return this.getLayoutBounds().getWidth();
-	}
 	
 	/**
 	 * 
@@ -141,4 +126,17 @@ public class UMLObjectSymbol extends UMLSymbol {
 		this.isSelected = status;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.millersville.cs.bitsplease.model.UMLSymbol#getFields()
+	 */
+	@Override
+	public ObservableList<Property<? extends Object>> getFields() {
+		ObservableList<Property<? extends Object>> fields = super.getFields();
+		fields.add(this.layoutXProperty());
+		fields.add(this.layoutYProperty());
+		fields.add(this.prefWidthProperty());
+		fields.add(this.prefHeightProperty());
+		return fields;
+	}
+
 }

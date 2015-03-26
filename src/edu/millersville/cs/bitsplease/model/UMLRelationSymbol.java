@@ -7,6 +7,8 @@
 
 package edu.millersville.cs.bitsplease.model;
 
+import javafx.beans.property.Property;
+import javafx.collections.ObservableList;
 import javafx.scene.shape.Line;
 
 public class UMLRelationSymbol extends UMLSymbol {
@@ -19,10 +21,14 @@ public class UMLRelationSymbol extends UMLSymbol {
 	public UMLRelationSymbol(UMLObjectSymbol sourceObject,
 			UMLObjectSymbol targetObject, UMLRelationType relationType){
 		super();
+		
 		this.sourceObject = sourceObject;
 		this.targetObject = targetObject;
 		this.relationType = relationType;
-
+		
+		// clicks should NOT be captured based on bounding box
+		this.setPickOnBounds(false);
+		
 		this.rLine = new Line();
 		
 		switch (this.relationType) {
@@ -103,5 +109,13 @@ public class UMLRelationSymbol extends UMLSymbol {
 
 	public void refresh() {
 		refreshLine();
+	}
+
+	@Override
+	public ObservableList<Property<? extends Object>> getFields() {
+		ObservableList<Property<? extends Object>> fields = super.getFields();
+		fields.add(sourceObject.getIdentifierProperty());
+		fields.add(targetObject.getIdentifierProperty());
+		return fields;
 	}
 }

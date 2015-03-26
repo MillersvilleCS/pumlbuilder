@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javafx.beans.property.Property;
+import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -210,11 +212,12 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 			lbot.setVisible(true);
 		
 	}
-//	
-//	public void refreshSymbolPosition() {
-//		Point2D origin = umlClassSymbol.getOrigin();
-//		
-//		this.setLayoutX(origin.getX());
-//		this.setLayoutY(origin.getY());
-//	}
+
+	@Override
+	public ObservableList<Property<? extends Object>> getFields() {
+		ObservableList<Property<? extends Object>> fields = super.getFields();
+		attributes.forEach(a -> fields.add(a.textProperty()));
+		functions.forEach(f -> fields.add(f.textProperty()));
+		return fields;
+	}
 }
