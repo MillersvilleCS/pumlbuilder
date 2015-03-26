@@ -13,18 +13,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import javafx.geometry.Point2D;
-import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 
 public class UMLClassSymbol extends UMLObjectSymbol {
-	private Rectangle umlBox;
+	private VBox umlVBox;
 	private Line ltop;
 	private Line lbot;
-	private Label name;
-	private List<Label> attributes;
-	private List<Label> functions;
+	private TextField name;
+	private List<TextField> attributes;
+	private List<TextField> functions;
 	private final int offset = 20;
 	
 		/**
@@ -35,55 +34,51 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	public UMLClassSymbol(Point2D origin, double height, double width){
 		super(origin, height, width);
 		
-		umlBox = new Rectangle(0, 0, width, height);
-		umlBox.setFill(Color.TRANSPARENT);
-		umlBox.setStroke(Color.BLACK);
-		this.getChildren().add(umlBox);
+		umlVBox = new VBox();
+		umlVBox.setStyle("-fx-border-color: #000; -fx-background-color: white");
+		umlVBox.setPrefSize(width, height);
+		this.getChildren().add(umlVBox);
 		
-		double y = 20;
-		name = new Label(" " + getIdentifier());
-		name.setMaxWidth(umlBox.getWidth() - 10);
-		name.setPrefHeight(y);
-		this.getChildren().add(name);
+		name = new TextField(getIdentifier());
+		name.setMaxWidth(width);
+		name.setPrefHeight(offset);
+		name.setStyle("-fx-border-color: white");
+		name.setEditable(false);
+		name.setMouseTransparent(true);
+		umlVBox.getChildren().add(name);
 		
-		y = name.getBoundsInParent().getMinY() + name.getPrefHeight(); //will only work for 1 line names
-		ltop = new Line(0, 0, umlBox.getWidth(), 0);
-		ltop.setLayoutY(name.getPrefHeight());
-		this.getChildren().add(ltop);
+		ltop = new Line(0, 0, width, 0);
+		umlVBox.getChildren().add(ltop);
 		
-		attributes = new ArrayList<Label>(0);
-		int length = 0;
+		attributes = new ArrayList<TextField>(0);
 		// TODO: need to add means to set attributes
 		for (String s: Arrays.asList("Attribute1","Attribute2")){
 			if (s != null){
-				Label l = new Label(" " + s);
-				l.setMaxWidth(getWidth() - 10);
-				l.setLayoutY(ltop.getStartY() + length + offset);
-				l.setPrefHeight(offset);
-				length += offset;
-				attributes.add(l);
-				this.getChildren().add(attributes.get(attributes.size() - 1));
+				TextField t = new TextField(s);
+				t.setStyle("-fx-border-color: white; -fx-highlight-fill: none");
+				t.setEditable(false);
+				t.setMouseTransparent(true);
+				t.setMaxWidth(getWidth());
+				t.setPrefHeight(offset);
+				attributes.add(t);
+				umlVBox.getChildren().add(attributes.get(attributes.size() - 1));
 			}
 		}
 		
-		if (attributes.size() == 0)
-			length = 20;
-		
 		lbot = new Line(0, 0, getWidth(), 0);
-		lbot.setLayoutY(ltop.getLayoutY() + length);
-		this.getChildren().add(lbot);
+		umlVBox.getChildren().add(lbot);
 		
-		functions = new ArrayList<Label>(0);
-		length = 0;
+		functions = new ArrayList<TextField>(0);
 		for (String s: Arrays.asList("Operation1()","Operation2()")){
 			if (s != null){
-				Label l = new Label(" " + s);
-				l.setMaxWidth(getWidth() - 10);
-				l.setLayoutY(lbot.getLayoutY() + length);
-				l.setPrefHeight(offset);
-				length += offset;
-				functions.add(l);
-				this.getChildren().add(functions.get(functions.size() - 1));
+				TextField t = new TextField(s);
+				t.setStyle("-fx-border-color: white");
+				t.setEditable(false);
+				t.setMouseTransparent(true);
+				t.setMaxWidth(getWidth());
+				t.setPrefHeight(offset);
+				functions.add(t);
+				umlVBox.getChildren().add(functions.get(functions.size() - 1));
 			}
 		}
 	}
@@ -92,11 +87,11 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	 * removes all elements of the UML diagram from the scene
 	 */
 	public void delete(){
-		this.getChildren().removeAll(umlBox, ltop, lbot, name);
-		for (Label l: attributes)
-			this.getChildren().remove(l);
-		for (Label l: functions)
-			this.getChildren().remove(l);
+		this.getChildren().removeAll(umlVBox, ltop, lbot, name);
+		for (TextField t: attributes)
+			this.getChildren().remove(t);
+		for (TextField t: functions)
+			this.getChildren().remove(t);
 	}
 	
 	/**
@@ -175,26 +170,27 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		double width = getWidth();
 		double height = getHeight();
 		
-		umlBox.setWidth(width);
+		//umlBox.setWidth(width);
+		umlVBox.setPrefSize(width, height);
 		name.setMaxWidth(width);
 		ltop.setEndX(width);
 		lbot.setEndX(width);
 		
-		umlBox.setHeight(height);
+		//umlBox.setHeight(height);
 		
-		for (Label l: attributes){
-			l.setMaxWidth(width);
-			if (l.getLayoutY() + l.getPrefHeight() > height)
-				l.setVisible(false);
+		for (TextField t: attributes){
+			t.setMaxWidth(width);
+			if (t.getLayoutY() + t.getPrefHeight() > height)
+				t.setVisible(false);
 			else
-				l.setVisible(true);
+				t.setVisible(true);
 		}
-		for (Label l: functions){
-			l.setMaxWidth(width);
-			if (l.getLayoutY() + l.getPrefHeight() > height)
-				l.setVisible(false);
+		for (TextField t: functions){
+			t.setMaxWidth(width);
+			if (t.getLayoutY() + t.getPrefHeight() > height)
+				t.setVisible(false);
 			else
-				l.setVisible(true);
+				t.setVisible(true);
 		}
 		
 		
