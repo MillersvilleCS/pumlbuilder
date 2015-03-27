@@ -33,45 +33,46 @@ public class ToolbarPane extends VBox implements ChangeListener<Toggle> {
 		super();
 		
 		tbToggleGroup = new ToggleGroup();
+		this.setStyle("-fx-background-color: #444");
 		
-		ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("Select.png")));
+		ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Select.png")));
 		
 		//create the button with icon
 		ToolbarButton moveSelectButton = new ToolbarButton();
 		moveSelectButton.setImage(icon);
 		moveSelectButton.setTooltip(new Tooltip("Move/Select"));
 		
-		icon = new ImageView(new Image(getClass().getResourceAsStream("Class.png")));
+		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Class.png")));
 		ToolbarButton newClassButton = new ToolbarButton();
 		newClassButton.setImage(icon);
 		newClassButton.setTooltip(new Tooltip("New Class"));
 		
-		icon = new ImageView(new Image(getClass().getResourceAsStream("Association.png")));
+		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Association.png")));
 		ToolbarButton newAssociationButton = new ToolbarButton();
 		newAssociationButton.setImage(icon);
 		newAssociationButton.setTooltip(new Tooltip("New Association"));
 		
-		icon = new ImageView(new Image(getClass().getResourceAsStream("Dependency.png")));
+		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Dependency.png")));
 		ToolbarButton newDependencyButton = new ToolbarButton();
 		newDependencyButton.setImage(icon);
 		newDependencyButton.setTooltip(new Tooltip("New Dependency"));
 		
-		icon = new ImageView(new Image(getClass().getResourceAsStream("Aggregation.png")));
+		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Aggregation.png")));
 		ToolbarButton newAggregationButton = new ToolbarButton();
 		newAggregationButton.setImage(icon);
 		newAggregationButton.setTooltip(new Tooltip("New Aggregation"));
 		
-		icon = new ImageView(new Image(getClass().getResourceAsStream("Composition.png")));
+		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Composition.png")));
 		ToolbarButton newCompostionButton = new ToolbarButton();
 		newCompostionButton.setImage(icon);
 		newCompostionButton.setTooltip(new Tooltip("New Composition"));
 		
-		icon = new ImageView(new Image(getClass().getResourceAsStream("Generalization.png")));
+		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Generalization.png")));
 		ToolbarButton newGeneralizationButton = new ToolbarButton();
 		newGeneralizationButton.setImage(icon);
 		newGeneralizationButton.setTooltip(new Tooltip("New Generaliztion"));
 		
-		icon = new ImageView(new Image(getClass().getResourceAsStream("Delete.png")));
+		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Delete.png")));
 		ToolbarButton deleteObjectButton = new ToolbarButton();
 		deleteObjectButton.setImage(icon);
 		deleteObjectButton.setTooltip(new Tooltip("Delete Object"));
