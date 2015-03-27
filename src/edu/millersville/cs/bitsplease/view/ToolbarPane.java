@@ -14,9 +14,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import edu.millersville.cs.bitsplease.PUMLBuilder;
 
 /**
  * 
@@ -32,47 +32,79 @@ public class ToolbarPane extends VBox implements ChangeListener<Toggle> {
 	public ToolbarPane() {
 		super();
 		
-		Font.loadFont(PUMLBuilder.class.getResource("fontawesome-webfont.ttf").toExternalForm(), 24);
-		
-		// TODO: move style code to CSS files
-		this.setStyle("-fx-background-color: #444; -fx-font-family: FontAwesome");
-		
 		tbToggleGroup = new ToggleGroup();
 		
+		ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("Select.png")));
+		
 		//create the button with icon
-		ToolbarButton moveSelectButton = new ToolbarButton("\uf047");
+		ToolbarButton moveSelectButton = new ToolbarButton();
+		moveSelectButton.setImage(icon);
 		moveSelectButton.setTooltip(new Tooltip("Move/Select"));
 		
-		ToolbarButton newClassButton = new ToolbarButton("\uf022");
+		icon = new ImageView(new Image(getClass().getResourceAsStream("Class.png")));
+		ToolbarButton newClassButton = new ToolbarButton();
+		newClassButton.setImage(icon);
 		newClassButton.setTooltip(new Tooltip("New Class"));
 		
-		ToolbarButton newRelationButton = new ToolbarButton("\uf040");
-		newRelationButton.setTooltip(new Tooltip("New Relation"));
+		icon = new ImageView(new Image(getClass().getResourceAsStream("Association.png")));
+		ToolbarButton newAssociationButton = new ToolbarButton();
+		newAssociationButton.setImage(icon);
+		newAssociationButton.setTooltip(new Tooltip("New Association"));
 		
-		ToolbarButton newDependencyButton = new ToolbarButton("\uf062");
+		icon = new ImageView(new Image(getClass().getResourceAsStream("Dependency.png")));
+		ToolbarButton newDependencyButton = new ToolbarButton();
+		newDependencyButton.setImage(icon);
 		newDependencyButton.setTooltip(new Tooltip("New Dependency"));
 		
-		ToolbarButton deleteObjectButton = new ToolbarButton("\uf014");
+		icon = new ImageView(new Image(getClass().getResourceAsStream("Aggregation.png")));
+		ToolbarButton newAggregationButton = new ToolbarButton();
+		newAggregationButton.setImage(icon);
+		newAggregationButton.setTooltip(new Tooltip("New Aggregation"));
+		
+		icon = new ImageView(new Image(getClass().getResourceAsStream("Composition.png")));
+		ToolbarButton newCompostionButton = new ToolbarButton();
+		newCompostionButton.setImage(icon);
+		newCompostionButton.setTooltip(new Tooltip("New Composition"));
+		
+		icon = new ImageView(new Image(getClass().getResourceAsStream("Generalization.png")));
+		ToolbarButton newGeneralizationButton = new ToolbarButton();
+		newGeneralizationButton.setImage(icon);
+		newGeneralizationButton.setTooltip(new Tooltip("New Generaliztion"));
+		
+		icon = new ImageView(new Image(getClass().getResourceAsStream("Delete.png")));
+		ToolbarButton deleteObjectButton = new ToolbarButton();
+		deleteObjectButton.setImage(icon);
 		deleteObjectButton.setTooltip(new Tooltip("Delete Object"));
+		
 		
 		// store action info for event processing
 		moveSelectButton.setUserData(UMLEditorMode.SELECT);
 		newClassButton.setUserData(UMLEditorMode.CREATE_CLASS);
-		newRelationButton.setUserData(UMLEditorMode.CREATE_ASSOCIATION);
+		newAssociationButton.setUserData(UMLEditorMode.CREATE_ASSOCIATION);
 		newDependencyButton.setUserData(UMLEditorMode.CREATE_DEPENDENCY);
+		newAggregationButton.setUserData(UMLEditorMode.CREATE_AGGREGATION);
+		newCompostionButton.setUserData(UMLEditorMode.CREATE_COMPOSITION);
+		newGeneralizationButton.setUserData(UMLEditorMode.CREATE_GENERALIZATION);
 		deleteObjectButton.setUserData(UMLEditorMode.DELETE);
 		
 		moveSelectButton.setToggleGroup(tbToggleGroup);
 		newClassButton.setToggleGroup(tbToggleGroup);
-		newRelationButton.setToggleGroup(tbToggleGroup);
+		newAssociationButton.setToggleGroup(tbToggleGroup);
 		newDependencyButton.setToggleGroup(tbToggleGroup);
+		newAggregationButton.setToggleGroup(tbToggleGroup);
+		newCompostionButton.setToggleGroup(tbToggleGroup);
+		newGeneralizationButton.setToggleGroup(tbToggleGroup);
 		deleteObjectButton.setToggleGroup(tbToggleGroup);
+		
 		
 		// add to toolbar
 		this.getChildren().add(moveSelectButton);
 		this.getChildren().add(newClassButton);
-		this.getChildren().add(newRelationButton);
+		this.getChildren().add(newAssociationButton);
 		this.getChildren().add(newDependencyButton);
+		this.getChildren().add(newAggregationButton);
+		this.getChildren().add(newCompostionButton);
+		this.getChildren().add(newGeneralizationButton);
 		this.getChildren().add(deleteObjectButton);
 			
 		tbToggleGroup.selectedToggleProperty().addListener(this);
