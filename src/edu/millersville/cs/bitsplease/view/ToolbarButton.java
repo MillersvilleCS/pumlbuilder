@@ -1,5 +1,6 @@
 /**
  * @author Merv Fansler
+ * @author Mike Sims
  * @since February 25, 2015
  * @version 0.1.0
  */
@@ -7,6 +8,7 @@
 package edu.millersville.cs.bitsplease.view;
 
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 
@@ -15,8 +17,7 @@ public class ToolbarButton extends ToggleButton {
 	/**
 	 * @param label
 	 */
-	public ToolbarButton(String label) {
-		super(label);
+	public ToolbarButton(){
 		addPersistentToggle();
 		setPrefWidth(40);
 		setPrefHeight(40);
@@ -33,5 +34,9 @@ public class ToolbarButton extends ToggleButton {
 					event.consume();
 			}
 		});
+	}
+	
+	public void setImage(Node image) {
+		super.setGraphic(image);
 	}
 }
