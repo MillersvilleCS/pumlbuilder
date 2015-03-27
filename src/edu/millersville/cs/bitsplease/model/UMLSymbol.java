@@ -17,7 +17,7 @@ public abstract class UMLSymbol extends Region {
 	protected StringProperty identifier = new SimpleStringProperty("Untitled");
 	
 	public ObservableList<Property<? extends Object>> getFields() {
-		ObservableList<Property<? extends Object>> fields = FXCollections.emptyObservableList();
+		ObservableList<Property<? extends Object>> fields = FXCollections.observableArrayList();
 		fields.add(identifier);
 		return fields;
 	}
