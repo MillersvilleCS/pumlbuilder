@@ -10,11 +10,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 
 public abstract class UMLSymbol extends Region {
 	protected boolean isSelected = false;
 	protected StringProperty identifier = new SimpleStringProperty("Untitled");
+	
+	private DropShadow dropShadow = new DropShadow(6,Color.MEDIUMORCHID);
 	
 	public ObservableList<Property<? extends Object>> getFields() {
 		ObservableList<Property<? extends Object>> fields = FXCollections.observableArrayList();
@@ -32,6 +36,11 @@ public abstract class UMLSymbol extends Region {
 	 * @param isSelected the isSelected to set
 	 */
 	public void setSelected(boolean isSelected) {
+		if (isSelected) {
+			this.setEffect(dropShadow);
+		} else {
+			this.setEffect(null);
+		}
 		this.isSelected = isSelected;
 	}
 	/**

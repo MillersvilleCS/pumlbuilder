@@ -83,6 +83,13 @@ public class DocumentViewPane extends Pane {
 	 * @param selectedUMLSymbol the selectedUMLSymbol to set
 	 */
 	public void setSelectedUMLSymbol(UMLSymbol umlSymbol) {
+		UMLSymbol oldSymbol = this.selectedUMLSymbol.getValue();
+		if (oldSymbol != null) {
+			oldSymbol.setSelected(false);
+		}
+		if (umlSymbol != null) {
+			umlSymbol.setSelected(true);
+		}
 		this.selectedUMLSymbol.setValue(umlSymbol);
 	}
 }
