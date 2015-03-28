@@ -34,10 +34,7 @@ public class PropertiesPane extends VBox implements ChangeListener<UMLSymbol> {
 		super();
 		
 		getChildren().add(paneTitle);
-		//createObjectPane();
-		//createRelationPane();
-		//setActivePane(objectPane);
-		
+		this.setSpacing(10d);
 		this.setStyle("-fx-background-color: #aaa; -fx-padding: 20; -fx-text-fill: white; -fx-font-weight: bold");
 	
 		selectedSymbol.addListener(this);
