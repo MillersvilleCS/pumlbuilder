@@ -10,16 +10,18 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
-import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
-import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
-import edu.millersville.cs.bitsplease.model.UMLRelationType;
-import edu.millersville.cs.bitsplease.model.UMLSymbol;
+import javafx.scene.web.WebView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import edu.millersville.cs.bitsplease.PUMLBuilder;
+import edu.millersville.cs.bitsplease.model.*;
 
 /***
  * Primary GUI component where all user interact occurs. All other view
@@ -73,6 +75,33 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		fileMenu.getItems().add(exit);
 		Menu editMenu = new Menu("Edit");
 		Menu helpMenu = new Menu("Help");
+		MenuItem about = new MenuItem("About");
+		about.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				// create popup window
+				final Stage dialog = new Stage(StageStyle.UTILITY);
+                dialog.initModality(Modality.WINDOW_MODAL);
+                dialog.initOwner(getScene().getWindow());
+                dialog.setResizable(false);
+                
+                // create view for about content
+                WebView aboutPage = new WebView();
+                
+                // load content into view
+                String aboutURL = PUMLBuilder.class.getResource("/html/about.html").toExternalForm();
+                aboutPage.getEngine().load(aboutURL);
+                
+                // load view into window
+                Scene dialogScene = new Scene(aboutPage, 400, 300);
+                dialog.setScene(dialogScene);
+                
+                // display window
+                dialog.show();
+			}
+		});
+		helpMenu.getItems().add(about);
 		
 		menuBar.getMenus().addAll(fileMenu, editMenu, helpMenu);
 		
