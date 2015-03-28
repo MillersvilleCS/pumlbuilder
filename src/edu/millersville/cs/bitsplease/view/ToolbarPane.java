@@ -72,6 +72,16 @@ public class ToolbarPane extends VBox implements ChangeListener<Toggle> {
 		newGeneralizationButton.setImage(icon);
 		newGeneralizationButton.setTooltip(new Tooltip("New Generaliztion"));
 		
+		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/User.png")));
+		ToolbarButton newUserButton = new ToolbarButton();
+		newUserButton.setImage(icon);
+		newUserButton.setTooltip(new Tooltip("New User"));
+		
+		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/UseCase.png")));
+		ToolbarButton newUseCaseButton = new ToolbarButton();
+		newUseCaseButton.setImage(icon);
+		newUseCaseButton.setTooltip(new Tooltip("New Use Case"));
+		
 		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Delete.png")));
 		ToolbarButton deleteObjectButton = new ToolbarButton();
 		deleteObjectButton.setImage(icon);
@@ -86,6 +96,8 @@ public class ToolbarPane extends VBox implements ChangeListener<Toggle> {
 		newAggregationButton.setUserData(UMLEditorMode.CREATE_AGGREGATION);
 		newCompostionButton.setUserData(UMLEditorMode.CREATE_COMPOSITION);
 		newGeneralizationButton.setUserData(UMLEditorMode.CREATE_GENERALIZATION);
+		newUserButton.setUserData(UMLEditorMode.CREATE_USER);
+		newUseCaseButton.setUserData(UMLEditorMode.CREATE_USE_CASE);
 		deleteObjectButton.setUserData(UMLEditorMode.DELETE);
 		
 		moveSelectButton.setToggleGroup(tbToggleGroup);
@@ -95,6 +107,8 @@ public class ToolbarPane extends VBox implements ChangeListener<Toggle> {
 		newAggregationButton.setToggleGroup(tbToggleGroup);
 		newCompostionButton.setToggleGroup(tbToggleGroup);
 		newGeneralizationButton.setToggleGroup(tbToggleGroup);
+		newUserButton.setToggleGroup(tbToggleGroup);
+		newUseCaseButton.setToggleGroup(tbToggleGroup);
 		deleteObjectButton.setToggleGroup(tbToggleGroup);
 		
 		
@@ -106,6 +120,8 @@ public class ToolbarPane extends VBox implements ChangeListener<Toggle> {
 		this.getChildren().add(newAggregationButton);
 		this.getChildren().add(newCompostionButton);
 		this.getChildren().add(newGeneralizationButton);
+		this.getChildren().add(newUserButton);
+		this.getChildren().add(newUseCaseButton);
 		this.getChildren().add(deleteObjectButton);
 			
 		tbToggleGroup.selectedToggleProperty().addListener(this);
