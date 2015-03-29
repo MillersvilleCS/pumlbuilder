@@ -7,6 +7,10 @@
 
 package edu.millersville.cs.bitsplease.model;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
 import javafx.scene.shape.Line;
@@ -106,6 +110,18 @@ public class UMLRelationSymbol extends UMLSymbol {
 	public UMLObjectSymbol getTargetObject() {
 		return this.targetObject;
 	}
+	
+	public void setUmlRelationType(UMLRelationType relType) {
+		this.relationType = relType;
+	}
+	
+	public void setSourceObject(UMLObjectSymbol _source) {
+		this.sourceObject = _source;
+	}
+	
+	public void setTargetObject(UMLObjectSymbol _target) {
+		this.targetObject = _target;
+	}
 
 	public void refresh() {
 		refreshLine();
@@ -118,4 +134,28 @@ public class UMLRelationSymbol extends UMLSymbol {
 		fields.add(targetObject.getIdentifierProperty());
 		return fields;
 	}
+
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		
+		out.writeObject(identifier.getValue());
+		
+		out.writeObject(getSourceObject());
+		out.writeObject(getTargetObject());
+		out.writeObject(getUmlRelationType());
+		
+	}
+
+	@Override
+	public void readExternal(ObjectInput in) throws IOException,
+			ClassNotFoundException {
+		identifier.setValue((String)in.readObject());
+		
+		setSourceObject((UMLObjectSymbol)in.readObject());
+		setTargetObject((UMLObjectSymbol)in.readObject());
+		setUmlRelationType((UMLRelationType)in.readObject());
+		
+	}
+
+	
 }

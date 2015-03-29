@@ -8,6 +8,9 @@
 
 package edu.millersville.cs.bitsplease.model;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.Arrays;
 
 import javafx.beans.property.Property;
@@ -21,6 +24,13 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	private VBox classBox, attributes, operations;
 	private TextField name;
 	
+	
+	/**
+	 * Empty constructor for externalization purposes
+	 */
+	public UMLClassSymbol(){
+		super();
+	}
 	/**
 	 * UMLObjectSymbol Constructor displaying UMLClassSymbol location and attributes
 	 * This constructor assumes that the width and height are large enough to encompass all of its attributes
@@ -83,5 +93,33 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 			}
 		});
 		return fields;
+	}
+
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		// TODO Auto-generated method stub
+		out.writeObject(identifier.getValue());
+		out.writeDouble(getX());
+		out.writeDouble(getY());
+		out.writeDouble(getPrefHeight());
+		out.writeDouble(getPrefWidth());
+		
+	
+		
+		
+	}
+
+	@Override
+	public void readExternal(ObjectInput in) throws IOException,
+			ClassNotFoundException {
+		identifier.setValue((String)in.readObject());
+		double x = in.readDouble();
+		double y = in.readDouble();
+		setOrigin(new Point2D(x,y));
+		
+		setPrefHeight(in.readDouble());
+		setPrefWidth(in.readDouble());	
+		
+		
 	}
 }

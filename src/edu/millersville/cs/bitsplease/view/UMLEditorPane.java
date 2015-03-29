@@ -1,10 +1,18 @@
 /**
  * @author Merv Fansler
+ * @author Kevin Fisher
  * @since February 19, 2015
  * @version 0.1.1
  */
 
 package edu.millersville.cs.bitsplease.view;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.FileInputStream;
+import java.io.ObjectOutputStream;
+import java.io.FileOutputStream;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,9 +22,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -63,24 +76,48 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		MenuBar menuBar = new MenuBar();
 		
 		Menu fileMenu = new Menu("File");
-		MenuItem exit = new MenuItem("Exit");
-		exit.setOnAction(new EventHandler<ActionEvent>(){
-			
-			@Override
-			public void handle(ActionEvent e){
-				System.exit(0);
-			}
-		});
 		
-		fileMenu.getItems().add(exit);
+		//Open handles single entity for now
+		MenuItem open = new MenuItem("Open");
+		open.setOnAction(event -> {
+			FileChooser fileHandler = new FileChooser();
+			File fileToLoad = fileHandler.showOpenDialog(getScene().getWindow());
+			
+			try{
+			ObjectInputStream in = new ObjectInputStream(
+					new FileInputStream(fileToLoad));
+			
+			//Load in currently selected symbol of specified saved state
+			documentViewPane.setSelectedUMLSymbol((UMLSymbol)in.readObject());
+			System.out.println(documentViewPane.getSelectedUMLSymbol().getValue().getIdentifier());
+			}catch(Exception e){e.printStackTrace();}
+			
+		});
+		open.setAccelerator(new KeyCodeCombination(KeyCode.O, 
+				KeyCombination.SHORTCUT_DOWN));
+		
+		MenuItem save = new MenuItem("Save");
+		save.setOnAction(event -> {
+			FileChooser fileHandler = new FileChooser();
+			File fileToSave = fileHandler.showSaveDialog(getScene().getWindow());
+			try{
+			ObjectOutputStream o = new ObjectOutputStream(
+					new FileOutputStream(fileToSave));
+			//Save currently selected object [For now..]
+			o.writeObject(documentViewPane.getSelectedUMLSymbol().getValue());
+			
+			}catch(IOException e){ e.printStackTrace();}
+		});
+		MenuItem exit = new MenuItem("Exit");
+		exit.setOnAction(event ->{ System.exit(0); });
+		exit.setAccelerator(new KeyCodeCombination(KeyCode.W, KeyCombination.SHORTCUT_DOWN,
+					KeyCombination.SHIFT_DOWN ));
+		
+		fileMenu.getItems().addAll(open,save, new SeparatorMenuItem(), exit);
 		Menu editMenu = new Menu("Edit");
 		Menu helpMenu = new Menu("Help");
 		MenuItem about = new MenuItem("About");
-		about.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				// create popup window
+		about.setOnAction(event -> {
 				final Stage dialog = new Stage(StageStyle.UTILITY);
                 dialog.initModality(Modality.WINDOW_MODAL);
                 dialog.initOwner(getScene().getWindow());
@@ -99,8 +136,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
                 
                 // display window
                 dialog.show();
-			}
-		});
+			});
 		helpMenu.getItems().add(about);
 		
 		menuBar.getMenus().addAll(fileMenu, editMenu, helpMenu);

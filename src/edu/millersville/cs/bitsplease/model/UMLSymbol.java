@@ -5,6 +5,8 @@
  */
 package edu.millersville.cs.bitsplease.model;
 
+import java.io.Externalizable;
+
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -14,7 +16,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 
-public abstract class UMLSymbol extends Region {
+public abstract class UMLSymbol extends Region implements Externalizable{
 	protected boolean isSelected = false;
 	protected StringProperty identifier = new SimpleStringProperty("Untitled");
 	
