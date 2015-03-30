@@ -9,13 +9,12 @@
 package edu.millersville.cs.bitsplease.view;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.FileInputStream;
 import java.io.ObjectOutputStream;
-import java.io.FileOutputStream;
 
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -35,7 +34,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import edu.millersville.cs.bitsplease.PUMLBuilder;
-import edu.millersville.cs.bitsplease.model.*;
+import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
+import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
+import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
+import edu.millersville.cs.bitsplease.model.UMLRelationType;
+import edu.millersville.cs.bitsplease.model.UMLSymbol;
 
 /***
  * Primary GUI component where all user interact occurs. All other view
@@ -92,6 +95,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			
 			documentViewPane.addUMLSymbol(loadedIn);
 			documentViewPane.setSelectedUMLSymbol(loadedIn);
+			in.close();
 			}catch(Exception e){e.printStackTrace();}
 			
 		});
@@ -108,6 +112,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			//Save currently selected object [For now..]
 			o.writeObject(documentViewPane.getSelectedUMLSymbol().getValue());
 			
+			o.close();
 			}catch(IOException e){ e.printStackTrace();}
 		});
 		MenuItem exit = new MenuItem("Exit");

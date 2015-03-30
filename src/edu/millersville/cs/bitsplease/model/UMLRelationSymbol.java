@@ -11,6 +11,7 @@ package edu.millersville.cs.bitsplease.model;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.List;
 
 import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
@@ -92,6 +93,35 @@ public class UMLRelationSymbol extends UMLSymbol {
 		getChildren().add(rSymbol);
 	}
 	
+	public Point2D getStartPoint() {
+		List<Double> points = rLine.getPoints();
+		if (points.size() < 2) {
+			return null;
+		} else {
+			return new Point2D(points.get(0),points.get(1));
+		}
+	}
+	
+	public Point2D getEndPoint() {
+		List<Double> points = rLine.getPoints();
+		int size = points.size();
+		if (size < 2) {
+			return null;
+		} else {
+			return new Point2D(points.get(size-2),points.get(size-1));
+		}
+	}
+	
+	public double getEndOrientation() {
+		List<Double> points = rLine.getPoints();
+		int size = points.size();
+		if (size < 4) {
+			return 0d;
+		} else {
+			return Math.atan2(points.get(size-1)-points.get(size-3), points.get(size-2)-points.get(size-4));
+		}
+	}
+	
 	/**
 	 * @param s1 symbol to start line at
 	 * @param s2 symbol to end line at
@@ -150,7 +180,6 @@ public class UMLRelationSymbol extends UMLSymbol {
 				});
 				break;
 		}
-		
 	}
 	
 	public UMLRelationType getUmlRelationType() {
@@ -181,38 +210,22 @@ public class UMLRelationSymbol extends UMLSymbol {
 	 * resets the position of the arrowhead based off of the line's position
 	 */
 	private void refreshArrow(){
-		int length = 10;
+		double arrowSize = 10;
 		Polyline p = (Polyline) rSymbol;
-		Point2D lpoint;
-		Point2D rpoint;
-		double x = rLine.getPoints().get(2);
-		double y = rLine.getPoints().get(3);
 		
-		if ((x == targetObject.getTopCenter().getX()) && (y == targetObject.getTopCenter().getY())){
-			lpoint = new Point2D(x - length, y - length);
-			rpoint = new Point2D(x + length, y - length);
-		} else if ((x == targetObject.getBottomCenter().getX()) && (y == targetObject.getBottomCenter().getY())){
-			lpoint = new Point2D(x - length, y + length);
-			rpoint = new Point2D(x + length, y + length);
-		} else if ((x == targetObject.getMiddleLeft().getX()) && (y == targetObject.getMiddleLeft().getY())){
-			lpoint = new Point2D(x - length, y - length);
-			rpoint = new Point2D(x - length, y + length);
-		} else {
-			lpoint = new Point2D(x + length, y - length);
-			rpoint = new Point2D(x + length, y + length);
-		}
-		
-		p.getPoints().setAll(lpoint.getX(), lpoint.getY(),
-								x, y,
-								rpoint.getX(), rpoint.getY());
+		p.getPoints().setAll(-0.5*arrowSize, arrowSize, 0.5*arrowSize, 0d, -0.5*arrowSize, -arrowSize);
+		p.setRotate(Math.toDegrees(getEndOrientation()));
+		p.setTranslateX(getEndPoint().getX() - 0.5*arrowSize*Math.cos(getEndOrientation()));
+		p.setTranslateY(getEndPoint().getY() - 0.5*arrowSize*Math.sin(getEndOrientation()));
 	}
+	
 	/**
 	 * resets the position for the AGGREGATION and COMPOSITION relation types
 	 */
 	private void refreshDiamond(){
 		Polygon p = (Polygon) rSymbol;
-		double x = rLine.getPoints().get(2);
-		double y = rLine.getPoints().get(3);
+		double x = getEndPoint().getX();
+		double y = getEndPoint().getY();
 		p.setRotate(0);
 		rSymbol.setLayoutX(x - 5);
 		
@@ -237,8 +250,8 @@ public class UMLRelationSymbol extends UMLSymbol {
 	 */
 	private void refreshTriangle(){
 		Polygon p = (Polygon) rSymbol;
-		double x = rLine.getPoints().get(2);
-		double y = rLine.getPoints().get(3);
+		double x = getEndPoint().getX();
+		double y = getEndPoint().getY();
 		p.setRotate(0);
 		rSymbol.setLayoutX(x - 12);
 		
