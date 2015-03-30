@@ -72,6 +72,11 @@ public class ToolbarPane extends VBox implements ChangeListener<Toggle> {
 		newGeneralizationButton.setImage(icon);
 		newGeneralizationButton.setTooltip(new Tooltip("New Generaliztion"));
 		
+		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Interface.png")));
+		ToolbarButton newInterfaceButton = new ToolbarButton();
+		newInterfaceButton.setImage(icon);
+		newInterfaceButton.setTooltip(new Tooltip("New Interface"));
+		
 		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/User.png")));
 		ToolbarButton newUserButton = new ToolbarButton();
 		newUserButton.setImage(icon);
@@ -96,6 +101,7 @@ public class ToolbarPane extends VBox implements ChangeListener<Toggle> {
 		newAggregationButton.setUserData(UMLEditorMode.CREATE_AGGREGATION);
 		newCompostionButton.setUserData(UMLEditorMode.CREATE_COMPOSITION);
 		newGeneralizationButton.setUserData(UMLEditorMode.CREATE_GENERALIZATION);
+		newInterfaceButton.setUserData(UMLEditorMode.CREATE_INTERFACE);
 		newUserButton.setUserData(UMLEditorMode.CREATE_USER);
 		newUseCaseButton.setUserData(UMLEditorMode.CREATE_USE_CASE);
 		deleteObjectButton.setUserData(UMLEditorMode.DELETE);
@@ -107,6 +113,7 @@ public class ToolbarPane extends VBox implements ChangeListener<Toggle> {
 		newAggregationButton.setToggleGroup(tbToggleGroup);
 		newCompostionButton.setToggleGroup(tbToggleGroup);
 		newGeneralizationButton.setToggleGroup(tbToggleGroup);
+		newInterfaceButton.setToggleGroup(tbToggleGroup);
 		newUserButton.setToggleGroup(tbToggleGroup);
 		newUseCaseButton.setToggleGroup(tbToggleGroup);
 		deleteObjectButton.setToggleGroup(tbToggleGroup);
@@ -120,6 +127,7 @@ public class ToolbarPane extends VBox implements ChangeListener<Toggle> {
 		this.getChildren().add(newAggregationButton);
 		this.getChildren().add(newCompostionButton);
 		this.getChildren().add(newGeneralizationButton);
+		this.getChildren().add(newInterfaceButton);
 		this.getChildren().add(newUserButton);
 		this.getChildren().add(newUseCaseButton);
 		this.getChildren().add(deleteObjectButton);

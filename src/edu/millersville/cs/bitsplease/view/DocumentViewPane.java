@@ -14,6 +14,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
+import edu.millersville.cs.bitsplease.model.UMLInterfaceSymbol;
 import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
 import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
@@ -43,6 +44,10 @@ public class DocumentViewPane extends Pane {
 	 */
 	public void addUMLSymbol(UMLRelationSymbol relView) {
 		this.getChildren().add(relView);
+	}
+	
+	public void addUMLSymbol(UMLInterfaceSymbol intView) {
+		this.getChildren().add(intView);
 	}
 	
 	public void refreshRelations(UMLObjectSymbol obj) {

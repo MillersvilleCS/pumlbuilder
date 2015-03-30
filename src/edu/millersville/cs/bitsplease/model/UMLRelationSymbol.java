@@ -53,9 +53,10 @@ public class UMLRelationSymbol extends UMLSymbol {
 		
 		// create and add identifier field
 		rText = new TextField();
+		rText.textProperty().bindBidirectional(identifier);
 		rText.setMouseTransparent(true);
 		rText.setFocusTraversable(false);
-		rText.setVisible(false);
+		rText.setVisible(true);
 		rText.setStyle("-fx-border-color: white");
 		rText.setPrefWidth(100);
 		getChildren().add(rText);

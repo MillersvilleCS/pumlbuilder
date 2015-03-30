@@ -36,6 +36,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import edu.millersville.cs.bitsplease.PUMLBuilder;
 import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
+import edu.millersville.cs.bitsplease.model.UMLInterfaceSymbol;
 import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
 import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
 import edu.millersville.cs.bitsplease.model.UMLRelationType;
@@ -197,6 +198,13 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 					}
 				}
 				
+				break;
+			case CREATE_INTERFACE:
+					
+					UMLInterfaceSymbol i = new UMLInterfaceSymbol(new Point2D(e.getX() -85, e.getY() -40));
+					documentViewPane.addUMLSymbol(i);
+					documentViewPane.setSelectedUMLSymbol(i);
+					
 				break;
 			case DELETE:
 				documentViewPane.setSelectedUMLSymbol(null);

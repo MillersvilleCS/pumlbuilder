@@ -53,6 +53,7 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		
 		classBox.getChildren().addAll(name,s1,attributes,s2,operations);
 		this.getChildren().add(classBox);
+		
 				  
 	}
 	/**
