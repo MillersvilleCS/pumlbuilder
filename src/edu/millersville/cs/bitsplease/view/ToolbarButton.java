@@ -21,6 +21,7 @@ public class ToolbarButton extends ToggleButton {
 		addPersistentToggle();
 		setPrefWidth(40);
 		setPrefHeight(40);
+		setFocusTraversable(false);
 		setStyle("-fx-font-size: 16");
 	}
 
