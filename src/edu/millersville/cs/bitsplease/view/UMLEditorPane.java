@@ -86,10 +86,11 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			try{
 			ObjectInputStream in = new ObjectInputStream(
 					new FileInputStream(fileToLoad));
-			
+			UMLClassSymbol loadedIn = (UMLClassSymbol)in.readObject();
 			//Load in currently selected symbol of specified saved state
-			documentViewPane.setSelectedUMLSymbol((UMLSymbol)in.readObject());
-			System.out.println(documentViewPane.getSelectedUMLSymbol().getValue().getIdentifier());
+			
+			documentViewPane.addUMLSymbol(loadedIn);
+			documentViewPane.setSelectedUMLSymbol(loadedIn);
 			}catch(Exception e){e.printStackTrace();}
 			
 		});

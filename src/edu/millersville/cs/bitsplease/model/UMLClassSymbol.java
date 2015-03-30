@@ -11,7 +11,10 @@ package edu.millersville.cs.bitsplease.model;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
@@ -26,10 +29,31 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	
 	
 	/**
-	 * Empty constructor for externalization purposes
+	 * Default constructor for externalization purposes
 	 */
 	public UMLClassSymbol(){
 		super();
+		
+		classBox = new VBox();
+		classBox.setStyle("-fx-border-color: #000; -fx-background-color: white; -fx-width: 100%; -fx-height: 100%;");
+		
+		name = new TextField();
+		name.textProperty().bindBidirectional(identifier);
+		name.setStyle("-fx-border-color:white;");
+		name.setMouseTransparent(true);
+		name.setFocusTraversable(false);
+		
+		attributes = new VBox();
+		operations = new VBox();
+		
+		Separator s1 = new Separator(),
+				  s2 = new Separator();
+		s1.setStyle("-fx-background-color: #000;");
+		s2.setStyle("-fx-background-color: #000;");
+		
+		classBox.getChildren().addAll(name,s1,attributes,s2,operations);
+		this.getChildren().add(classBox);
+				  
 	}
 	/**
 	 * UMLObjectSymbol Constructor displaying UMLClassSymbol location and attributes
@@ -63,6 +87,10 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		this.getChildren().add(classBox);
 	}
 	
+	/**
+	 * 
+	 * @param operationName 
+	 */
 	private void addOperation(String operationName) {
 		TextField t = new TextField(operationName);
 		t.setStyle("-fx-border-color: white");
@@ -70,7 +98,17 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		t.setFocusTraversable(false);
 		operations.getChildren().add(t);
 	}
-
+	
+	public void setOperations(ArrayList<String> ops){
+		ops.forEach(op -> {
+			addOperation(op);
+		});
+	}
+	
+	/**
+	 * 
+	 * @param attributeName
+	 */
 	private void addAttribute(String attributeName) {
 		TextField t = new TextField(attributeName);
 		t.setStyle("-fx-border-color: white");
@@ -78,7 +116,17 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		t.setFocusTraversable(false);
 		attributes.getChildren().add(t);
 	}
+	
+	public void setAttributes(ArrayList<String> attr){
+		attr.forEach(a -> {
+			addAttribute(a);
+		});
+	}
 
+	/**
+	 * 
+	 * @return An iterable list of the fields contained within the class
+	 */
 	@Override
 	public ObservableList<Property<? extends Object>> getFields() {
 		ObservableList<Property<? extends Object>> fields = super.getFields();
@@ -104,6 +152,29 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		out.writeDouble(getPrefHeight());
 		out.writeDouble(getPrefWidth());
 		
+		List<String> attr = new ArrayList<String>();
+		attributes.getChildren().forEach(a -> {
+			attr.add(((TextField)a).textProperty().getValue());	
+		});
+		
+		System.out.println("Attr array size : " + attr.size());
+		System.out.println("Attribute 1: " + attr.get(0));
+		System.out.println("Attribute 2: " + attr.get(1));
+		
+		out.writeObject(attr);
+		
+		List<String> ops = new ArrayList<String>();
+		
+		operations.getChildren().forEach(op -> {
+			
+				ops.add(((TextField)op).textProperty().getValue());
+		});
+		
+		System.out.println("Ops array size: " + ops.size());
+		System.out.println("Operation 1: " + ops.get(0));
+		System.out.println("Operation 2: " + ops.get(1));
+		
+		out.writeObject(ops);
 	
 		
 		
@@ -118,7 +189,27 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		setOrigin(new Point2D(x,y));
 		
 		setPrefHeight(in.readDouble());
-		setPrefWidth(in.readDouble());	
+		setPrefWidth(in.readDouble());
+		
+		@SuppressWarnings("unchecked")
+		ArrayList<String> attr = (ArrayList<String>)in.readObject();
+		System.out.println("Loaded in attr array, size: " + attr.size());
+		System.out.println("Attributes: ");
+		for(String s : attr){
+			System.out.println(s);
+		}
+		setAttributes(attr);
+		
+		@SuppressWarnings("unchecked")
+		ArrayList<String> ops = (ArrayList<String>)in.readObject();
+		System.out.println("Loaded in ops array, size: " + ops.size());
+		System.out.println("Operations: ");
+		for(String op : ops){
+			System.out.println(op);
+		}
+		setOperations(ops);
+		
+		
 		
 		
 	}
