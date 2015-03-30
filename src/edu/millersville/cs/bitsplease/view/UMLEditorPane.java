@@ -215,6 +215,9 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 				}
 				break;
 			case CREATE_ASSOCIATION:
+			case CREATE_AGGREGATION:
+			case CREATE_COMPOSITION:
+			case CREATE_GENERALIZATION:
 			case CREATE_DEPENDENCY:
 				if (!isRelating) {
 					
@@ -248,6 +251,39 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 								dragTarget, 
 								dragRelease, 
 								UMLRelationType.DEPENDENCY));
+					}					
+				}
+				break;
+			case CREATE_AGGREGATION:
+				if (isRelating) {
+					UMLObjectSymbol dragRelease = resolveUMLObjectSymbolParent((Node)e.getPickResult().getIntersectedNode());
+					if (dragRelease != null) {
+						documentViewPane.addUMLSymbol(
+								new UMLRelationSymbol(dragTarget, 
+										dragRelease, 
+										UMLRelationType.AGGREGATION));
+					}					
+				}
+				break;
+			case CREATE_COMPOSITION:
+				if (isRelating) {
+					UMLObjectSymbol dragRelease = resolveUMLObjectSymbolParent((Node)e.getPickResult().getIntersectedNode());
+					if (dragRelease != null) {
+						documentViewPane.addUMLSymbol(
+								new UMLRelationSymbol(dragTarget, 
+										dragRelease, 
+										UMLRelationType.COMPOSITION));
+					}					
+				}
+				break;
+			case CREATE_GENERALIZATION:
+				if (isRelating) {
+					UMLObjectSymbol dragRelease = resolveUMLObjectSymbolParent((Node)e.getPickResult().getIntersectedNode());
+					if (dragRelease != null) {
+						documentViewPane.addUMLSymbol(
+								new UMLRelationSymbol(dragTarget, 
+										dragRelease, 
+										UMLRelationType.GENERALIZATION));
 					}					
 				}
 				break;

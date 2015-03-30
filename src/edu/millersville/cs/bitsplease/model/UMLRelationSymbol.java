@@ -22,12 +22,15 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Shape;
 
+//PolyLine test
+import javafx.scene.shape.Polyline;
+
 public class UMLRelationSymbol extends UMLSymbol {
 
 	private	UMLRelationType relationType;
 	private UMLObjectSymbol sourceObject;
 	private UMLObjectSymbol targetObject;
-	private Line rLine;
+	private Polyline rLine;
 	private Shape rSymbol;
 	private TextField rText;
 	
@@ -41,7 +44,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 		
 		// clicks should NOT be captured based on bounding box
 		this.setPickOnBounds(false);
-		this.rLine = new Line();
+		this.rLine = new Polyline();
 		refreshLine();
 		getChildren().add(rLine);
 		
@@ -56,11 +59,11 @@ public class UMLRelationSymbol extends UMLSymbol {
 		switch (this.relationType) {
 		case ASSOCIATION:
 			rSymbol = new Polyline();
-			refreshArrow();
+			//refreshArrow();
 			break;
 		case DEPENDENCY:
 			rSymbol = new Polyline();
-			refreshArrow();
+			//refreshArrow();
 			rLine.getStrokeDashArray().addAll(25d, 10d);
 			break;
 		case AGGREGATION:
@@ -70,14 +73,14 @@ public class UMLRelationSymbol extends UMLSymbol {
 					10.0, 8.0);
 			rSymbol.setFill(Color.WHITE);
 			rSymbol.setStroke(Color.BLACK);
-			refreshDiamond();
+			//refreshDiamond();
 			break;
 		case COMPOSITION:
 			rSymbol = new Polygon(5.0, 0.0,
 					0.0 ,8.0,
 					5.0, 16.0,
 					10.0, 8.0);
-			refreshDiamond();
+			//refreshDiamond();
 			break;
 		case GENERALIZATION:
 			rSymbol = new Polygon(12.0, 0.0,
@@ -85,7 +88,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 					24.0, 15.0);
 			rSymbol.setFill(Color.WHITE);
 			rSymbol.setStroke(Color.BLACK);
-			refreshTriangle();
+			//refreshTriangle();
 			break;
 		default:
 			break;
@@ -117,29 +120,61 @@ public class UMLRelationSymbol extends UMLSymbol {
 		
 		switch (minIndex) {
 		case 0:
-			rLine.setStartX(sourceObject.getTopCenter().getX());
-			rLine.setStartY(sourceObject.getTopCenter().getY());
-			rLine.setEndX(targetObject.getBottomCenter().getX());
-			rLine.setEndY(targetObject.getBottomCenter().getY());
-			break;
-		case 1:
-			rLine.setStartX(sourceObject.getMiddleRight().getX());
-			rLine.setStartY(sourceObject.getMiddleRight().getY());
-			rLine.setEndX(targetObject.getMiddleLeft().getX());
-			rLine.setEndY(targetObject.getMiddleLeft().getY());
-			break;
-		case 2:
-			rLine.setStartX(sourceObject.getMiddleLeft().getX());
-			rLine.setStartY(sourceObject.getMiddleLeft().getY());
-			rLine.setEndX(targetObject.getMiddleRight().getX());
-			rLine.setEndY(targetObject.getMiddleRight().getY());
-			break;
-		case 3:
-			rLine.setStartX(sourceObject.getBottomCenter().getX());
-			rLine.setStartY(sourceObject.getBottomCenter().getY());
-			rLine.setEndX(targetObject.getTopCenter().getX());
-			rLine.setEndY(targetObject.getTopCenter().getY());
-			break;			
+		rLine.getPoints().addAll(new Double[]{
+				sourceObject.getTopCenter().getX(),
+				sourceObject.getTopCenter().getY(),
+				targetObject.getBottomCenter().getX(),
+				targetObject.getBottomCenter().getY()
+			});
+		/*Line
+		rLine.setStartX(sourceObject.getTopCenter().getX());
+		rLine.setStartY(sourceObject.getTopCenter().getY());
+		rLine.setEndX(targetObject.getBottomCenter().getX());
+		rLine.setEndY(targetObject.getBottomCenter().getY());
+		*/
+		break;
+	case 1:
+		rLine.getPoints().addAll(new Double[]{
+				sourceObject.getMiddleRight().getX(),
+				sourceObject.getMiddleRight().getY(),
+				targetObject.getMiddleLeft().getX(),
+				targetObject.getMiddleLeft().getY()
+			});
+		/*Line
+		rLine.setStartX(sourceObject.getMiddleRight().getX());
+		rLine.setStartY(sourceObject.getMiddleRight().getY());
+		rLine.setEndX(targetObject.getMiddleLeft().getX());
+		rLine.setEndY(targetObject.getMiddleLeft().getY());
+		*/
+		break;
+	case 2:
+		rLine.getPoints().addAll(new Double[]{
+				sourceObject.getMiddleLeft().getX(),
+				sourceObject.getMiddleLeft().getY(),
+				targetObject.getMiddleRight().getX(),
+				targetObject.getMiddleRight().getY()
+			});
+		/*Line
+		rLine.setStartX(sourceObject.getMiddleLeft().getX());
+		rLine.setStartY(sourceObject.getMiddleLeft().getY());
+		rLine.setEndX(targetObject.getMiddleRight().getX());
+		rLine.setEndY(targetObject.getMiddleRight().getY());
+		*/
+		break;
+	case 3:
+		rLine.getPoints().addAll(new Double[]{
+				sourceObject.getBottomCenter().getX(),
+				sourceObject.getBottomCenter().getY(),
+				targetObject.getTopCenter().getX(),
+				targetObject.getTopCenter().getY()
+			});
+		/*Line 
+		rLine.setStartX(sourceObject.getBottomCenter().getX());
+		rLine.setStartY(sourceObject.getBottomCenter().getY());
+		rLine.setEndX(targetObject.getTopCenter().getX());
+		rLine.setEndY(targetObject.getTopCenter().getY());
+		*/
+		break;		
 		}
 		
 	}
@@ -171,6 +206,8 @@ public class UMLRelationSymbol extends UMLSymbol {
 	/**
 	 * resets the position of the arrowhead based off of the line's position
 	 */
+	
+	/*TEMPORARY
 	private void refreshArrow(){
 		int length = 10;
 		Polyline p = (Polyline) rSymbol;
@@ -200,6 +237,8 @@ public class UMLRelationSymbol extends UMLSymbol {
 	/**
 	 * resets the position for the AGGREGATION and COMPOSITION relation types
 	 */
+	
+	/*TEMPORARY
 	private void refreshDiamond(){
 		Polygon p = (Polygon) rSymbol;
 		double x = rLine.getEndX();
@@ -226,6 +265,8 @@ public class UMLRelationSymbol extends UMLSymbol {
 	/**
 	 * resets the position of the GENERALIZATION relation type
 	 */
+	
+	/*TEMPORARY
 	private void refreshTriangle(){
 		Polygon p = (Polygon) rSymbol;
 		double x = rLine.getEndX();
@@ -277,9 +318,11 @@ public class UMLRelationSymbol extends UMLSymbol {
 	/**
 	 * calls all of the related functions to update the relation line and symbols
 	 */
+	
 	public void refresh() {
 		refreshLine();
 		
+		/*TEMPORARY
 		switch (this.relationType) {
 		case ASSOCIATION:
 			refreshArrow();
@@ -299,11 +342,14 @@ public class UMLRelationSymbol extends UMLSymbol {
 		default:
 			break;
 		}
+	
 		
 		rText.setLayoutX((rLine.getStartX() + rLine.getEndX()) / 2);
 		rText.setLayoutY((rLine.getStartY() + rLine.getEndY()) / 2);
+		
+		*/
 	}
-
+	
 	@Override
 	public ObservableList<Property<? extends Object>> getFields() {
 		ObservableList<Property<? extends Object>> fields = super.getFields();
