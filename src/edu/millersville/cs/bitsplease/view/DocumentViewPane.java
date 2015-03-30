@@ -1,5 +1,6 @@
 /**
  * @author Merv Fansler
+ * @author Josh Wakefield
  * @since February 25, 2015
  * @version 0.1.1
  */
@@ -86,6 +87,10 @@ public class DocumentViewPane extends Pane {
 		UMLSymbol oldSymbol = this.selectedUMLSymbol.getValue();
 		if (oldSymbol != null) {
 			oldSymbol.setSelected(false);
+			if (oldSymbol instanceof UMLClassSymbol)  {
+				((UMLClassSymbol) oldSymbol).togglenoneditableUMLSymbol();
+			}
+			oldSymbol.requestFocus();
 		}
 		if (umlSymbol != null) {
 			umlSymbol.setSelected(true);

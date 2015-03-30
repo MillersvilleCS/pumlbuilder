@@ -2,6 +2,7 @@
  * @author Kevin Fisher
  * @author Joe Martello
  * @author Merv Fansler
+ * @author Josh Wakefield
  * @since February 25, 2015
  * @version 0.1.1
  */
@@ -122,6 +123,38 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		});
 	}
 
+	public void toggleeditableUMLSymbol() {
+		name.setMouseTransparent(false);
+		
+		attributes.getChildren().forEach(attr -> {
+			if (attr instanceof TextField) {
+				attr.setMouseTransparent(false);
+			}
+		});
+		
+		operations.getChildren().forEach(oper -> {
+			if (oper instanceof TextField) {
+				oper.setMouseTransparent(false);
+			}
+		});
+	}
+
+	public void togglenoneditableUMLSymbol() {
+		name.setMouseTransparent(true);
+			
+		attributes.getChildren().forEach(attr -> {
+			if (attr instanceof TextField) {
+				attr.setMouseTransparent(true);
+			}
+		});
+			
+		operations.getChildren().forEach(oper -> {
+			if (oper instanceof TextField) {
+				oper.setMouseTransparent(true);
+			}
+		});
+	}
+	
 	/**
 	 * 
 	 * @return An iterable list of the fields contained within the class

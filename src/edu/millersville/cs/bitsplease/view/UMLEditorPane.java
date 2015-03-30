@@ -2,6 +2,7 @@
  * @author Merv Fansler
  * @author Kevin Fisher
  * @author Mike Sims
+ * @author Josh Wakefield
  * @since February 19, 2015
  * @version 0.1.1
  */
@@ -185,6 +186,16 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 				break;
 			case SELECT: // selecting items
 				documentViewPane.setSelectedUMLSymbol(resolveUMLSymbolParent((Node) e.getTarget()));
+				
+				if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLClassSymbol) {
+					UMLClassSymbol toEdit = (UMLClassSymbol) resolveUMLSymbolParent((Node) e.getTarget());
+					documentViewPane.setSelectedUMLSymbol(toEdit);
+					if (toEdit.isSelected()) {
+						if (e.getClickCount() == 2) {
+							toEdit.toggleeditableUMLSymbol();
+						}
+					}
+				}
 				
 				break;
 			case DELETE:
