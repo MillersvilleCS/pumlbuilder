@@ -38,10 +38,11 @@ public class UMLRelationSymbol extends UMLSymbol {
 			UMLObjectSymbol targetObject, UMLRelationType relationType){
 		super();
 		
+		
 		this.sourceObject = sourceObject;
 		this.targetObject = targetObject;
 		this.relationType = relationType;
-		
+		identifier.setValue(relationType.toString());
 		// clicks should NOT be captured based on bounding box
 		this.setPickOnBounds(false);
 		

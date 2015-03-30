@@ -81,6 +81,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		
 		Menu fileMenu = new Menu("File");
 		
+		MenuItem newDoc = new MenuItem("New");
 		//Open handles single entity for now
 		MenuItem open = new MenuItem("Open");
 		open.setOnAction(event -> {
@@ -111,16 +112,19 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 					new FileOutputStream(fileToSave));
 			//Save currently selected object [For now..]
 			o.writeObject(documentViewPane.getSelectedUMLSymbol().getValue());
-			
 			o.close();
+			
 			}catch(IOException e){ e.printStackTrace();}
 		});
+		MenuItem saveAs = new MenuItem("Save As");
+		MenuItem exportAs = new MenuItem("Export As...");
 		MenuItem exit = new MenuItem("Exit");
 		exit.setOnAction(event ->{ System.exit(0); });
 		exit.setAccelerator(new KeyCodeCombination(KeyCode.W, KeyCombination.SHORTCUT_DOWN,
 					KeyCombination.SHIFT_DOWN ));
 		
-		fileMenu.getItems().addAll(open,save, new SeparatorMenuItem(), exit);
+		fileMenu.getItems().addAll(newDoc,new SeparatorMenuItem(), open,save, 
+				saveAs,new SeparatorMenuItem(),exportAs, new SeparatorMenuItem(), exit);
 		Menu editMenu = new Menu("Edit");
 		Menu helpMenu = new Menu("Help");
 		MenuItem about = new MenuItem("About");
