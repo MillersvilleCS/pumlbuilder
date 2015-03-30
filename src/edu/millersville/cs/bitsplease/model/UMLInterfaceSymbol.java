@@ -28,11 +28,20 @@ public class UMLInterfaceSymbol extends UMLObjectSymbol{
 	public UMLInterfaceSymbol(){
 		super();
 		VBox interfaceContainer = new VBox();
+		interfaceContainer.setAlignment(Pos.CENTER);
 		
 		interfaceText = new TextField();
-		renderedInterface = new Circle();
+		interfaceText.textProperty().bindBidirectional(identifier);
+		interfaceText.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
+		interfaceText.setMouseTransparent(true);
+		interfaceText.setFocusTraversable(false);
+		interfaceText.setAlignment(Pos.CENTER);
+		
+		renderedInterface = new Circle(10.0);
+		renderedInterface.setFill(Color.WHITE);
+		renderedInterface.setStroke(Color.BLACK);
 
-		interfaceContainer.getChildren().addAll(renderedInterface,interfaceText);
+		interfaceContainer.getChildren().addAll(interfaceText, renderedInterface);
 		this.getChildren().add(interfaceContainer);
 	}
 	
@@ -96,7 +105,10 @@ public class UMLInterfaceSymbol extends UMLObjectSymbol{
 	@Override
 	public void readExternal(ObjectInput in) throws IOException,
 			ClassNotFoundException {
-		// TODO Auto-generated method stub
+		
+		identifier.setValue((String)in.readObject());
+		setOrigin(new Point2D(in.readDouble(), in.readDouble()));
+		
 		
 	}
 
