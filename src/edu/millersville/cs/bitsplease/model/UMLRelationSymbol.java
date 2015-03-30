@@ -24,6 +24,9 @@ import javafx.scene.shape.Shape;
 
 public class UMLRelationSymbol extends UMLSymbol {
 
+	final double ARROW_SIZE = 10d;
+	final double DIAMOND_SIZE = 12d;
+	
 	private	UMLRelationType relationType;
 	private UMLObjectSymbol sourceObject;
 	private UMLObjectSymbol targetObject;
@@ -41,10 +44,13 @@ public class UMLRelationSymbol extends UMLSymbol {
 		
 		// clicks should NOT be captured based on bounding box
 		this.setPickOnBounds(false);
+		
+		// create, add, and update line
 		this.rLine = new Polyline();
 		refreshLine();
 		getChildren().add(rLine);
 		
+		// create and add identifier field
 		rText = new TextField();
 		rText.setMouseTransparent(true);
 		rText.setFocusTraversable(false);
@@ -53,46 +59,56 @@ public class UMLRelationSymbol extends UMLSymbol {
 		rText.setPrefWidth(100);
 		getChildren().add(rText);
 		
+		// create and position relation head symbol
 		switch (this.relationType) {
 		case ASSOCIATION:
-			rSymbol = new Polyline();
+			rSymbol = new Polyline(-0.5*ARROW_SIZE, ARROW_SIZE,
+									0.5*ARROW_SIZE, 0d, 
+								   -0.5*ARROW_SIZE, -ARROW_SIZE);
 			refreshArrow();
 			break;
 		case DEPENDENCY:
-			rSymbol = new Polyline();
+			rSymbol = new Polyline(-0.5*ARROW_SIZE, ARROW_SIZE,
+									0.5*ARROW_SIZE, 0d, 
+								   -0.5*ARROW_SIZE, -ARROW_SIZE);
 			refreshArrow();
 			rLine.getStrokeDashArray().addAll(25d, 10d);
 			break;
 		case AGGREGATION:
-			rSymbol = new Polygon(5.0, 0.0,
-					0.0 ,8.0,
-					5.0, 16.0,
-					10.0, 8.0);
+			rSymbol = new Polygon(DIAMOND_SIZE, 0,
+					 			  0, 0.5*DIAMOND_SIZE,
+					 			  -DIAMOND_SIZE, 0,
+					 			  0, -0.5*DIAMOND_SIZE);
 			rSymbol.setFill(Color.WHITE);
 			rSymbol.setStroke(Color.BLACK);
 			refreshDiamond();
 			break;
 		case COMPOSITION:
-			rSymbol = new Polygon(5.0, 0.0,
-					0.0 ,8.0,
-					5.0, 16.0,
-					10.0, 8.0);
+			rSymbol = new Polygon(DIAMOND_SIZE, 0,
+		 			  			  0, 0.5*DIAMOND_SIZE,
+		 			  			  -DIAMOND_SIZE, 0,
+		 			  			  0, -0.5*DIAMOND_SIZE);
 			refreshDiamond();
 			break;
 		case GENERALIZATION:
-			rSymbol = new Polygon(12.0, 0.0,
-					0.0 ,15.0,
-					24.0, 15.0);
+			rSymbol = new Polygon(-0.5*ARROW_SIZE, ARROW_SIZE,
+								   0.5*ARROW_SIZE, 0d, 
+								  -0.5*ARROW_SIZE, -ARROW_SIZE);
 			rSymbol.setFill(Color.WHITE);
 			rSymbol.setStroke(Color.BLACK);
-			refreshTriangle();
+			refreshArrow();
 			break;
 		default:
 			break;
 		}
+		
+		// add symbol to scene
 		getChildren().add(rSymbol);
 	}
 	
+	/**
+	 * @return Point2D position of the first point of the relation line
+	 */
 	public Point2D getStartPoint() {
 		List<Double> points = rLine.getPoints();
 		if (points.size() < 2) {
@@ -102,6 +118,9 @@ public class UMLRelationSymbol extends UMLSymbol {
 		}
 	}
 	
+	/**
+	 * @return Point2D position of the last point of the relation line
+	 */
 	public Point2D getEndPoint() {
 		List<Double> points = rLine.getPoints();
 		int size = points.size();
@@ -112,9 +131,16 @@ public class UMLRelationSymbol extends UMLSymbol {
 		}
 	}
 	
+	/**
+	 * @return orientation of last segment of the line in radians; 
+	 * Positive x-axis returns 0, positive y-axis returns PI/4, negative y-axis returns -PI/4; 
+	 * Invalid lines return 0
+	 */
 	public double getEndOrientation() {
 		List<Double> points = rLine.getPoints();
 		int size = points.size();
+		
+		// must have at least 2 points to be 
 		if (size < 4) {
 			return 0d;
 		} else {
@@ -122,16 +148,14 @@ public class UMLRelationSymbol extends UMLSymbol {
 		}
 	}
 	
-	/**
-	 * @param s1 symbol to start line at
-	 * @param s2 symbol to end line at
-	 * @return shortest line connecting the middle edges of the two UMLObjectSymbols
+	/***
+	 * Refreshes the line component of the relation
 	 */
 	private void refreshLine() {
 		
 		rLine.getPoints().clear();
 		
-		// the follow computes the edge center pair between the two objects
+		// the following computes the edge center pair between the two objects
 		// which has the shortest distance
 		double[] distances = {
 				sourceObject.getTopCenter().distance(targetObject.getBottomCenter()),
@@ -210,66 +234,18 @@ public class UMLRelationSymbol extends UMLSymbol {
 	 * resets the position of the arrowhead based off of the line's position
 	 */
 	private void refreshArrow(){
-		double arrowSize = 10;
-		Polyline p = (Polyline) rSymbol;
-		
-		p.getPoints().setAll(-0.5*arrowSize, arrowSize, 0.5*arrowSize, 0d, -0.5*arrowSize, -arrowSize);
-		p.setRotate(Math.toDegrees(getEndOrientation()));
-		p.setTranslateX(getEndPoint().getX() - 0.5*arrowSize*Math.cos(getEndOrientation()));
-		p.setTranslateY(getEndPoint().getY() - 0.5*arrowSize*Math.sin(getEndOrientation()));
+		rSymbol.setRotate(Math.toDegrees(getEndOrientation()));
+		rSymbol.setTranslateX(getEndPoint().getX() - 0.5*ARROW_SIZE*Math.cos(getEndOrientation()));
+		rSymbol.setTranslateY(getEndPoint().getY() - 0.5*ARROW_SIZE*Math.sin(getEndOrientation()));
 	}
 	
 	/**
 	 * resets the position for the AGGREGATION and COMPOSITION relation types
 	 */
 	private void refreshDiamond(){
-		Polygon p = (Polygon) rSymbol;
-		double x = getEndPoint().getX();
-		double y = getEndPoint().getY();
-		p.setRotate(0);
-		rSymbol.setLayoutX(x - 5);
-		
-		if ((x == targetObject.getTopCenter().getX()) && (y == targetObject.getTopCenter().getY())){
-			rSymbol.setLayoutY(y);
-			rSymbol.setLayoutY(y - 16);
-		} else if ((x == targetObject.getBottomCenter().getX()) && (y == targetObject.getBottomCenter().getY())){
-			rSymbol.setLayoutY(y);
-		} else if ((x == targetObject.getMiddleLeft().getX()) && (y == targetObject.getMiddleLeft().getY())){
-			p.setRotate(90);
-			rSymbol.setLayoutX(x - 12);
-			rSymbol.setLayoutY(y - 8);
-		} else {
-			p.setRotate(90);
-			rSymbol.setLayoutX(x + 3);
-			rSymbol.setLayoutY(y - 8);
-		}
-	}
-	
-	/**
-	 * resets the position of the GENERALIZATION relation type
-	 */
-	private void refreshTriangle(){
-		Polygon p = (Polygon) rSymbol;
-		double x = getEndPoint().getX();
-		double y = getEndPoint().getY();
-		p.setRotate(0);
-		rSymbol.setLayoutX(x - 12);
-		
-		if ((x == targetObject.getTopCenter().getX()) && (y == targetObject.getTopCenter().getY())){
-			rSymbol.setLayoutY(y);
-			rSymbol.setRotate(180);
-			rSymbol.setLayoutY(y - 16);
-		} else if ((x == targetObject.getBottomCenter().getX()) && (y == targetObject.getBottomCenter().getY())){
-			rSymbol.setLayoutY(y);
-		} else if ((x == targetObject.getMiddleLeft().getX()) && (y == targetObject.getMiddleLeft().getY())){
-			rSymbol.setLayoutY(y - 8);
-			p.setRotate(90);
-			rSymbol.setLayoutX(x - 18);
-		} else {
-			p.setRotate(-90);
-			rSymbol.setLayoutX(x - 5);
-			rSymbol.setLayoutY(y - 8);
-		}
+		rSymbol.setRotate(Math.toDegrees(getEndOrientation()));
+		rSymbol.setTranslateX(getEndPoint().getX() - DIAMOND_SIZE*Math.cos(getEndOrientation()));
+		rSymbol.setTranslateY(getEndPoint().getY() - DIAMOND_SIZE*Math.sin(getEndOrientation()));
 	}
 	
 	/**
@@ -299,31 +275,24 @@ public class UMLRelationSymbol extends UMLSymbol {
 	/**
 	 * calls all of the related functions to update the relation line and symbols
 	 */
-	
 	public void refresh() {
 		refreshLine();
 		
-
+		// refresh symbol head
 		switch (this.relationType) {
 		case ASSOCIATION:
-			refreshArrow();
-			break;
 		case DEPENDENCY:
+		case GENERALIZATION:
 			refreshArrow();
 			break;
 		case AGGREGATION:
-			refreshDiamond();
-			break;
 		case COMPOSITION:
 			refreshDiamond();
-			break;
-		case GENERALIZATION:
-			refreshTriangle();
 			break;
 		default:
 			break;
 		}
-	
+		
 		rText.setLayoutX((rLine.getPoints().get(0) + rLine.getPoints().get(2)) / 2);
 		rText.setLayoutY((rLine.getPoints().get(1) + rLine.getPoints().get(3)) / 2);
 	}
