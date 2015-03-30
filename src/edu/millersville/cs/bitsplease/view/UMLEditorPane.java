@@ -1,6 +1,7 @@
 /**
  * @author Merv Fansler
  * @author Kevin Fisher
+ * @author Mike Sims
  * @since February 19, 2015
  * @version 0.1.1
  */

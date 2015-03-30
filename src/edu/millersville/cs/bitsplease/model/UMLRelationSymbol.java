@@ -22,9 +22,6 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Shape;
 
-//PolyLine test
-import javafx.scene.shape.Polyline;
-
 public class UMLRelationSymbol extends UMLSymbol {
 
 	private	UMLRelationType relationType;
@@ -103,6 +100,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 	 */
 	private void refreshLine() {
 		
+		rLine.getPoints().clear();
 		// the follow computes the edge center pair between the two objects
 		// which has the shortest distance
 		double[] distances = {
@@ -206,7 +204,6 @@ public class UMLRelationSymbol extends UMLSymbol {
 	/**
 	 * resets the position of the arrowhead based off of the line's position
 	 */
-	
 	/*TEMPORARY
 	private void refreshArrow(){
 		int length = 10;
