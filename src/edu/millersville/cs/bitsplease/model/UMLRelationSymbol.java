@@ -35,6 +35,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 
 	final double ARROW_SIZE = 10d;
 	final double DIAMOND_SIZE = 12d;
+	final double SELF_RELATION_SIZE = 60d;
 	
 	private	UMLRelationType relationType;
 	private UMLObjectSymbol sourceObject;
@@ -146,55 +147,74 @@ public class UMLRelationSymbol extends UMLSymbol {
 		
 		rLine.getPoints().clear();
 		
-		// the following computes the edge center pair between the two objects
-		// which has the shortest distance
-		double[] distances = {
-				sourceObject.getTopCenter().distance(targetObject.getBottomCenter()),
-				sourceObject.getMiddleRight().distance(targetObject.getMiddleLeft()),
-				sourceObject.getMiddleLeft().distance(targetObject.getMiddleRight()),
-				sourceObject.getBottomCenter().distance(targetObject.getTopCenter())
-		};
-		
-		int minIndex = 0;
-		for (int i = 1; i < 4; i++) {
-			if (distances[i] < distances[minIndex])
-				minIndex = i;
+		if (sourceObject != targetObject) {
+			// the following computes the edge center pair between the two objects
+			// which has the shortest distance
+			double[] distances = {
+					sourceObject.getTopCenter().distance(targetObject.getBottomCenter()),
+					sourceObject.getMiddleRight().distance(targetObject.getMiddleLeft()),
+					sourceObject.getMiddleLeft().distance(targetObject.getMiddleRight()),
+					sourceObject.getBottomCenter().distance(targetObject.getTopCenter())
+			};
+			
+			int minIndex = 0;
+			for (int i = 1; i < 4; i++) {
+				if (distances[i] < distances[minIndex])
+					minIndex = i;
+			}
+			
+			switch (minIndex) {
+				case 0:
+					rLine.getPoints().addAll(new Double[]{
+							sourceObject.getTopCenter().getX(),
+							sourceObject.getTopCenter().getY(),
+							targetObject.getBottomCenter().getX(),
+							targetObject.getBottomCenter().getY()
+					});
+					break;
+				case 1:
+					rLine.getPoints().addAll(new Double[]{
+							sourceObject.getMiddleRight().getX(),
+							sourceObject.getMiddleRight().getY(),
+							targetObject.getMiddleLeft().getX(),
+							targetObject.getMiddleLeft().getY()
+					});
+					break;
+				case 2:
+					rLine.getPoints().addAll(new Double[]{
+							sourceObject.getMiddleLeft().getX(),
+							sourceObject.getMiddleLeft().getY(),
+							targetObject.getMiddleRight().getX(),
+							targetObject.getMiddleRight().getY()
+					});
+					break;
+				case 3:
+					rLine.getPoints().addAll(new Double[]{
+							sourceObject.getBottomCenter().getX(),
+							sourceObject.getBottomCenter().getY(),
+							targetObject.getTopCenter().getX(),
+							targetObject.getTopCenter().getY()
+					});
+					break;
+			}
+		} else {
+			Point2D startPoint = sourceObject.getBottomCenter();
+			Point2D endPoint = sourceObject.getMiddleLeft();
+			
+			rLine.getPoints().addAll(new Double[]{
+					startPoint.getX(),
+					startPoint.getY(),
+					startPoint.getX(),
+					startPoint.getY() + SELF_RELATION_SIZE,
+					endPoint.getX() - SELF_RELATION_SIZE,
+					startPoint.getY() + SELF_RELATION_SIZE,
+					endPoint.getX() - SELF_RELATION_SIZE,
+					endPoint.getY(),
+					endPoint.getX(),
+					endPoint.getY()
+			});
 		}
 		
-		switch (minIndex) {
-			case 0:
-				rLine.getPoints().addAll(new Double[]{
-						sourceObject.getTopCenter().getX(),
-						sourceObject.getTopCenter().getY(),
-						targetObject.getBottomCenter().getX(),
-						targetObject.getBottomCenter().getY()
-				});
-				break;
-			case 1:
-				rLine.getPoints().addAll(new Double[]{
-						sourceObject.getMiddleRight().getX(),
-						sourceObject.getMiddleRight().getY(),
-						targetObject.getMiddleLeft().getX(),
-						targetObject.getMiddleLeft().getY()
-				});
-				break;
-			case 2:
-				rLine.getPoints().addAll(new Double[]{
-						sourceObject.getMiddleLeft().getX(),
-						sourceObject.getMiddleLeft().getY(),
-						targetObject.getMiddleRight().getX(),
-						targetObject.getMiddleRight().getY()
-				});
-				break;
-			case 3:
-				rLine.getPoints().addAll(new Double[]{
-						sourceObject.getBottomCenter().getX(),
-						sourceObject.getBottomCenter().getY(),
-						targetObject.getTopCenter().getX(),
-						targetObject.getTopCenter().getY()
-				});
-				break;
-		}
 	}
 	
 	/**
