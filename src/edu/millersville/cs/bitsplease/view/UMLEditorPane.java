@@ -43,6 +43,7 @@ import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
 import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
 import edu.millersville.cs.bitsplease.model.UMLRelationType;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
+import edu.millersville.cs.bitsplease.model.UMLUserSymbol;
 
 /***
  * Primary GUI component where all user interact occurs. All other view
@@ -226,11 +227,15 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 				break;
 			case CREATE_INTERFACE:
 					
-					UMLInterfaceSymbol i = new UMLInterfaceSymbol(new Point2D(e.getX() -85, e.getY() -40));
-					documentViewPane.addUMLSymbol(i);
-					documentViewPane.setSelectedUMLSymbol(i);
+				UMLInterfaceSymbol i = new UMLInterfaceSymbol(new Point2D(e.getX() -85, e.getY() -40));
+				documentViewPane.addUMLSymbol(i);
+				documentViewPane.setSelectedUMLSymbol(i);
 					
 				break;
+			case CREATE_USER:
+				UMLUserSymbol u = new UMLUserSymbol(new Point2D(e.getX(),e.getY()));
+				documentViewPane.addUMLSymbol(u);
+				documentViewPane.setSelectedUMLSymbol(u);
 			case DELETE:
 				documentViewPane.setSelectedUMLSymbol(null);
 				UMLSymbol toDelete = resolveUMLSymbolParent((Node)e.getTarget());

@@ -30,42 +30,22 @@ public class DocumentViewPane extends Pane {
 	public DocumentViewPane() {
 		super();
 	}
-
-	/**
-	 * Add UML elements to view.
-	 * @param objView UML element view to add to display
-	 */
-	public void addUMLSymbol(UMLClassSymbol objView) {
-		this.getChildren().add(objView);
-		entityList.add(objView);
-		System.out.println("Total entities: " + entityList.size());
-	}
-
-	/**
-	 * Add UML elements to view.
-	 * @param objView UML element view to add to display
-	 */
-	public void addUMLSymbol(UMLRelationSymbol relView) {
-		this.getChildren().add(relView);
-		entityList.add(relView);
-		System.out.println("Total entities: " + entityList.size());
-	}
+	
 	/**
 	 * Add UML elements to the view
-	 * @param intView UML element view to add to display
+	 * @param symbol UML element to add to display
 	 */
-	public void addUMLSymbol(UMLInterfaceSymbol intView) {
-		this.getChildren().add(intView);
-		entityList.add(intView);
+	public void addUMLSymbol(UMLSymbol symbol) {
+		this.getChildren().add(symbol);
+		entityList.add(symbol);
 	}
-	
 	
 	public void refreshRelations(UMLObjectSymbol obj) {
 		for (Node relView : getChildren().filtered(referencesUMLObject(obj))) {
 			((UMLRelationSymbol)relView).refresh();
 		}
 	}
-
+	
 	/**
 	 * Remove a UML element symbol from the Document
 	 * @param toDelete UMLSymbol to be removed from the Document
