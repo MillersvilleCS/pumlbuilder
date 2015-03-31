@@ -124,6 +124,9 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		});
 	}
 
+	/**
+	 * This method sets all TextFields in the UMLClassSymbol to editable.
+	 */
 	public void setEditableUMLSymbol() {
 		name.setMouseTransparent(false);
 		
@@ -140,6 +143,9 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		});
 	}
 
+	/**
+	 * This method sets all TextFields in the UMLClassSymbol to non-editable.
+	 */
 	public void setNonEditableUMLSymbol() {
 		name.setMouseTransparent(true);
 			
