@@ -1,7 +1,7 @@
 /**
  * @author Kevin Fisher
  * @since February 19, 2015
- * @version 0.1.1
+ * @version 0.2.0
  */
 
 package edu.millersville.cs.bitsplease.model;
@@ -33,6 +33,10 @@ public abstract class UMLObjectSymbol extends UMLSymbol {
 		setOrigin(origin);
 	}
 	
+	/**
+	 * UMLObjectSymbol Constructor that specifies an identifer only
+	 * @param name the text to set the UMLObject identifer
+	 */
 	public UMLObjectSymbol(String name){
 		this.identifier.setValue(name);
 	}
@@ -89,22 +93,37 @@ public abstract class UMLObjectSymbol extends UMLSymbol {
 		return this.getLayoutY();
 	}
 	
+	/**
+	 * @return the point at the center of the UMLObjectSymbol
+	 */
 	public Point2D getCenter() {
 		return new Point2D(getX() + getWidth()/2, getY() + getHeight()/2);
 	}
 	
+	/**
+	 * @return the point at the center of the top of the UMLObjectSymbol
+	 */
 	public Point2D getTopCenter() {
 		return new Point2D(getX() + getWidth()/2, getY());
 	}
 	
+	/**
+	 * @return the point at the center of the left side of the UMLObjectSymbol
+	 */
 	public Point2D getMiddleLeft() {
 		return new Point2D(getX(), getY() + getHeight()/2);
 	}
 	
+	/**
+	 * @return the point at the center of the right sie of the UMLObjectSymbol
+	 */
 	public Point2D getMiddleRight() {
 		return new Point2D(getX() + getWidth(), getY() + getHeight()/2);
 	}
 	
+	/**
+	 * @return the point at the center of the bottom of the UMLObjectSymbol
+	 */
 	public Point2D getBottomCenter() {
 		return new Point2D(getX() + getWidth()/2, getY() + getHeight());
 	}
@@ -122,11 +141,14 @@ public abstract class UMLObjectSymbol extends UMLSymbol {
 		this.setLayoutY(newPoint.getY());
 	}
 	
+	/**
+	 * @param status the status to set the isSelected 
+	 */
 	public void setSelectedStatus(boolean status){
 		this.isSelected = status;
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see edu.millersville.cs.bitsplease.model.UMLSymbol#getFields()
 	 */
 	@Override

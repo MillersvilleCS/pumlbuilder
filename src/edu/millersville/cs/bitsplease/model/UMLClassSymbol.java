@@ -4,7 +4,7 @@
  * @author Merv Fansler
  * @author Josh Wakefield
  * @since February 25, 2015
- * @version 0.1.1
+ * @version 0.2.0
  */
 
 package edu.millersville.cs.bitsplease.model;
@@ -89,8 +89,8 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	}
 	
 	/**
-	 * 
-	 * @param operationName 
+	 * Add a Operation element to a UMLClassSymbol
+	 * @param operationName Operation to add to the UMLCLassObject
 	 */
 	public void addOperation(String operationName) {
 		TextField t = new TextField(operationName);
@@ -100,6 +100,10 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		operations.getChildren().add(t);
 	}
 	
+	/**
+	 * Set the operations of a class by passing in a list
+	 * @param ops list of operations to set for the UMLClassSymbol
+	 */
 	public void setOperations(ArrayList<String> ops){
 		ops.forEach(op -> {
 			addOperation(op);
@@ -107,8 +111,8 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	}
 	
 	/**
-	 * 
-	 * @param attributeName
+	 * Add an attribute element to the UMLClassObject
+	 * @param attributeName attribute to add to the UMLClassObject
 	 */
 	public void addAttribute(String attributeName) {
 		TextField t = new TextField(attributeName);
@@ -118,6 +122,10 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		attributes.getChildren().add(t);
 	}
 	
+	/**
+	 * Set the attributes of a class by passing in a List
+	 * @param attr List of attributes to set for the UMLClassObject
+	 */
 	public void setAttributes(ArrayList<String> attr){
 		attr.forEach(a -> {
 			addAttribute(a);
@@ -125,7 +133,7 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	}
 
 	/**
-	 * This method sets all TextFields in the UMLClassSymbol to editable.
+	 * Set all TextFields in the UMLClassSymbol to editable.
 	 */
 	public void setEditableUMLSymbol() {
 		name.setMouseTransparent(false);
@@ -144,7 +152,7 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	}
 
 	/**
-	 * This method sets all TextFields in the UMLClassSymbol to non-editable.
+	 * Set all TextFields in the UMLClassSymbol to non-editable.
 	 */
 	public void setNonEditableUMLSymbol() {
 		name.setMouseTransparent(true);
@@ -163,7 +171,7 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	}
 	
 	/**
-	 * 
+	 * Get a list of all existing fields within a UMLClassSymbol
 	 * @return An iterable list of the fields contained within the class
 	 */
 	@Override
@@ -182,6 +190,11 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		return fields;
 	}
 
+	/**
+	 * Defines how this object can be written out to a file
+	 * @param out the Object output stream used to write the object out to a file
+	 * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
+	 */
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
 		// TODO Auto-generated method stub
@@ -196,10 +209,6 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 			attr.add(((TextField)a).textProperty().getValue());	
 		});
 		
-		System.out.println("Attr array size : " + attr.size());
-		System.out.println("Attribute 1: " + attr.get(0));
-		System.out.println("Attribute 2: " + attr.get(1));
-		
 		out.writeObject(attr);
 		
 		List<String> ops = new ArrayList<String>();
@@ -209,16 +218,14 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 				ops.add(((TextField)op).textProperty().getValue());
 		});
 		
-		System.out.println("Ops array size: " + ops.size());
-		System.out.println("Operation 1: " + ops.get(0));
-		System.out.println("Operation 2: " + ops.get(1));
-		
-		out.writeObject(ops);
-	
-		
-		
+		out.writeObject(ops);	
 	}
-
+	
+	/**
+	 * Defines how the object will be read in from a file
+	 * @param in the input stream that will read the object in from a file
+	 * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
+	 */
 	@Override
 	public void readExternal(ObjectInput in) throws IOException,
 			ClassNotFoundException {
@@ -247,9 +254,6 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 			System.out.println(op);
 		}
 		setOperations(ops);
-		
-		
-		
 		
 	}
 }

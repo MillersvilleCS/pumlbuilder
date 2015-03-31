@@ -1,5 +1,7 @@
 /**
- * 
+ * @author Merv Fansler
+ * @since March 30, 2015
+ * @version 0.2.0
  */
 package edu.millersville.cs.bitsplease.model;
 

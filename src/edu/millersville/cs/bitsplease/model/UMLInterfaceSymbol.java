@@ -1,7 +1,7 @@
 /***
  * @author Kevin Fisher
  * @since  March 30, 2015
- * @version 0.1.1
+ * @version 0.2.0
  */
 		
 package edu.millersville.cs.bitsplease.model;
@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+
 
 public class UMLInterfaceSymbol extends UMLObjectSymbol{
 	
@@ -75,27 +76,47 @@ public class UMLInterfaceSymbol extends UMLObjectSymbol{
 		this.getChildren().add(interfaceContainer);
 	}
 	
-	
+	/**
+	 * @return the Interface object text
+	 */
 	public String getText(){
 		return interfaceText.getText();
 	}
 	
+	/**
+	 * @return the value of the origins x-coordinate
+	 */
 	public double getX(){
 		return super.getX();
 	}
 	
+	/**
+	 * @return the value of the origins y-coordinate
+	 */
 	public double getY() {
 		return super.getY();
 	}
 	
+	/**
+	 * 
+	 * @param text the text to set to the Interface text field
+	 */
 	public void setText(String text){
 		interfaceText.setText(text);
 	}
 	
+	/** 
+	 * @param origin the point at which the interface will rendered
+	 */
 	public void setOrigin(Point2D _origin){
 		super.setOrigin(_origin);
 	}
 	
+	/**
+	 * Defines how the object will be written to a file
+	 * @param out Object output stream that allows the object to be written to a file
+	 * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
+	 */
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
 		
@@ -107,6 +128,11 @@ public class UMLInterfaceSymbol extends UMLObjectSymbol{
 		
 	}
 
+	/**
+	 * Defines how the object will be read in from a File
+	 * @param in Object input Stream to read the object in from a file
+	 * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
+	 */
 	@Override
 	public void readExternal(ObjectInput in) throws IOException,
 			ClassNotFoundException {
