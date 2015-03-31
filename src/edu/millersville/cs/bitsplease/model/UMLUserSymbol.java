@@ -104,8 +104,7 @@ public class UMLUserSymbol extends UMLObjectSymbol {
 			ClassNotFoundException {
 		try {
 			identifier.setValue((String) in.readObject());
-			setLayoutX(in.readDouble());
-			setLayoutY(in.readDouble());
+			setOrigin(new Point2D(in.readDouble(),in.readDouble()));
 		} catch (Exception x) {
 			System.err.println("Invalid UML File format");
 		}
@@ -119,7 +118,7 @@ public class UMLUserSymbol extends UMLObjectSymbol {
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeObject(identifier.getValue());
-		out.writeDouble(getLayoutX());
-		out.writeDouble(getLayoutY());
+		out.writeDouble(getX());
+		out.writeDouble(getY());
 	}
 }

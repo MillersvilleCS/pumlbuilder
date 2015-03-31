@@ -15,7 +15,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
-import edu.millersville.cs.bitsplease.model.UMLInterfaceSymbol;
 import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
 import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
@@ -86,16 +85,7 @@ public class DocumentViewPane extends Pane {
 	 * @param _entityList List of entities to set on the Document.
 	 */
 	public void setEntities(ArrayList<UMLSymbol> _entityList){
-		_entityList.forEach( uml -> {
-			
-			if (uml instanceof UMLClassSymbol){
-				addUMLSymbol((UMLClassSymbol)uml);
-			}else if(uml instanceof UMLRelationSymbol){
-				addUMLSymbol((UMLRelationSymbol)uml);
-			}else if(uml instanceof UMLInterfaceSymbol){
-				addUMLSymbol((UMLInterfaceSymbol)uml);
-			}
-		});
+		_entityList.forEach( uml -> addUMLSymbol(uml));
 	}
 	
 	/**
