@@ -72,6 +72,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		documentViewPane.addEventHandler(MouseEvent.MOUSE_DRAGGED, this);
 		documentViewPane.addEventHandler(MouseEvent.MOUSE_RELEASED, this);
 		
+		//this.setTop(createMenu());
 		this.setTop(createMenu());
 		
 		toolbarPane = new ToolbarPane();
@@ -83,6 +84,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 	
 	private MenuBar createMenu() {
 		MenuBar menuBar = new MenuBar();
+		menuBar.setUseSystemMenuBar(true);
 		
 		Menu fileMenu = new Menu("File");
 		
@@ -219,7 +221,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 					documentViewPane.setSelectedUMLSymbol(toEdit);
 					if (toEdit.isSelected()) {
 						if (e.getClickCount() == 2) {
-							toEdit.toggleeditableUMLSymbol();
+							toEdit.setEditableUMLSymbol();
 						}
 					}
 				}

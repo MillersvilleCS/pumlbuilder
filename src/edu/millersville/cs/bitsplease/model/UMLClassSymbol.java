@@ -124,7 +124,7 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		});
 	}
 
-	public void toggleeditableUMLSymbol() {
+	public void setEditableUMLSymbol() {
 		name.setMouseTransparent(false);
 		
 		attributes.getChildren().forEach(attr -> {
@@ -140,7 +140,7 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		});
 	}
 
-	public void togglenoneditableUMLSymbol() {
+	public void setNonEditableUMLSymbol() {
 		name.setMouseTransparent(true);
 			
 		attributes.getChildren().forEach(attr -> {

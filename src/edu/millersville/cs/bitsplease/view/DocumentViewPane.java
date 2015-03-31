@@ -114,7 +114,7 @@ public class DocumentViewPane extends Pane {
 		if (oldSymbol != null) {
 			oldSymbol.setSelected(false);
 			if (oldSymbol instanceof UMLClassSymbol)  {
-				((UMLClassSymbol) oldSymbol).togglenoneditableUMLSymbol();
+				((UMLClassSymbol) oldSymbol).setNonEditableUMLSymbol();
 			}
 			oldSymbol.requestFocus();
 		}
