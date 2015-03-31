@@ -92,7 +92,7 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	 * 
 	 * @param operationName 
 	 */
-	private void addOperation(String operationName) {
+	public void addOperation(String operationName) {
 		TextField t = new TextField(operationName);
 		t.setStyle("-fx-border-color: white");
 		t.setMouseTransparent(true);
@@ -110,7 +110,7 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	 * 
 	 * @param attributeName
 	 */
-	private void addAttribute(String attributeName) {
+	public void addAttribute(String attributeName) {
 		TextField t = new TextField(attributeName);
 		t.setStyle("-fx-border-color: white");
 		t.setMouseTransparent(true);
