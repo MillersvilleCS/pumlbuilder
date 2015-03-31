@@ -15,40 +15,40 @@ public class UMLRelationTypeTest {
 	public void testUMLRelationType(){
 		
 		UMLRelationSymbol rel = new UMLRelationSymbol();
-		rel.setUmlRelationType(UMLRelationType.ASSOCIATION);
-		assertEquals(UMLRelationType.ASSOCIATION, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.AGGREGATION, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.COMPOSITION, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.DEPENDENCY, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.GENERALIZATION, rel.getUmlRelationType());
+		rel.setUMLRelationType(UMLRelationType.ASSOCIATION);
+		assertEquals(UMLRelationType.ASSOCIATION, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.AGGREGATION, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.COMPOSITION, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.DEPENDENCY, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.GENERALIZATION, rel.getUMLRelationType());
 		
-		rel.setUmlRelationType(UMLRelationType.AGGREGATION);
-		assertEquals(UMLRelationType.AGGREGATION, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.ASSOCIATION, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.COMPOSITION, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.DEPENDENCY, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.GENERALIZATION, rel.getUmlRelationType());
+		rel.setUMLRelationType(UMLRelationType.AGGREGATION);
+		assertEquals(UMLRelationType.AGGREGATION, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.ASSOCIATION, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.COMPOSITION, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.DEPENDENCY, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.GENERALIZATION, rel.getUMLRelationType());
 		
-		rel.setUmlRelationType(UMLRelationType.COMPOSITION);
-		assertEquals(UMLRelationType.COMPOSITION, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.AGGREGATION, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.ASSOCIATION, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.DEPENDENCY, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.GENERALIZATION, rel.getUmlRelationType());
+		rel.setUMLRelationType(UMLRelationType.COMPOSITION);
+		assertEquals(UMLRelationType.COMPOSITION, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.AGGREGATION, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.ASSOCIATION, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.DEPENDENCY, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.GENERALIZATION, rel.getUMLRelationType());
 		
-		rel.setUmlRelationType(UMLRelationType.DEPENDENCY);
-		assertEquals(UMLRelationType.DEPENDENCY, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.AGGREGATION, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.ASSOCIATION, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.COMPOSITION, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.GENERALIZATION, rel.getUmlRelationType());
+		rel.setUMLRelationType(UMLRelationType.DEPENDENCY);
+		assertEquals(UMLRelationType.DEPENDENCY, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.AGGREGATION, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.ASSOCIATION, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.COMPOSITION, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.GENERALIZATION, rel.getUMLRelationType());
 		
-		rel.setUmlRelationType(UMLRelationType.GENERALIZATION);
-		assertEquals(UMLRelationType.GENERALIZATION, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.AGGREGATION, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.ASSOCIATION, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.COMPOSITION, rel.getUmlRelationType());
-		assertNotEquals(UMLRelationType.DEPENDENCY, rel.getUmlRelationType());
+		rel.setUMLRelationType(UMLRelationType.GENERALIZATION);
+		assertEquals(UMLRelationType.GENERALIZATION, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.AGGREGATION, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.ASSOCIATION, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.COMPOSITION, rel.getUMLRelationType());
+		assertNotEquals(UMLRelationType.DEPENDENCY, rel.getUMLRelationType());
 		
 	}
 }
