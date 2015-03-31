@@ -19,7 +19,7 @@ public class PUMLBuilder extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
-		Scene scene = new Scene(new UMLEditorPane(), 800, 600);
+		Scene scene = new Scene(new UMLEditorPane(), 1000, 600);
 		
 		primaryStage.setTitle("Penultimate UML Builder");
 		primaryStage.setScene(scene);

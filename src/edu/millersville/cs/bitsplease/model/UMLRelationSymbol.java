@@ -14,7 +14,6 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.List;
 
-
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -26,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Shape;
+
 /**
  * A model-view representation of a UML relation symbol.
  * A UMLRelationSymbol object can be represented as any major
@@ -33,13 +33,17 @@ import javafx.scene.shape.Shape;
  */
 public class UMLRelationSymbol extends UMLSymbol {
 
+	// Style Constants 
 	final double ARROW_SIZE = 10d;
 	final double DIAMOND_SIZE = 12d;
 	final double SELF_RELATION_SIZE = 60d;
 	
+	// Model Components
 	private	UMLRelationType relationType;
 	private UMLObjectSymbol sourceObject;
 	private UMLObjectSymbol targetObject;
+	
+	// View Components
 	private Polyline rLine;
 	private Shape rSymbol;
 	private TextField rText;
@@ -47,8 +51,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 	/**
 	 * Default constructor for externalization
 	 */
-	public UMLRelationSymbol(){
-		
+	public UMLRelationSymbol(){		
 		super();
 		
 		this.setPickOnBounds(false);
@@ -56,18 +59,16 @@ public class UMLRelationSymbol extends UMLSymbol {
 		this.rLine = new Polyline();
 		this.getChildren().add(rLine);
 		
-		rText = new TextField();
-		rText.textProperty().bindBidirectional(identifier);
-		rText.setMouseTransparent(true);
-		rText.setFocusTraversable(false);
-		rText.setVisible(true);
-		rText.setStyle("-fx-border-color: transparent; -fx-background-color: transparent");
-		rText.setPrefWidth(150);
-		this.getChildren().add(rText);
-		
-		
+		initializeTextField();
 	}
 	
+	/**
+	 * This is the typical constructor to be used when creating new relations using the
+	 * GUI interface.
+	 * @param sourceObject object to relate from
+	 * @param targetObject object to relate to
+	 * @param relationType type of relation
+	 */
 	public UMLRelationSymbol(UMLObjectSymbol sourceObject,
 			UMLObjectSymbol targetObject, UMLRelationType relationType){
 		super();
@@ -75,27 +76,87 @@ public class UMLRelationSymbol extends UMLSymbol {
 		this.sourceObject = sourceObject;
 		this.targetObject = targetObject;
 		this.relationType = relationType;
+		
+		// set default string to relation type
 		identifier.setValue(relationType.toString());
+		
 		// clicks should NOT be captured based on bounding box
 		this.setPickOnBounds(false);
 		
 		// create, add, and update line
 		this.rLine = new Polyline();
-		refreshLine();
 		getChildren().add(rLine);
+		refreshLine();
 		
-		// create and add identifier field
-		rText = new TextField();
-		rText.textProperty().bindBidirectional(identifier);
-		rText.setMouseTransparent(true);
-		rText.setFocusTraversable(false);
-		rText.setVisible(true);
-		rText.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
-		rText.setPrefWidth(150);
-		getChildren().add(rText);
+		initializeTextField();
+		refreshTextLayout();
 		
 		// create and position relation head symbol
 		initSymbol(this.relationType);
+	}
+
+	/**
+	 * Initializes the label of the relation
+	 */
+	private void initializeTextField() {
+		// create and add identifier field
+		rText = new TextField();
+		rText.textProperty().bindBidirectional(identifier);
+		rText.setFocusTraversable(false);
+		rText.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
+		rText.setPrefWidth(150);
+		getChildren().add(rText);
+	}
+	
+	/**
+	 * Create the appropriate symbol head for the given UMLRelationType
+	 * @param relType Type of relation to draw
+	 */
+	private void initSymbol(UMLRelationType relType){
+		switch (this.relationType) {
+		case ASSOCIATION:
+			rSymbol = new Polyline(-0.5*ARROW_SIZE, ARROW_SIZE,
+									0.5*ARROW_SIZE, 0d, 
+								   -0.5*ARROW_SIZE, -ARROW_SIZE);
+			refreshArrow();
+			break;
+		case DEPENDENCY:
+			rSymbol = new Polyline(-0.5*ARROW_SIZE, ARROW_SIZE,
+									0.5*ARROW_SIZE, 0d, 
+								   -0.5*ARROW_SIZE, -ARROW_SIZE);
+			refreshArrow();
+			rLine.getStrokeDashArray().addAll(25d, 10d);
+			break;
+		case AGGREGATION:
+			rSymbol = new Polygon(DIAMOND_SIZE, 0,
+					 			  0, 0.5*DIAMOND_SIZE,
+					 			  -DIAMOND_SIZE, 0,
+					 			  0, -0.5*DIAMOND_SIZE);
+			rSymbol.setFill(Color.WHITE);
+			rSymbol.setStroke(Color.BLACK);
+			refreshDiamond();
+			break;
+		case COMPOSITION:
+			rSymbol = new Polygon(DIAMOND_SIZE, 0,
+		 			  			  0, 0.5*DIAMOND_SIZE,
+		 			  			  -DIAMOND_SIZE, 0,
+		 			  			  0, -0.5*DIAMOND_SIZE);
+			refreshDiamond();
+			break;
+		case GENERALIZATION:
+			rSymbol = new Polygon(-0.5*ARROW_SIZE, ARROW_SIZE,
+								   0.5*ARROW_SIZE, 0d, 
+								  -0.5*ARROW_SIZE, -ARROW_SIZE);
+			rSymbol.setFill(Color.WHITE);
+			rSymbol.setStroke(Color.BLACK);
+			refreshArrow();
+			break;
+		default:
+			break;
+		}
+		
+		// add symbol to scene
+		getChildren().add(rSymbol);
 	}
 	
 	/**
@@ -132,7 +193,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 		List<Double> points = rLine.getPoints();
 		int size = points.size();
 		
-		// must have at least 2 points to be 
+		// must have at least 2 points to be valid
 		if (size < 4) {
 			return 0d;
 		} else {
@@ -198,6 +259,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 					break;
 			}
 		} else {
+			// loop for self-referencing relations
 			Point2D startPoint = sourceObject.getBottomCenter();
 			Point2D endPoint = sourceObject.getMiddleLeft();
 			
@@ -214,18 +276,16 @@ public class UMLRelationSymbol extends UMLSymbol {
 					endPoint.getY()
 			});
 		}
-		
 	}
 	
 	/**
-	 * 
 	 * @return the enum value representing the relation type
 	 */
-	public UMLRelationType getUmlRelationType() {
+	public UMLRelationType getUMLRelationType() {
 		return this.relationType;
 	}
+	
 	/**
-	 * 
 	 * @return the source UMLObjectSymbol
 	 */
 	public UMLObjectSymbol getSourceObject() {
@@ -233,7 +293,6 @@ public class UMLRelationSymbol extends UMLSymbol {
 	}
 	
 	/**
-	 * 
 	 * @return the target UMLObjectSymbol
 	 */
 	public UMLObjectSymbol getTargetObject() {
@@ -241,19 +300,18 @@ public class UMLRelationSymbol extends UMLSymbol {
 	}
 	
 	/**
-	 * 
 	 * @param relType enum value representing the type of relation to create
 	 */
-	public void setUmlRelationType(UMLRelationType relType) {
+	public void setUMLRelationType(UMLRelationType relType) {
 		this.relationType = relType;
 	}
 	
 	/**
-	 * 
-	 * @param _source UMLObjectSymbol to be set as sourceObject
+	 * Sets the source object to a new UMLObjectSymbol
+	 * @param source UMLObjectSymbol to be set as sourceObject
 	 */
-	public void setSourceObject(UMLObjectSymbol _source) {
-		this.sourceObject = _source;
+	public void setSourceObject(UMLObjectSymbol source) {
+		this.sourceObject = source;
 		this.sourceObject.layoutBoundsProperty().addListener(new ChangeListener<Bounds>() {
 			
 			@Override
@@ -261,12 +319,15 @@ public class UMLRelationSymbol extends UMLSymbol {
 					Bounds oldValue, Bounds newValue) {
 				refresh();
 			}
-			
-			});
+		});
 	}
 	
-	public void setTargetObject(UMLObjectSymbol _target) {
-		this.targetObject = _target;
+	/**
+	 * Sets the target object to a new UMLObjectSymbol
+	 * @param target the object to relate to
+	 */
+	public void setTargetObject(UMLObjectSymbol target) {
+		this.targetObject = target;
 		this.targetObject.layoutBoundsProperty().addListener(new ChangeListener<Bounds>() {
 			
 			@Override
@@ -274,8 +335,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 					Bounds oldValue, Bounds newValue) {
 				refresh();
 			}
-			
-			});
+		});
 	}
 
 	/**
@@ -294,56 +354,6 @@ public class UMLRelationSymbol extends UMLSymbol {
 		rSymbol.setRotate(Math.toDegrees(getEndOrientation()));
 		rSymbol.setTranslateX(getEndPoint().getX() - DIAMOND_SIZE*Math.cos(getEndOrientation()));
 		rSymbol.setTranslateY(getEndPoint().getY() - DIAMOND_SIZE*Math.sin(getEndOrientation()));
-	}
-	/**
-	 * Create the appropriate symbol head for the given UMLRelationType
-	 * @param relType Type of relation to draw
-	 */
-	private void initSymbol(UMLRelationType relType){
-		switch (this.relationType) {
-		case ASSOCIATION:
-			rSymbol = new Polyline(-0.5*ARROW_SIZE, ARROW_SIZE,
-									0.5*ARROW_SIZE, 0d, 
-								   -0.5*ARROW_SIZE, -ARROW_SIZE);
-			refreshArrow();
-			break;
-		case DEPENDENCY:
-			rSymbol = new Polyline(-0.5*ARROW_SIZE, ARROW_SIZE,
-									0.5*ARROW_SIZE, 0d, 
-								   -0.5*ARROW_SIZE, -ARROW_SIZE);
-			refreshArrow();
-			rLine.getStrokeDashArray().addAll(25d, 10d);
-			break;
-		case AGGREGATION:
-			rSymbol = new Polygon(DIAMOND_SIZE, 0,
-					 			  0, 0.5*DIAMOND_SIZE,
-					 			  -DIAMOND_SIZE, 0,
-					 			  0, -0.5*DIAMOND_SIZE);
-			rSymbol.setFill(Color.WHITE);
-			rSymbol.setStroke(Color.BLACK);
-			refreshDiamond();
-			break;
-		case COMPOSITION:
-			rSymbol = new Polygon(DIAMOND_SIZE, 0,
-		 			  			  0, 0.5*DIAMOND_SIZE,
-		 			  			  -DIAMOND_SIZE, 0,
-		 			  			  0, -0.5*DIAMOND_SIZE);
-			refreshDiamond();
-			break;
-		case GENERALIZATION:
-			rSymbol = new Polygon(-0.5*ARROW_SIZE, ARROW_SIZE,
-								   0.5*ARROW_SIZE, 0d, 
-								  -0.5*ARROW_SIZE, -ARROW_SIZE);
-			rSymbol.setFill(Color.WHITE);
-			rSymbol.setStroke(Color.BLACK);
-			refreshArrow();
-			break;
-		default:
-			break;
-		}
-		
-		// add symbol to scene
-		getChildren().add(rSymbol);
 	}
 	
 	/**
@@ -391,10 +401,28 @@ public class UMLRelationSymbol extends UMLSymbol {
 			break;
 		}
 		
-		rText.setLayoutX((rLine.getPoints().get(0) + rLine.getPoints().get(2)) / 2);
-		rText.setLayoutY((rLine.getPoints().get(1) + rLine.getPoints().get(3)) / 2);
+		// refresh text position
+		refreshTextLayout();
 	}
 	
+	/***
+	 * Computes the layout for the label text.
+	 */
+	private void refreshTextLayout() {
+		if (sourceObject != targetObject) {
+			rText.setLayoutX((getStartPoint().getX() + getEndPoint().getX()) / 2 );
+			rText.setLayoutY((getStartPoint().getY() + getEndPoint().getY()) / 2 );
+		} else {
+			rText.setLayoutX(rLine.getLayoutBounds().getMinX() + (rLine.getLayoutBounds().getWidth())/2);
+			rText.setLayoutY(rLine.getLayoutBounds().getMaxY());
+		}
+	}
+	
+	/***
+	 * This method provides a means for displaying editable fields in the
+	 * Properties Pane.
+	 * @return a list of all bindable fields of the UML Relation Symbol
+	 */
 	@Override
 	public ObservableList<Property<? extends Object>> getFields() {
 		ObservableList<Property<? extends Object>> fields = super.getFields();
@@ -402,7 +430,12 @@ public class UMLRelationSymbol extends UMLSymbol {
 		fields.add(targetObject.getIdentifierProperty());
 		return fields;
 	}
-
+	
+	/** 
+	 * Provides a means for saving this class to file
+	 * @param ObjectOuput out an object stream to write to
+	 * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
+	 */
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
 		
@@ -410,10 +443,15 @@ public class UMLRelationSymbol extends UMLSymbol {
 		
 		out.writeObject(getSourceObject());
 		out.writeObject(getTargetObject());
-		out.writeObject(getUmlRelationType());
+		out.writeObject(getUMLRelationType());
 		
 	}
 
+	/**
+	 * Provides a means for restoring a saved version of this class
+	 * @param ObjectInput in an object stream to read from
+	 * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
+	 */
 	@Override
 	public void readExternal(ObjectInput in) throws IOException,
 			ClassNotFoundException {
@@ -421,12 +459,11 @@ public class UMLRelationSymbol extends UMLSymbol {
 		
 		setSourceObject((UMLObjectSymbol)in.readObject());
 		setTargetObject((UMLObjectSymbol)in.readObject());
-		setUmlRelationType((UMLRelationType)in.readObject());
+		setUMLRelationType((UMLRelationType)in.readObject());
 		
 		refreshLine();
-		initSymbol(relationType);	
-	
-		
+		refreshTextLayout();
+		initSymbol(relationType);
 	}
 }
 
