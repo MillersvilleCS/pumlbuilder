@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -31,6 +32,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -87,20 +89,32 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		//Open handles single entity for now
 		MenuItem open = new MenuItem("Open");
 		open.setOnAction(event -> {
+			
 			FileChooser fileHandler = new FileChooser();
+			fileHandler.getExtensionFilters().addAll(new ExtensionFilter("UML Document", "*.uml"),
+					new ExtensionFilter("All Files", "*.*"));
 			File fileToLoad = fileHandler.showOpenDialog(getScene().getWindow());
 			
-			try{
-			ObjectInputStream in = new ObjectInputStream(
-					new FileInputStream(fileToLoad));
-			UMLInterfaceSymbol loadedIn = (UMLInterfaceSymbol)in.readObject();
-			//Load in currently selected symbol of specified saved state
+			if(fileToLoad ==null){
+				
+				System.out.println("Hey thanks for wasting my time, cool.");
+				
+			}else{
+				//first remove all node currently occupying the Document View
+				documentViewPane.getChildren().remove(0, documentViewPane.getChildren().size());
+				
+				try{
+					ObjectInputStream in = new ObjectInputStream(
+							new FileInputStream(fileToLoad));
 			
-			documentViewPane.addUMLSymbol(loadedIn);
-			documentViewPane.setSelectedUMLSymbol(loadedIn);
-			in.close();
-			}catch(Exception e){e.printStackTrace();}
+					@SuppressWarnings("unchecked")
+					ArrayList<UMLSymbol> loadedIn = (ArrayList<UMLSymbol>)in.readObject();
 			
+					documentViewPane.setEntities(loadedIn);
+					in.close();
+			
+				}catch(Exception e){e.printStackTrace();}
+			}
 		});
 		open.setAccelerator(new KeyCodeCombination(KeyCode.O, 
 				KeyCombination.SHORTCUT_DOWN));
@@ -108,16 +122,25 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		MenuItem save = new MenuItem("Save");
 		save.setOnAction(event -> {
 			FileChooser fileHandler = new FileChooser();
+			fileHandler.getExtensionFilters().addAll(new ExtensionFilter("UML Document", "*.uml"),
+						new ExtensionFilter("All Files", "*.*"));
 			File fileToSave = fileHandler.showSaveDialog(getScene().getWindow());
-			try{
-			ObjectOutputStream o = new ObjectOutputStream(
-					new FileOutputStream(fileToSave));
-			//Save currently selected object [For now..]
-			o.writeObject(documentViewPane.getSelectedUMLSymbol().getValue());
-			o.close();
 			
-			}catch(IOException e){ e.printStackTrace();}
+			if(fileToSave == null){
+				System.out.println("Hey cool that's great.");
+			}else{
+			
+				try{
+					ObjectOutputStream o = new ObjectOutputStream(
+							new FileOutputStream(fileToSave));
+					
+					o.writeObject(documentViewPane.getEntities());
+					o.close();
+				}catch(IOException e){ e.printStackTrace();}
+			}	
 		});
+		save.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
+		
 		MenuItem saveAs = new MenuItem("Save As");
 		MenuItem exportAs = new MenuItem("Export As...");
 		MenuItem exit = new MenuItem("Exit");
@@ -127,8 +150,10 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		
 		fileMenu.getItems().addAll(newDoc,new SeparatorMenuItem(), open,save, 
 				saveAs,new SeparatorMenuItem(),exportAs, new SeparatorMenuItem(), exit);
+		
 		Menu editMenu = new Menu("Edit");
 		Menu helpMenu = new Menu("Help");
+		
 		MenuItem about = new MenuItem("About");
 		about.setOnAction(event -> {
 				final Stage dialog = new Stage(StageStyle.UTILITY);

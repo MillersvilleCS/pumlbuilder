@@ -7,6 +7,7 @@
 
 package edu.millersville.cs.bitsplease.view;
 
+import java.util.ArrayList;
 import java.util.function.Predicate;
 
 import javafx.beans.property.ObjectProperty;
@@ -22,7 +23,7 @@ import edu.millersville.cs.bitsplease.model.UMLSymbol;
 public class DocumentViewPane extends Pane {
 
 	private ObjectProperty<UMLSymbol> selectedUMLSymbol = new SimpleObjectProperty<UMLSymbol>();
-	
+	private ArrayList<UMLSymbol> entityList = new ArrayList<UMLSymbol>();
 	/**
 	 * Constructor
 	 */
@@ -36,6 +37,8 @@ public class DocumentViewPane extends Pane {
 	 */
 	public void addUMLSymbol(UMLClassSymbol objView) {
 		this.getChildren().add(objView);
+		entityList.add(objView);
+		System.out.println("Total entities: " + entityList.size());
 	}
 
 	/**
@@ -44,11 +47,18 @@ public class DocumentViewPane extends Pane {
 	 */
 	public void addUMLSymbol(UMLRelationSymbol relView) {
 		this.getChildren().add(relView);
+		entityList.add(relView);
+		System.out.println("Total entities: " + entityList.size());
 	}
-	
+	/**
+	 * Add UML elements to the view
+	 * @param intView UML element view to add to display
+	 */
 	public void addUMLSymbol(UMLInterfaceSymbol intView) {
 		this.getChildren().add(intView);
+		entityList.add(intView);
 	}
+	
 	
 	public void refreshRelations(UMLObjectSymbol obj) {
 		for (Node relView : getChildren().filtered(referencesUMLObject(obj))) {
@@ -56,6 +66,10 @@ public class DocumentViewPane extends Pane {
 		}
 	}
 
+	/**
+	 * Remove a UML element symbol from the Document
+	 * @param toDelete UMLSymbol to be removed from the Document
+	 */
 	public void removeUMLSymbol(UMLSymbol toDelete) {
 		
 		// remove all relation symbols that references an object being removed
@@ -65,8 +79,35 @@ public class DocumentViewPane extends Pane {
 		}
 		
 		getChildren().remove(toDelete);
+		entityList.remove(toDelete);
 	}
 	
+	/**
+	 * Return a list of all entities held by the Document
+	 * @return list of all UMLSymbols held within the Document View Pane
+	 */
+	public ArrayList<UMLSymbol> getEntities(){
+		return this.entityList;
+	}
+	
+	/**
+	 * Set a list of all entities held by the Document. Each entity
+	 * within the list is added to the Document view.
+	 * @param _entityList List of entities to set on the Document.
+	 */
+	public void setEntities(ArrayList<UMLSymbol> _entityList){
+		_entityList.forEach( uml -> {
+			
+			if (uml instanceof UMLClassSymbol){
+				addUMLSymbol((UMLClassSymbol)uml);
+			}else if(uml instanceof UMLRelationSymbol){
+				addUMLSymbol((UMLRelationSymbol)uml);
+			}else if(uml instanceof UMLInterfaceSymbol){
+				addUMLSymbol((UMLInterfaceSymbol)uml);
+			}
+			
+		});
+	}
 	/**
 	 * Provides a means for finding relations of a given object
 	 * @param obj an object

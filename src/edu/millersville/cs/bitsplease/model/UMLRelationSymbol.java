@@ -2,6 +2,7 @@
  * @author Michael Sims
  * @author Merv Fansler
  * @author Joe Martello
+ * @author Kevin Fisher
  * @since February 25, 2015
  * @version 0.1.1
  */
@@ -13,15 +14,23 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.List;
 
+
 import javafx.beans.property.Property;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Shape;
-
+/**
+ * A model-view representation of a UML relation symbol.
+ * A UMLRelationSymbol object can be represented as any major
+ * UML relation types
+ */
 public class UMLRelationSymbol extends UMLSymbol {
 
 	final double ARROW_SIZE = 10d;
@@ -34,10 +43,33 @@ public class UMLRelationSymbol extends UMLSymbol {
 	private Shape rSymbol;
 	private TextField rText;
 	
+	/**
+	 * Default constructor for externalization
+	 */
+	public UMLRelationSymbol(){
+		
+		super();
+		
+		this.setPickOnBounds(false);
+		
+		this.rLine = new Polyline();
+		this.getChildren().add(rLine);
+		
+		rText = new TextField();
+		rText.textProperty().bindBidirectional(identifier);
+		rText.setMouseTransparent(true);
+		rText.setFocusTraversable(false);
+		rText.setVisible(true);
+		rText.setStyle("-fx-border-color: transparent; -fx-background-color: transparent");
+		rText.setPrefWidth(150);
+		this.getChildren().add(rText);
+		
+		
+	}
+	
 	public UMLRelationSymbol(UMLObjectSymbol sourceObject,
 			UMLObjectSymbol targetObject, UMLRelationType relationType){
 		super();
-		
 		
 		this.sourceObject = sourceObject;
 		this.targetObject = targetObject;
@@ -57,55 +89,12 @@ public class UMLRelationSymbol extends UMLSymbol {
 		rText.setMouseTransparent(true);
 		rText.setFocusTraversable(false);
 		rText.setVisible(true);
-		rText.setStyle("-fx-border-color: white");
-		rText.setPrefWidth(100);
+		rText.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
+		rText.setPrefWidth(150);
 		getChildren().add(rText);
 		
 		// create and position relation head symbol
-		switch (this.relationType) {
-		case ASSOCIATION:
-			rSymbol = new Polyline(-0.5*ARROW_SIZE, ARROW_SIZE,
-									0.5*ARROW_SIZE, 0d, 
-								   -0.5*ARROW_SIZE, -ARROW_SIZE);
-			refreshArrow();
-			break;
-		case DEPENDENCY:
-			rSymbol = new Polyline(-0.5*ARROW_SIZE, ARROW_SIZE,
-									0.5*ARROW_SIZE, 0d, 
-								   -0.5*ARROW_SIZE, -ARROW_SIZE);
-			refreshArrow();
-			rLine.getStrokeDashArray().addAll(25d, 10d);
-			break;
-		case AGGREGATION:
-			rSymbol = new Polygon(DIAMOND_SIZE, 0,
-					 			  0, 0.5*DIAMOND_SIZE,
-					 			  -DIAMOND_SIZE, 0,
-					 			  0, -0.5*DIAMOND_SIZE);
-			rSymbol.setFill(Color.WHITE);
-			rSymbol.setStroke(Color.BLACK);
-			refreshDiamond();
-			break;
-		case COMPOSITION:
-			rSymbol = new Polygon(DIAMOND_SIZE, 0,
-		 			  			  0, 0.5*DIAMOND_SIZE,
-		 			  			  -DIAMOND_SIZE, 0,
-		 			  			  0, -0.5*DIAMOND_SIZE);
-			refreshDiamond();
-			break;
-		case GENERALIZATION:
-			rSymbol = new Polygon(-0.5*ARROW_SIZE, ARROW_SIZE,
-								   0.5*ARROW_SIZE, 0d, 
-								  -0.5*ARROW_SIZE, -ARROW_SIZE);
-			rSymbol.setFill(Color.WHITE);
-			rSymbol.setStroke(Color.BLACK);
-			refreshArrow();
-			break;
-		default:
-			break;
-		}
-		
-		// add symbol to scene
-		getChildren().add(rSymbol);
+		initSymbol(this.relationType);
 	}
 	
 	/**
@@ -208,28 +197,65 @@ public class UMLRelationSymbol extends UMLSymbol {
 		}
 	}
 	
+	/**
+	 * 
+	 * @return the enum value representing the relation type
+	 */
 	public UMLRelationType getUmlRelationType() {
 		return this.relationType;
 	}
-	
+	/**
+	 * 
+	 * @return the source UMLObjectSymbol
+	 */
 	public UMLObjectSymbol getSourceObject() {
 		return this.sourceObject;
 	}
 	
+	/**
+	 * 
+	 * @return the target UMLObjectSymbol
+	 */
 	public UMLObjectSymbol getTargetObject() {
 		return this.targetObject;
 	}
 	
+	/**
+	 * 
+	 * @param relType enum value representing the type of relation to create
+	 */
 	public void setUmlRelationType(UMLRelationType relType) {
 		this.relationType = relType;
 	}
 	
+	/**
+	 * 
+	 * @param _source UMLObjectSymbol to be set as sourceObject
+	 */
 	public void setSourceObject(UMLObjectSymbol _source) {
 		this.sourceObject = _source;
+		this.sourceObject.layoutBoundsProperty().addListener(new ChangeListener<Bounds>() {
+			
+			@Override
+			public void changed(ObservableValue<? extends Bounds> observable,
+					Bounds oldValue, Bounds newValue) {
+				refresh();
+			}
+			
+			});
 	}
 	
 	public void setTargetObject(UMLObjectSymbol _target) {
 		this.targetObject = _target;
+		this.targetObject.layoutBoundsProperty().addListener(new ChangeListener<Bounds>() {
+			
+			@Override
+			public void changed(ObservableValue<? extends Bounds> observable,
+					Bounds oldValue, Bounds newValue) {
+				refresh();
+			}
+			
+			});
 	}
 
 	/**
@@ -248,6 +274,56 @@ public class UMLRelationSymbol extends UMLSymbol {
 		rSymbol.setRotate(Math.toDegrees(getEndOrientation()));
 		rSymbol.setTranslateX(getEndPoint().getX() - DIAMOND_SIZE*Math.cos(getEndOrientation()));
 		rSymbol.setTranslateY(getEndPoint().getY() - DIAMOND_SIZE*Math.sin(getEndOrientation()));
+	}
+	/**
+	 * Create the appropriate symbol head for the given UMLRelationType
+	 * @param relType Type of relation to draw
+	 */
+	private void initSymbol(UMLRelationType relType){
+		switch (this.relationType) {
+		case ASSOCIATION:
+			rSymbol = new Polyline(-0.5*ARROW_SIZE, ARROW_SIZE,
+									0.5*ARROW_SIZE, 0d, 
+								   -0.5*ARROW_SIZE, -ARROW_SIZE);
+			refreshArrow();
+			break;
+		case DEPENDENCY:
+			rSymbol = new Polyline(-0.5*ARROW_SIZE, ARROW_SIZE,
+									0.5*ARROW_SIZE, 0d, 
+								   -0.5*ARROW_SIZE, -ARROW_SIZE);
+			refreshArrow();
+			rLine.getStrokeDashArray().addAll(25d, 10d);
+			break;
+		case AGGREGATION:
+			rSymbol = new Polygon(DIAMOND_SIZE, 0,
+					 			  0, 0.5*DIAMOND_SIZE,
+					 			  -DIAMOND_SIZE, 0,
+					 			  0, -0.5*DIAMOND_SIZE);
+			rSymbol.setFill(Color.WHITE);
+			rSymbol.setStroke(Color.BLACK);
+			refreshDiamond();
+			break;
+		case COMPOSITION:
+			rSymbol = new Polygon(DIAMOND_SIZE, 0,
+		 			  			  0, 0.5*DIAMOND_SIZE,
+		 			  			  -DIAMOND_SIZE, 0,
+		 			  			  0, -0.5*DIAMOND_SIZE);
+			refreshDiamond();
+			break;
+		case GENERALIZATION:
+			rSymbol = new Polygon(-0.5*ARROW_SIZE, ARROW_SIZE,
+								   0.5*ARROW_SIZE, 0d, 
+								  -0.5*ARROW_SIZE, -ARROW_SIZE);
+			rSymbol.setFill(Color.WHITE);
+			rSymbol.setStroke(Color.BLACK);
+			refreshArrow();
+			break;
+		default:
+			break;
+		}
+		
+		// add symbol to scene
+		getChildren().add(rSymbol);
 	}
 	
 	/**
@@ -327,7 +403,10 @@ public class UMLRelationSymbol extends UMLSymbol {
 		setTargetObject((UMLObjectSymbol)in.readObject());
 		setUmlRelationType((UMLRelationType)in.readObject());
 		
-	}
-
+		refreshLine();
+		initSymbol(relationType);	
 	
+		
+	}
 }
+

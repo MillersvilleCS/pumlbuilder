@@ -45,6 +45,11 @@ public class UMLInterfaceSymbol extends UMLObjectSymbol{
 		this.getChildren().add(interfaceContainer);
 	}
 	
+	/**
+	 * UMLSymbol constructor for displaying at a specified point.
+	 * This constructor assumes that the point passed in was received as user input
+	 * @param origin Point at which the UMLInterfaceSymbol will be created 
+	 */
 	public UMLInterfaceSymbol(Point2D origin){
 		super(origin);
 		
