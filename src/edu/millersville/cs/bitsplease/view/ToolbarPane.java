@@ -2,7 +2,7 @@
  * @author Merv Fansler	
  * @author Josh Wakefield
  * @author Mike Sims
- * @version 0.1.1
+ * @version 0.2.0
  */
 
 package edu.millersville.cs.bitsplease.view;
@@ -19,7 +19,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
 /**
- * 
+ * Toolbar Pane GUI Component
+ * This component provides the main interface for switching between editing modes.
  */
 public class ToolbarPane extends VBox implements ChangeListener<Toggle> {
 
@@ -27,7 +28,7 @@ public class ToolbarPane extends VBox implements ChangeListener<Toggle> {
 	private ObjectProperty<UMLEditorMode> currentEditorMode = new SimpleObjectProperty<UMLEditorMode>(UMLEditorMode.SELECT);
 	
 	/**
-	 * 
+	 * Default Constructor for ToolbarPane
 	 */
 	public ToolbarPane() {
 		super();
@@ -39,57 +40,57 @@ public class ToolbarPane extends VBox implements ChangeListener<Toggle> {
 		
 		//create the button with icon
 		ToolbarButton moveSelectButton = new ToolbarButton();
-		moveSelectButton.setImage(icon);
+		moveSelectButton.setGraphic(icon);
 		moveSelectButton.setTooltip(new Tooltip("Move/Select"));
 		
 		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Class.png")));
 		ToolbarButton newClassButton = new ToolbarButton();
-		newClassButton.setImage(icon);
+		newClassButton.setGraphic(icon);
 		newClassButton.setTooltip(new Tooltip("New Class"));
 		
 		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Association.png")));
 		ToolbarButton newAssociationButton = new ToolbarButton();
-		newAssociationButton.setImage(icon);
+		newAssociationButton.setGraphic(icon);
 		newAssociationButton.setTooltip(new Tooltip("New Association"));
 		
 		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Dependency.png")));
 		ToolbarButton newDependencyButton = new ToolbarButton();
-		newDependencyButton.setImage(icon);
+		newDependencyButton.setGraphic(icon);
 		newDependencyButton.setTooltip(new Tooltip("New Dependency"));
 		
 		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Aggregation.png")));
 		ToolbarButton newAggregationButton = new ToolbarButton();
-		newAggregationButton.setImage(icon);
+		newAggregationButton.setGraphic(icon);
 		newAggregationButton.setTooltip(new Tooltip("New Aggregation"));
 		
 		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Composition.png")));
 		ToolbarButton newCompostionButton = new ToolbarButton();
-		newCompostionButton.setImage(icon);
+		newCompostionButton.setGraphic(icon);
 		newCompostionButton.setTooltip(new Tooltip("New Composition"));
 		
 		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Generalization.png")));
 		ToolbarButton newGeneralizationButton = new ToolbarButton();
-		newGeneralizationButton.setImage(icon);
+		newGeneralizationButton.setGraphic(icon);
 		newGeneralizationButton.setTooltip(new Tooltip("New Generaliztion"));
 		
 		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Interface.png")));
 		ToolbarButton newInterfaceButton = new ToolbarButton();
-		newInterfaceButton.setImage(icon);
+		newInterfaceButton.setGraphic(icon);
 		newInterfaceButton.setTooltip(new Tooltip("New Interface"));
 		
 		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/User.png")));
 		ToolbarButton newUserButton = new ToolbarButton();
-		newUserButton.setImage(icon);
+		newUserButton.setGraphic(icon);
 		newUserButton.setTooltip(new Tooltip("New User"));
 		
 		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/UseCase.png")));
 		ToolbarButton newUseCaseButton = new ToolbarButton();
-		newUseCaseButton.setImage(icon);
+		newUseCaseButton.setGraphic(icon);
 		newUseCaseButton.setTooltip(new Tooltip("New Use Case"));
 		
 		icon = new ImageView(new Image(getClass().getResourceAsStream("/img/Delete.png")));
 		ToolbarButton deleteObjectButton = new ToolbarButton();
-		deleteObjectButton.setImage(icon);
+		deleteObjectButton.setGraphic(icon);
 		deleteObjectButton.setTooltip(new Tooltip("Delete Object"));
 		
 		
@@ -152,6 +153,11 @@ public class ToolbarPane extends VBox implements ChangeListener<Toggle> {
 				).get(0).setSelected(true);
 	}
 
+	/**
+	 * Method required for implementing ChangeListener<Toggle>.
+	 * Enables publishing of Editor mode state.
+	 * @see javafx.beans.value.ChangeListener#changed(javafx.beans.value.ObservableValue, java.lang.Object, java.lang.Object)
+	 */
 	@Override
 	public void changed(ObservableValue<? extends Toggle> observable, 
 			Toggle oldValue, Toggle newValue) {

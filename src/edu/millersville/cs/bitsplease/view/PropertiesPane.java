@@ -2,12 +2,11 @@
  * @author Merv Fansler	
  * @author Kevin Fisher
  * @since  February 24, 2015
- * @version 0.1.1
+ * @version 0.2.0
  * 
  */
 
 package edu.millersville.cs.bitsplease.view;
-
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -21,7 +20,11 @@ import javafx.scene.layout.VBox;
 import javafx.util.converter.NumberStringConverter;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
 
-
+/**
+ * Properties Pane GUI Component
+ * This component provides a field editing interface the fields of the 
+ * currently selected object.
+ */
 public class PropertiesPane extends VBox implements ChangeListener<UMLSymbol> {
 	
 	private Label paneTitle = new Label("Properties");
@@ -30,16 +33,21 @@ public class PropertiesPane extends VBox implements ChangeListener<UMLSymbol> {
 	 * Constructor
 	 */
 	public PropertiesPane(ObjectProperty<UMLSymbol> selectedSymbol) {
-		
 		super();
 		
 		getChildren().add(paneTitle);
 		this.setSpacing(10d);
 		this.setStyle("-fx-background-color: #aaa; -fx-padding: 20; -fx-text-fill: white; -fx-font-weight: bold");
-	
+		
 		selectedSymbol.addListener(this);
 	}
 	
+	/** 
+	 * Method required for implementing ChangeListener<UMLSymbol>
+	 * This method enables the Properties Pane to subscribe to a change in selected 
+	 * object.
+	 * @see javafx.beans.value.ChangeListener#changed(javafx.beans.value.ObservableValue, java.lang.Object, java.lang.Object)
+	 */
 	@Override
 	public void changed(ObservableValue<? extends UMLSymbol> observable,
 			UMLSymbol oldValue, UMLSymbol newValue) {

@@ -1,7 +1,7 @@
 /**
  * @author Merv Fansler
  * @since February 19, 2015
- * @version 0.1.1
+ * @version 0.2.0
  */
 
 package edu.millersville.cs.bitsplease;
@@ -16,6 +16,10 @@ import javafx.stage.Stage;
  */
 public class PUMLBuilder extends Application {
 
+	/**
+	 * JavaFX Application entry point
+	 * @see javafx.application.Application#start(javafx.stage.Stage)
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
@@ -26,6 +30,10 @@ public class PUMLBuilder extends Application {
 		primaryStage.show();
 	}
 
+	/**
+	 * Java executable entry point
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		launch(PUMLBuilder.class, args);
 	}

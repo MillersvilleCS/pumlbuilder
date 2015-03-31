@@ -4,7 +4,7 @@
  * @author Mike Sims
  * @author Josh Wakefield
  * @since February 19, 2015
- * @version 0.1.1
+ * @version 0.2.0
  */
 
 package edu.millersville.cs.bitsplease.view;
@@ -37,20 +37,15 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import edu.millersville.cs.bitsplease.PUMLBuilder;
-import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
-import edu.millersville.cs.bitsplease.model.UMLInterfaceSymbol;
-import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
-import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
-import edu.millersville.cs.bitsplease.model.UMLRelationType;
-import edu.millersville.cs.bitsplease.model.UMLSymbol;
-import edu.millersville.cs.bitsplease.model.UMLUserSymbol;
+import edu.millersville.cs.bitsplease.model.*;
 
 /***
  * Primary GUI component where all user interact occurs. All other view
  * components are owned by UMLEditorPane.
  */
 public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent> {
-
+	
+	// Subcomponents
 	private ToolbarPane toolbarPane;
 	private DocumentViewPane documentViewPane;
 	private PropertiesPane propertiesPane;
@@ -63,25 +58,35 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 
 	private boolean isRelating = false;
 	
+	/**
+	 * Default Construct for UMLEditor Pane
+	 */
 	public UMLEditorPane() {
 		super();
 		
+		// create Document View Pane
 		documentViewPane = new DocumentViewPane();
 		this.setCenter(documentViewPane);
 		documentViewPane.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 		documentViewPane.addEventHandler(MouseEvent.MOUSE_DRAGGED, this);
 		documentViewPane.addEventHandler(MouseEvent.MOUSE_RELEASED, this);
 		
-		//this.setTop(createMenu());
+		// create and add Menu
 		this.setTop(createMenu());
 		
+		// create and add Toolbar Pane
 		toolbarPane = new ToolbarPane();
 		this.setLeft(toolbarPane);
 		
+		// create and add Properties Pane
 		propertiesPane = new PropertiesPane(documentViewPane.getSelectedUMLSymbol());
 		this.setRight(propertiesPane);
 	}
 	
+	/**
+	 * initialization method for MenuBar
+	 * @return instance of MenuBar to be attached to scene
+	 */
 	private MenuBar createMenu() {
 		MenuBar menuBar = new MenuBar();
 		menuBar.setUseSystemMenuBar(true);
@@ -89,7 +94,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		Menu fileMenu = new Menu("File");
 		
 		MenuItem newDoc = new MenuItem("New");
-		//Open handles single entity for now
+		
 		MenuItem open = new MenuItem("Open");
 		open.setOnAction(event -> {
 			
@@ -98,9 +103,9 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 					new ExtensionFilter("All Files", "*.*"));
 			File fileToLoad = fileHandler.showOpenDialog(getScene().getWindow());
 			
-			if(fileToLoad ==null){
+			if(fileToLoad == null){
 				
-				System.out.println("Hey thanks for wasting my time, cool.");
+				// System.out.println("Hey thanks for wasting my time, cool.");
 				
 			}else{
 				//first remove all node currently occupying the Document View
@@ -130,7 +135,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			File fileToSave = fileHandler.showSaveDialog(getScene().getWindow());
 			
 			if(fileToSave == null){
-				System.out.println("Hey cool that's great.");
+				//System.out.println("Hey cool that's great.");
 			}else{
 			
 				try{
@@ -185,20 +190,29 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		return menuBar;
 	}
 	
+	/**
+	 * @return reference to ToolbarPane instance
+	 */
 	public ToolbarPane getToolBarPane() {
 		return toolbarPane;
 	}
 	
+	/**
+	 * @return reference to DocumentViewPane instance
+	 */
 	public DocumentViewPane getDocumentViewPane() {
 		return documentViewPane;
 	}
 	
+	/**
+	 * @return reference to PropertiesPane instance
+	 */
 	public PropertiesPane getPropertiesPane() {
 		return propertiesPane;
 	}
 	
 	/** 
-	 * Provides MouseEvent handling for panes
+	 * Provides MouseEvent handling for all subcomponent panes
 	 * @see javafx.event.EventHandler#handle(javafx.event.Event)
 	 */
 	@Override
@@ -232,7 +246,6 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 				UMLInterfaceSymbol i = new UMLInterfaceSymbol(new Point2D(e.getX() -85, e.getY() -40));
 				documentViewPane.addUMLSymbol(i);
 				documentViewPane.setSelectedUMLSymbol(i);
-					
 				break;
 			case CREATE_USER:
 				UMLUserSymbol u = new UMLUserSymbol(new Point2D(e.getX(),e.getY()));
@@ -271,7 +284,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 				} else {
 					dragTarget.setLayoutX(e.getX() + dragOffsetX);
 					dragTarget.setLayoutY(e.getY() + dragOffsetY);
-					//TODO: this should be automatic now
+					//TODO: this could be made automatic with binding
 					documentViewPane.refreshRelations((UMLObjectSymbol) documentViewPane.getSelectedUMLSymbol().getValue());
 				}
 				break;
@@ -382,9 +395,9 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 	}
 	
 	/**
-	 * Utility to traverse scene graph and identify ancestor UMLSymbol
+	 * Utility to traverse scene graph and identify ancestor UMLObjectSymbol
 	 * @author Merv Fansler
-	 * @param target initial node to test for ancestor UMLSymbol
+	 * @param target initial node to test for ancestor UMLObjectSymbol
 	 * @return UMLSymbol ancestor, otherwise null
 	 */
 	private UMLObjectSymbol resolveUMLObjectSymbolParent(Node target) {

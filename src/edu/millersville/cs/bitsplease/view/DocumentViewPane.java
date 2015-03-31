@@ -2,7 +2,7 @@
  * @author Merv Fansler
  * @author Josh Wakefield
  * @since February 25, 2015
- * @version 0.1.1
+ * @version 0.2.0
  */
 
 package edu.millersville.cs.bitsplease.view;
@@ -20,12 +20,18 @@ import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
 import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
 
+/**
+ * Document View GUI Component
+ * This component provides the main view of the current UML document.
+ */
 public class DocumentViewPane extends Pane {
 
+	// State Variables
 	private ObjectProperty<UMLSymbol> selectedUMLSymbol = new SimpleObjectProperty<UMLSymbol>();
 	private ArrayList<UMLSymbol> entityList = new ArrayList<UMLSymbol>();
+	
 	/**
-	 * Constructor
+	 * Default Constructor
 	 */
 	public DocumentViewPane() {
 		super();
@@ -40,6 +46,10 @@ public class DocumentViewPane extends Pane {
 		entityList.add(symbol);
 	}
 	
+	/**
+	 * Method to refresh relations attached to given object
+	 * @param obj the object which has changed
+	 */
 	public void refreshRelations(UMLObjectSymbol obj) {
 		for (Node relView : getChildren().filtered(referencesUMLObject(obj))) {
 			((UMLRelationSymbol)relView).refresh();
@@ -85,9 +95,9 @@ public class DocumentViewPane extends Pane {
 			}else if(uml instanceof UMLInterfaceSymbol){
 				addUMLSymbol((UMLInterfaceSymbol)uml);
 			}
-			
 		});
 	}
+	
 	/**
 	 * Provides a means for finding relations of a given object
 	 * @param obj an object
