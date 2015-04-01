@@ -307,49 +307,9 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		} else if (e.getEventType() == MouseEvent.MOUSE_RELEASED) {
 			switch (toolbarPane.getCurrentEditorMode().getValue()) {
 			case CREATE_ASSOCIATION:
-				if (isRelating) {
-					UMLObjectSymbol dragRelease = resolveUMLObjectSymbolParent((Node)e.getPickResult().getIntersectedNode());
-					if (dragRelease != null) {
-						documentViewPane.addUMLSymbol(
-								new UMLRelationSymbol(dragTarget, 
-										dragRelease, 
-										UMLRelationType.ASSOCIATION));
-					}					
-				}
-				break;
 			case CREATE_DEPENDENCY:
-				if (isRelating) {
-					UMLObjectSymbol dragRelease = resolveUMLObjectSymbolParent((Node)e.getPickResult().getIntersectedNode());
-					if (dragRelease != null) {
-						documentViewPane.addUMLSymbol(new UMLRelationSymbol(
-								dragTarget, 
-								dragRelease, 
-								UMLRelationType.DEPENDENCY));
-					}					
-				}
-				break;
 			case CREATE_AGGREGATION:
-				if (isRelating) {
-					UMLObjectSymbol dragRelease = resolveUMLObjectSymbolParent((Node)e.getPickResult().getIntersectedNode());
-					if (dragRelease != null) {
-						documentViewPane.addUMLSymbol(
-								new UMLRelationSymbol(dragTarget, 
-										dragRelease, 
-										UMLRelationType.AGGREGATION));
-					}					
-				}
-				break;
 			case CREATE_COMPOSITION:
-				if (isRelating) {
-					UMLObjectSymbol dragRelease = resolveUMLObjectSymbolParent((Node)e.getPickResult().getIntersectedNode());
-					if (dragRelease != null) {
-						documentViewPane.addUMLSymbol(
-								new UMLRelationSymbol(dragTarget, 
-										dragRelease, 
-										UMLRelationType.COMPOSITION));
-					}					
-				}
-				break;
 			case CREATE_GENERALIZATION:
 				if (isRelating) {
 					UMLObjectSymbol dragRelease = resolveUMLObjectSymbolParent((Node)e.getPickResult().getIntersectedNode());
@@ -357,7 +317,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 						documentViewPane.addUMLSymbol(
 								new UMLRelationSymbol(dragTarget, 
 										dragRelease, 
-										UMLRelationType.GENERALIZATION));
+										toolbarPane.getCurrentEditorMode().getValue().getRelationType()));
 					}					
 				}
 				break;

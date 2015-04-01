@@ -9,6 +9,9 @@ package edu.millersville.cs.bitsplease.view;
 
 import javafx.event.EventHandler;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 /**
@@ -20,7 +23,13 @@ public class ToolbarButton extends ToggleButton {
 	/**
 	 * Default Button constructor
 	 */
-	public ToolbarButton(){
+	public ToolbarButton(UMLEditorMode editorMode){
+		ImageView icon = new ImageView(
+				new Image(getClass().getResourceAsStream(editorMode.getImagePath())));
+		setGraphic(icon);
+		setTooltip(new Tooltip(editorMode.getTooltipText()));
+		
+		setUserData(editorMode);
 		
 		setPrefWidth(40);
 		setPrefHeight(40);
@@ -30,7 +39,6 @@ public class ToolbarButton extends ToggleButton {
 		
 		// prevent unselecting by direct clicking
 		addPersistentToggle();
-		
 	}
 
 	/**
