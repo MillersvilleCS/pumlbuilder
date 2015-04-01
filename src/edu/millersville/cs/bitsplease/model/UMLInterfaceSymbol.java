@@ -20,30 +20,23 @@ import javafx.scene.shape.Circle;
 
 public class UMLInterfaceSymbol extends UMLObjectSymbol{
 	
+	private VBox _interface;
 	private TextField interfaceText;
-	private Circle renderedInterface;
+	private Circle interfaceView;
 	
 	/**
 	 * Default constructor, used for externalization
 	 */
 	public UMLInterfaceSymbol(){
 		super();
-		VBox interfaceContainer = new VBox();
-		interfaceContainer.setAlignment(Pos.CENTER);
+		_interface = new VBox();
+		_interface.setAlignment(Pos.CENTER);
 		
-		interfaceText = new TextField();
-		interfaceText.textProperty().bindBidirectional(identifier);
-		interfaceText.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
-		interfaceText.setMouseTransparent(true);
-		interfaceText.setFocusTraversable(false);
-		interfaceText.setAlignment(Pos.CENTER);
-		
-		renderedInterface = new Circle(10.0);
-		renderedInterface.setFill(Color.WHITE);
-		renderedInterface.setStroke(Color.BLACK);
-
-		interfaceContainer.getChildren().addAll(interfaceText, renderedInterface);
-		this.getChildren().add(interfaceContainer);
+		initInterfaceView();
+		initInterfaceText();
+	
+		_interface.getChildren().addAll(interfaceText, interfaceView);
+		this.getChildren().add(_interface);
 	}
 	
 	/**
@@ -54,26 +47,37 @@ public class UMLInterfaceSymbol extends UMLObjectSymbol{
 	public UMLInterfaceSymbol(Point2D origin){
 		super(origin);
 		
-		VBox interfaceContainer = new VBox();
-		interfaceContainer.setAlignment(Pos.CENTER);
+		_interface = new VBox();
+		_interface.setAlignment(Pos.CENTER);
 	
+		initInterfaceView();
+		initInterfaceText();
+		interfaceText.setText("<<Untitled>>");
+		
+		_interface.getChildren().addAll(interfaceText, interfaceView);
+		
+		this.getChildren().add(_interface);
+	}
+	
+	/**
+	 * initialize the interface view
+	 */
+	private void initInterfaceView(){
+		interfaceView = new Circle(10.0);
+		interfaceView.setFill(Color.WHITE);
+		interfaceView.setStroke(Color.BLACK);
+	}
+	
+	/**
+	 * initialize the interface text
+	 */
+	private void initInterfaceText(){
 		interfaceText = new TextField();
 		interfaceText.textProperty().bindBidirectional(identifier);
-		interfaceText.setText("<<Untitled>>");
 		interfaceText.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
 		interfaceText.setMouseTransparent(true);
 		interfaceText.setFocusTraversable(false);
 		interfaceText.setAlignment(Pos.CENTER);
-		
-		renderedInterface = new Circle(10.0);
-		renderedInterface.setFill(Color.WHITE);
-		renderedInterface.setStroke(Color.BLACK);
-		
-	
-		
-		interfaceContainer.getChildren().addAll(interfaceText, renderedInterface);
-		
-		this.getChildren().add(interfaceContainer);
 	}
 	
 	/**
@@ -106,7 +110,7 @@ public class UMLInterfaceSymbol extends UMLObjectSymbol{
 	}
 	
 	/** 
-	 * @param origin the point at which the interface will rendered
+	 * @param origin the point at which the interface will displayed
 	 */
 	public void setOrigin(Point2D _origin){
 		super.setOrigin(_origin);

@@ -251,6 +251,12 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 				UMLUserSymbol u = new UMLUserSymbol(new Point2D(e.getX(),e.getY()));
 				documentViewPane.addUMLSymbol(u);
 				documentViewPane.setSelectedUMLSymbol(u);
+				break;
+			case CREATE_USE_CASE:
+				UMLUseCaseSymbol use = new UMLUseCaseSymbol(new Point2D(e.getX(), e.getY()));
+				documentViewPane.addUMLSymbol(use);
+				documentViewPane.setSelectedUMLSymbol(use);
+				break;
 			case DELETE:
 				documentViewPane.setSelectedUMLSymbol(null);
 				UMLSymbol toDelete = resolveUMLSymbolParent((Node)e.getTarget());
