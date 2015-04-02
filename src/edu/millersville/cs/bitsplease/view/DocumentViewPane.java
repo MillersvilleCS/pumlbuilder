@@ -12,7 +12,6 @@ import java.util.function.Predicate;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
@@ -44,7 +43,8 @@ public class DocumentViewPane extends Pane {
 	public void addUMLSymbol(UMLSymbol symbol) {
 		this.getChildren().add(symbol);
 		entityList.add(symbol);
-		System.out.println("Entity Added! Total size: " + entityList.size());
+		System.out.println("Adding object with ID: " +symbol);
+		System.out.println("Entity Added! Total entities: " + entityList.size());
 	}
 	
 	/**
@@ -65,12 +65,25 @@ public class DocumentViewPane extends Pane {
 		
 		// remove all relation symbols that references an object being removed
 		if (toDelete instanceof UMLObjectSymbol) {
-			getChildren().removeIf(
+			/*getChildren().removeIf(
 					referencesUMLObject((UMLObjectSymbol) toDelete));
+			*/
+			
+			
+			Object[] relations = getChildren().filtered(referencesUMLObject((UMLObjectSymbol)toDelete)).toArray();
+			System.out.println(relations.toString() + " reference deleted object");
+			for( Object relation: relations){
+				System.out.println("Deleting relation "+ relation);
+				getChildren().remove(relation);
+				entityList.remove(relation);
+			}
+			
 		}
 		
 		getChildren().remove(toDelete);
 		entityList.remove(toDelete);
+		System.out.println("Removed " + toDelete);
+		System.out.println("Total entities: " + entityList.size());
 	}
 	
 	/**
