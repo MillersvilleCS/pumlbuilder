@@ -17,8 +17,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.print.Printer;
+import javafx.print.PrinterJob;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
@@ -94,6 +97,9 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		Menu fileMenu = new Menu("File");
 		
 		MenuItem newDoc = new MenuItem("New");
+		newDoc.setOnAction(newAction ->{
+			documentViewPane.removeAllSymbols();
+		});
 		
 		MenuItem open = new MenuItem("Open");
 		open.setOnAction(event -> {
@@ -109,7 +115,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 				
 			}else{
 				//first remove all node currently occupying the Document View
-				documentViewPane.getChildren().remove(0, documentViewPane.getChildren().size());
+				documentViewPane.removeAllSymbols();
 				
 				try{
 					ObjectInputStream in = new ObjectInputStream(
@@ -150,6 +156,10 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		save.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
 		
 		MenuItem saveAs = new MenuItem("Save As");
+		MenuItem print = new MenuItem("Print");
+		print.setOnAction(event ->{ 
+		
+		});
 		MenuItem exportAs = new MenuItem("Export As...");
 		MenuItem exit = new MenuItem("Exit");
 		exit.setOnAction(event ->{ System.exit(0); });
@@ -157,7 +167,8 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 					KeyCombination.SHIFT_DOWN ));
 		
 		fileMenu.getItems().addAll(newDoc,new SeparatorMenuItem(), open,save, 
-				saveAs,new SeparatorMenuItem(),exportAs, new SeparatorMenuItem(), exit);
+				saveAs,new SeparatorMenuItem(),print, new SeparatorMenuItem(),
+				exportAs, new SeparatorMenuItem(), exit);
 		
 		Menu editMenu = new Menu("Edit");
 		Menu helpMenu = new Menu("Help");

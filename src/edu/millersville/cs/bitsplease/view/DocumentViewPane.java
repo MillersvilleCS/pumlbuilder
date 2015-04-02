@@ -12,6 +12,7 @@ import java.util.function.Predicate;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
@@ -43,6 +44,7 @@ public class DocumentViewPane extends Pane {
 	public void addUMLSymbol(UMLSymbol symbol) {
 		this.getChildren().add(symbol);
 		entityList.add(symbol);
+		System.out.println("Entity Added! Total size: " + entityList.size());
 	}
 	
 	/**
@@ -62,7 +64,7 @@ public class DocumentViewPane extends Pane {
 	public void removeUMLSymbol(UMLSymbol toDelete) {
 		
 		// remove all relation symbols that references an object being removed
-		if (toDelete instanceof UMLClassSymbol) {
+		if (toDelete instanceof UMLObjectSymbol) {
 			getChildren().removeIf(
 					referencesUMLObject((UMLObjectSymbol) toDelete));
 		}
@@ -70,6 +72,17 @@ public class DocumentViewPane extends Pane {
 		getChildren().remove(toDelete);
 		entityList.remove(toDelete);
 	}
+	
+	/**
+	 * Handle removing all entities from the entity list as well as the Scene
+	 */
+	public void removeAllSymbols(){
+		this.getChildren().removeAll(this.getChildren());
+		entityList = new ArrayList<UMLSymbol>();
+		
+		System.out.println("Total entities: " + entityList.size());
+	};
+		
 	
 	/**
 	 * Return a list of all entities held by the Document
