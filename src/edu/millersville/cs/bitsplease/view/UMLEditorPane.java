@@ -17,22 +17,25 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
-import javafx.print.Printer;
-import javafx.print.PrinterJob;
+import javafx.print.*;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.transform.Scale;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -102,65 +105,24 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		});
 		
 		MenuItem open = new MenuItem("Open");
-		open.setOnAction(event -> {
-			
-			FileChooser fileHandler = new FileChooser();
-			fileHandler.getExtensionFilters().addAll(new ExtensionFilter("UML Document", "*.uml"),
-					new ExtensionFilter("All Files", "*.*"));
-			File fileToLoad = fileHandler.showOpenDialog(getScene().getWindow());
-			
-			if(fileToLoad == null){
-				
-				// System.out.println("Hey thanks for wasting my time, cool.");
-				
-			}else{
-				//first remove all node currently occupying the Document View
-				documentViewPane.removeAllSymbols();
-				
-				try{
-					ObjectInputStream in = new ObjectInputStream(
-							new FileInputStream(fileToLoad));
-			
-					@SuppressWarnings("unchecked")
-					ArrayList<UMLSymbol> loadedIn = (ArrayList<UMLSymbol>)in.readObject();
-			
-					documentViewPane.setEntities(loadedIn);
-					in.close();
-			
-				}catch(Exception e){e.printStackTrace();}
-			}
-		});
+		open.setOnAction(event -> {	loadDocument(); });
 		open.setAccelerator(new KeyCodeCombination(KeyCode.O, 
 				KeyCombination.SHORTCUT_DOWN));
 		
 		MenuItem save = new MenuItem("Save");
-		save.setOnAction(event -> {
-			FileChooser fileHandler = new FileChooser();
-			fileHandler.getExtensionFilters().addAll(new ExtensionFilter("UML Document", "*.uml"),
-						new ExtensionFilter("All Files", "*.*"));
-			File fileToSave = fileHandler.showSaveDialog(getScene().getWindow());
-			
-			if(fileToSave == null){
-				//System.out.println("Hey cool that's great.");
-			}else{
-			
-				try{
-					ObjectOutputStream o = new ObjectOutputStream(
-							new FileOutputStream(fileToSave));
-					
-					o.writeObject(documentViewPane.getEntities());
-					o.close();
-				}catch(IOException e){ e.printStackTrace();}
-			}	
-		});
+		save.setOnAction(event-> { saveDocument();});
 		save.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
 		
 		MenuItem saveAs = new MenuItem("Save As");
+		
 		MenuItem print = new MenuItem("Print");
 		print.setOnAction(event ->{ 
-		
+			print(documentViewPane);		
 		});
+		print.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
+		
 		MenuItem exportAs = new MenuItem("Export As...");
+		
 		MenuItem exit = new MenuItem("Exit");
 		exit.setOnAction(event ->{ System.exit(0); });
 		exit.setAccelerator(new KeyCodeCombination(KeyCode.W, KeyCombination.SHORTCUT_DOWN,
@@ -346,6 +308,103 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			dragTarget = null;
 		}
 	}
+	/**
+	 * Handles saving a UML document through FleChooser
+	 * @author Kevin Fisher
+	 */
+	private void saveDocument(){
+		FileChooser fileHandler = new FileChooser();
+		fileHandler.getExtensionFilters().addAll(new ExtensionFilter("UML Document", "*.uml"),
+					new ExtensionFilter("All Files", "*.*"));
+		File fileToSave = fileHandler.showSaveDialog(getScene().getWindow());
+		
+		if(fileToSave == null){
+				//User exited filechooser without saving the file
+		}else {
+			
+			if(!fileToSave.getName().endsWith(".uml")){
+				fileToSave = new File(fileToSave + ".uml");
+			}
+			
+			try{
+				ObjectOutputStream o = new ObjectOutputStream(
+						new FileOutputStream(fileToSave));
+				
+				o.writeObject(documentViewPane.getEntities());
+				o.close();
+			}catch(IOException e){ e.printStackTrace();}
+		}	
+	}
+	
+	private void loadDocument(){
+		FileChooser fileHandler = new FileChooser();
+		fileHandler.getExtensionFilters().addAll(new ExtensionFilter("UML Document", "*.uml"),
+				new ExtensionFilter("All Files", "*.*"));
+		File fileToLoad = fileHandler.showOpenDialog(getScene().getWindow());
+		
+		if(fileToLoad == null){		
+			// System.out.println("Hey thanks for wasting my time, cool.");
+		
+		//Only load .uml files	
+		}else if(!fileToLoad.getName().endsWith(".uml")){
+			Alert invalidFileType = new Alert(AlertType.ERROR);
+			invalidFileType.setTitle("File Open Error");
+			invalidFileType.setHeaderText("Invalid File Type");
+			invalidFileType.setContentText("Hey next time try loading a file ending in .uml. \n Cool thanks.");
+			
+			invalidFileType.showAndWait();
+			
+		}else{	
+			//first remove all node currently occupying the Document View
+			documentViewPane.removeAllSymbols();
+			try{
+				ObjectInputStream in = new ObjectInputStream(
+						new FileInputStream(fileToLoad));
+	
+				@SuppressWarnings("unchecked")
+				ArrayList<UMLSymbol> loadedIn = (ArrayList<UMLSymbol>)in.readObject();
+		
+				documentViewPane.setEntities(loadedIn);
+				in.close();
+		
+			}catch(Exception e){e.printStackTrace();}
+		}
+	}
+	/**
+	 * Handles creation and execution of printing job to print Document
+	 * @author Kevin Fisher
+	 * @param node the node to be printed
+	 */
+	private void print(final DocumentViewPane node){
+		Printer printer = Printer.getDefaultPrinter();
+		PageLayout pageLayout = printer.createPageLayout(Paper.NA_LETTER,
+				PageOrientation.LANDSCAPE, Printer.MarginType.DEFAULT);
+		double scaleX = pageLayout.getPrintableWidth() /
+				node.getBoundsInParent().getWidth();
+		double scaleY = pageLayout.getPrintableHeight() /
+				node.getBoundsInParent().getHeight();
+		node.getTransforms().add(new Scale(scaleX, scaleY));
+		
+		PrinterJob job = PrinterJob.createPrinterJob(printer);
+		if(job == null){
+			Alert noPrinterFound = new Alert(AlertType.ERROR);
+			noPrinterFound.setTitle("Printer Exception");
+			noPrinterFound.setHeaderText("No Printer Found");
+			noPrinterFound.setContentText("Penultimate UML Builder was unable to detect a printer.");
+			noPrinterFound.setGraphic(new ImageView(this.getClass().getResource("img/printer.png").toString()));
+			noPrinterFound.showAndWait();
+		}else{
+			
+			boolean showDialog = job.showPrintDialog(getScene().getWindow());
+			
+			if(showDialog){
+				if(job.printPage(node)){
+					
+					job.endJob();
+				}
+			}
+		}
+	}
 	
 	/**
 	 * Utility to traverse scene graph and identify ancestor UMLSymbol
@@ -394,4 +453,5 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		
 		return result;
 	}
+	
 }
