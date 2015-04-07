@@ -54,7 +54,6 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		classBox.getChildren().addAll(name,s1,attributes,s2,operations);
 		this.getChildren().add(classBox);
 		
-				  
 	}
 	/**
 	 * UMLObjectSymbol Constructor displaying UMLClassSymbol location and attributes
@@ -111,6 +110,14 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	}
 	
 	/**
+	 * Delete the last operation element from the UMLClassObject
+	 */
+	public void deleteOperation(){
+		if (!operations.getChildren().isEmpty())
+			operations.getChildren().remove(operations.getChildren().size() - 1);
+	}
+	
+	/**
 	 * Add an attribute element to the UMLClassObject
 	 * @param attributeName attribute to add to the UMLClassObject
 	 */
@@ -132,6 +139,14 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		});
 	}
 
+	/**
+	 * Delete the last attribute element from the UMLClassObject
+	 */
+	public void deleteAttribute(){
+		if (!attributes.getChildren().isEmpty())
+			attributes.getChildren().remove(attributes.getChildren().size() - 1);
+	}
+	
 	/**
 	 * Set all TextFields in the UMLClassSymbol to editable.
 	 */
