@@ -15,9 +15,11 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
+import edu.millersville.cs.bitsplease.model.UMLInterfaceSymbol;
 import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
 import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
+import edu.millersville.cs.bitsplease.model.UMLUseCaseSymbol;
 
 /**
  * Document View GUI Component
@@ -140,7 +142,11 @@ public class DocumentViewPane extends Pane {
 		if (oldSymbol != null) {
 			oldSymbol.setSelected(false);
 			if (oldSymbol instanceof UMLClassSymbol)  {
-				((UMLClassSymbol) oldSymbol).setNonEditableUMLSymbol();
+				((UMLClassSymbol) oldSymbol).setNonEditableUMLClassSymbol();
+			} else if (oldSymbol instanceof UMLInterfaceSymbol) {
+				((UMLInterfaceSymbol) oldSymbol).setNonEditableUMLInterfaceSymbol();
+			} else if (oldSymbol instanceof UMLUseCaseSymbol) {
+				((UMLUseCaseSymbol) oldSymbol).setNonEditableUMLUseCaseSymbol();
 			}
 			oldSymbol.requestFocus();
 		}

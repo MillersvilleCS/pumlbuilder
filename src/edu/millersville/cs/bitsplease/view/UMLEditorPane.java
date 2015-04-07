@@ -197,16 +197,19 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 	 * Provides MouseEvent handling for all subcomponent panes
 	 * @see javafx.event.EventHandler#handle(javafx.event.Event)
 	 */
+	@SuppressWarnings("static-access")
 	@Override
 	public void handle(MouseEvent e) {
 		
 		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 			switch (toolbarPane.getCurrentEditorMode().getValue()) {
 			case CREATE_CLASS:
-
-				UMLClassSymbol c = new UMLClassSymbol(new Point2D(e.getX(),e.getY()), 100, 100);
-				documentViewPane.addUMLSymbol(c);
-				documentViewPane.setSelectedUMLSymbol(c);
+				
+				if (e.getButton().equals(e.getButton().PRIMARY)) {
+					UMLClassSymbol c = new UMLClassSymbol(new Point2D(e.getX(),e.getY()), 100, 100);
+					documentViewPane.addUMLSymbol(c);
+					documentViewPane.setSelectedUMLSymbol(c);
+				}
 				
 				break;
 			case SELECT: // selecting items
@@ -217,27 +220,54 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 					documentViewPane.setSelectedUMLSymbol(toEdit);
 					if (toEdit.isSelected()) {
 						if (e.getClickCount() == 2) {
-							toEdit.setEditableUMLSymbol();
+							toEdit.setEditableUMLClassSymbol();
+						}
+					}
+				} else if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLInterfaceSymbol) {
+					UMLInterfaceSymbol toEdit = (UMLInterfaceSymbol) resolveUMLSymbolParent((Node) e.getTarget());
+					documentViewPane.setSelectedUMLSymbol(toEdit);
+					if (toEdit.isSelected()) {
+						if (e.getClickCount() == 2) {
+							toEdit.setEditableUMLInterfaceSymbol();
+						}
+					}
+				} else if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLUseCaseSymbol) {
+					UMLUseCaseSymbol toEdit = (UMLUseCaseSymbol) resolveUMLSymbolParent((Node) e.getTarget());
+					documentViewPane.setSelectedUMLSymbol(toEdit);
+					if (toEdit.isSelected()) {
+						if (e.getClickCount() == 2) {
+							toEdit.setEditableUMLUseCaseSymbol();
 						}
 					}
 				}
 				
 				break;
 			case CREATE_INTERFACE:
-					
-				UMLInterfaceSymbol i = new UMLInterfaceSymbol(new Point2D(e.getX() -85, e.getY() -40));
-				documentViewPane.addUMLSymbol(i);
-				documentViewPane.setSelectedUMLSymbol(i);
+				
+				if (e.getButton().equals(e.getButton().PRIMARY)) {
+					UMLInterfaceSymbol i = new UMLInterfaceSymbol(new Point2D(e.getX() -85, e.getY() -40));
+					documentViewPane.addUMLSymbol(i);
+					documentViewPane.setSelectedUMLSymbol(i);
+				}
+				
 				break;
 			case CREATE_USER:
-				UMLUserSymbol u = new UMLUserSymbol(new Point2D(e.getX(),e.getY()));
-				documentViewPane.addUMLSymbol(u);
-				documentViewPane.setSelectedUMLSymbol(u);
+				
+				if (e.getButton().equals(e.getButton().PRIMARY)) {
+					UMLUserSymbol u = new UMLUserSymbol(new Point2D(e.getX(),e.getY()));
+					documentViewPane.addUMLSymbol(u);
+					documentViewPane.setSelectedUMLSymbol(u);
+				}
+				
 				break;
 			case CREATE_USE_CASE:
-				UMLUseCaseSymbol use = new UMLUseCaseSymbol(new Point2D(e.getX(), e.getY()));
-				documentViewPane.addUMLSymbol(use);
-				documentViewPane.setSelectedUMLSymbol(use);
+			
+				if (e.getButton().equals(e.getButton().PRIMARY)) {
+					UMLUseCaseSymbol use = new UMLUseCaseSymbol(new Point2D(e.getX(), e.getY()));
+					documentViewPane.addUMLSymbol(use);
+					documentViewPane.setSelectedUMLSymbol(use);
+				}
+				
 				break;
 			case DELETE:
 				documentViewPane.setSelectedUMLSymbol(null);

@@ -1,5 +1,6 @@
 /***
  * @author Kevin Fisher
+ * @author Josh Wakefield
  * @since  March 30, 2015
  * @version 0.2.0
  */
@@ -114,6 +115,20 @@ public class UMLInterfaceSymbol extends UMLObjectSymbol{
 	 */
 	public void setOrigin(Point2D _origin){
 		super.setOrigin(_origin);
+	}
+	
+	/**
+	 * Set the interfaceText in the UMLInterfaceSymbol to editable.
+	 */
+	public void setEditableUMLInterfaceSymbol() {
+		interfaceText.setMouseTransparent(false);
+	}
+
+	/**
+	 * Set the interfaceText in the UMLInterfaceSymbol to non-editable.
+	 */
+	public void setNonEditableUMLInterfaceSymbol() {
+		interfaceText.setMouseTransparent(true);
 	}
 	
 	/**

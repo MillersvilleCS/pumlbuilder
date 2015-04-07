@@ -135,7 +135,7 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	/**
 	 * Set all TextFields in the UMLClassSymbol to editable.
 	 */
-	public void setEditableUMLSymbol() {
+	public void setEditableUMLClassSymbol() {
 		name.setMouseTransparent(false);
 		
 		attributes.getChildren().forEach(attr -> {
@@ -154,7 +154,7 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	/**
 	 * Set all TextFields in the UMLClassSymbol to non-editable.
 	 */
-	public void setNonEditableUMLSymbol() {
+	public void setNonEditableUMLClassSymbol() {
 		name.setMouseTransparent(true);
 			
 		attributes.getChildren().forEach(attr -> {

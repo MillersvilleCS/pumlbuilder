@@ -106,6 +106,19 @@ public class UMLUseCaseSymbol extends UMLObjectSymbol {
 		super.setOrigin(_origin);
 	}
 	
+	/**
+	 * Set the useCaseText in the UMLUseCaseSymbol to editable.
+	 */
+	public void setEditableUMLUseCaseSymbol() {
+		useCaseText.setMouseTransparent(false);
+	}
+
+	/**
+	 * Set the useCaseText in the UMLUseCaseSymbol to non-editable.
+	 */
+	public void setNonEditableUMLUseCaseSymbol() {
+		useCaseText.setMouseTransparent(true);
+	}
 	
 	/**
 	 * Externalization method for writing this object out to a file
