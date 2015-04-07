@@ -16,6 +16,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.VBox;
 import javafx.util.converter.NumberStringConverter;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
@@ -61,6 +62,10 @@ public class PropertiesPane extends VBox implements ChangeListener<UMLSymbol> {
 					Bindings.bindBidirectional(tf.textProperty(), (StringProperty) p);
 				} else if (p instanceof DoubleProperty) {
 					Bindings.bindBidirectional(tf.textProperty(), (DoubleProperty) p, new NumberStringConverter());
+					tf.setTextFormatter(new TextFormatter<String>(c -> {
+						c.setText(c.getText().replaceAll("[^\\d]", ""));
+						return c;
+					}));
 				}
 				
 				this.getChildren().add(tf);

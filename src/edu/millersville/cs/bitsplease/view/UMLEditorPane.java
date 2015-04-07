@@ -19,7 +19,11 @@ import java.util.ArrayList;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
-import javafx.print.*;
+import javafx.print.PageLayout;
+import javafx.print.PageOrientation;
+import javafx.print.Paper;
+import javafx.print.Printer;
+import javafx.print.PrinterJob;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -28,7 +32,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -43,7 +46,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import edu.millersville.cs.bitsplease.PUMLBuilder;
-import edu.millersville.cs.bitsplease.model.*;
+import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
+import edu.millersville.cs.bitsplease.model.UMLInterfaceSymbol;
+import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
+import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
+import edu.millersville.cs.bitsplease.model.UMLSymbol;
+import edu.millersville.cs.bitsplease.model.UMLUseCaseSymbol;
+import edu.millersville.cs.bitsplease.model.UMLUserSymbol;
 
 /***
  * Primary GUI component where all user interact occurs. All other view
