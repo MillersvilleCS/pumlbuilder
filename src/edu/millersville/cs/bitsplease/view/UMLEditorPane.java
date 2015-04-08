@@ -178,6 +178,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 	 * @return instance of context Menu to be displayed when you right click on an object
 	 */
 	private ContextMenu createContextMenu() {
+		
 		ContextMenu contextMenu = new ContextMenu();
 		
 		//create generic contextMenu items
@@ -189,14 +190,17 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			documentViewPane.removeUMLSymbol(documentViewPane.getSelectedUMLSymbol().getValue());
 		});
 		
-		//create submenu for UMLClassSymbol's
-		Menu UMLclass = new Menu("UML Class");
+		MenuItem exit = new MenuItem("Exit");
+		exit.setOnAction(event -> { contextMenu.hide(); });
+		exit.setAccelerator(new KeyCodeCombination(KeyCode.ESCAPE));
 		
-		//adds fields to the UML Class submenu only if the selected object is a UMLClassSymbol
-		//otherwise this submenu will be blank and cannot be accessed
+		//Used to determine if the selected object is a UMLCLassSymbol and if it is then
+		//adds the menu options that are specific to a UMLClassSymbol to the context menu
+		//otherwise those options are not added to the context menu
 		if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLClassSymbol) {
-			UMLClassSymbol targetObj = (UMLClassSymbol) documentViewPane.getSelectedUMLSymbol().getValue();
 			
+			UMLClassSymbol targetObj = (UMLClassSymbol) documentViewPane.getSelectedUMLSymbol().getValue();
+		
 			MenuItem addAttr = new MenuItem("Add Attribute");
 			addAttr.setOnAction(event -> { targetObj.addAttribute("+attribute:type"); });
 			
@@ -209,17 +213,18 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			MenuItem deleteOper = new MenuItem("Delete Operation");
 			deleteOper.setOnAction(event -> { targetObj.deleteOperation(); });
 			
-			//add all items to UML Class submenu
-			UMLclass.getItems().addAll(addAttr, deleteAttr, new SeparatorMenuItem(), addOper, deleteOper);
+			//add all items to the contextMenu for a UMLClassSymbol
+			contextMenu.getItems().addAll(cut, copy, paste, new SeparatorMenuItem(), 
+					delete, new SeparatorMenuItem(), addAttr, deleteAttr, new SeparatorMenuItem(),
+					addOper, deleteOper, new SeparatorMenuItem(), exit);
+		
+		} else {
+		
+			//add all items to the contextMenu for non-UMLClassSymbol's
+			contextMenu.getItems().addAll(cut, copy, paste, new SeparatorMenuItem(), 
+					delete, new SeparatorMenuItem(), exit);
+			
 		}
-		
-		MenuItem exit = new MenuItem("Exit");
-		exit.setOnAction(event -> { contextMenu.hide(); });
-		exit.setAccelerator(new KeyCodeCombination(KeyCode.ESCAPE));
-		
-		//add all items to the contextMenu
-		contextMenu.getItems().addAll(cut, copy, paste, new SeparatorMenuItem(), 
-				delete, new SeparatorMenuItem(), UMLclass, new SeparatorMenuItem(), exit);
 		
 		return contextMenu;
 	}
