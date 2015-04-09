@@ -478,6 +478,8 @@ public class UMLRelationSymbol extends UMLSymbol {
 		ObservableList<Property<? extends Object>> fields = super.getFields();
 		fields.add(sourceObject.getIdentifierProperty());
 		fields.add(targetObject.getIdentifierProperty());
+		fields.add(sourceCardinality.textProperty());
+		fields.add(targetCardinality.textProperty());
 		return fields;
 	}
 	
