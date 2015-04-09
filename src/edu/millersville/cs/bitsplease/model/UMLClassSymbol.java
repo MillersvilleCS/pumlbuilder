@@ -150,7 +150,6 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	public void setEditableUMLClassSymbol() {
 		name.setMouseTransparent(false);
 		
-		
 		attributes.getChildren().forEach(attr -> {
 			if (attr instanceof TextField) {
 				attr.setMouseTransparent(false);

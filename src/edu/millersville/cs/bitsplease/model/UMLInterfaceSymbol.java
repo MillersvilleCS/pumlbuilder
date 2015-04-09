@@ -122,6 +122,7 @@ public class UMLInterfaceSymbol extends UMLObjectSymbol{
 	 */
 	public void setEditableUMLInterfaceSymbol() {
 		interfaceText.setMouseTransparent(false);
+		interfaceText.requestFocus();
 	}
 
 	/**
