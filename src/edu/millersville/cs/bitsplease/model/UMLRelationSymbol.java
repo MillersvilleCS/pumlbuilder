@@ -374,6 +374,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 	public void editText(){
 		rText.setMouseTransparent(false);
 		rText.setVisible(true);
+		
 	}
 	
 	/**

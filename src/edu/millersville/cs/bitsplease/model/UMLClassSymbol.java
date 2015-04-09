@@ -19,6 +19,7 @@ import java.util.List;
 import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -39,7 +40,8 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		
 		name = new TextField();
 		name.textProperty().bindBidirectional(identifier);
-		name.setStyle("-fx-border-color:white;");
+		name.setAlignment(Pos.CENTER);
+		name.setStyle("-fx-border-color:white; -fx-font-weight: bold;");
 		name.setMouseTransparent(true);
 		name.setFocusTraversable(false);
 		
@@ -68,15 +70,16 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		
 		name = new TextField();
 		name.textProperty().bindBidirectional(identifier);
-		name.setStyle("-fx-border-color: white");
+		name.setStyle("-fx-border-color: white; -fx-font-weight: bold;");
+		name.setAlignment(Pos.CENTER);
 		name.setMouseTransparent(true);
 		name.setFocusTraversable(false);
 		
 		attributes = new VBox();
 		operations = new VBox();
 		
-		Arrays.asList("+attribute1:type","+attribute2:type").forEach(a -> addAttribute(a));
-		Arrays.asList("-operation():type","-operation2():type").forEach(f -> addOperation(f));
+		Arrays.asList("+attribute:type","+attribute:type").forEach(a -> addAttribute(a));
+		Arrays.asList("-operation():type","-operation():type").forEach(f -> addOperation(f));
 		
 		Separator s1 = new Separator(),
 				  s2 = new Separator();
@@ -86,19 +89,17 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		classBox.getChildren().addAll(name,s1,attributes,s2,operations);
 		this.getChildren().add(classBox);
 	}
-	
 	/**
 	 * Add a Operation element to a UMLClassSymbol
 	 * @param operationName Operation to add to the UMLCLassObject
 	 */
 	public void addOperation(String operationName) {
 		TextField t = new TextField(operationName);
-		t.setStyle("-fx-border-color: white");
+		t.setStyle("-fx-border-color: white;");
 		t.setMouseTransparent(true);
 		t.setFocusTraversable(false);
 		operations.getChildren().add(t);
 	}
-	
 	/**
 	 * Set the operations of a class by passing in a list
 	 * @param ops list of operations to set for the UMLClassSymbol
@@ -115,8 +116,7 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	public void deleteOperation(){
 		if (!operations.getChildren().isEmpty())
 			operations.getChildren().remove(operations.getChildren().size() - 1);
-	}
-	
+	}	
 	/**
 	 * Add an attribute element to the UMLClassObject
 	 * @param attributeName attribute to add to the UMLClassObject
@@ -127,8 +127,7 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		t.setMouseTransparent(true);
 		t.setFocusTraversable(false);
 		attributes.getChildren().add(t);
-	}
-	
+	}	
 	/**
 	 * Set the attributes of a class by passing in a List
 	 * @param attr List of attributes to set for the UMLClassObject
@@ -138,7 +137,6 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 			addAttribute(a);
 		});
 	}
-
 	/**
 	 * Delete the last attribute element from the UMLClassObject
 	 */
@@ -146,12 +144,12 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		if (!attributes.getChildren().isEmpty())
 			attributes.getChildren().remove(attributes.getChildren().size() - 1);
 	}
-	
 	/**
 	 * Set all TextFields in the UMLClassSymbol to editable.
 	 */
 	public void setEditableUMLClassSymbol() {
 		name.setMouseTransparent(false);
+		
 		
 		attributes.getChildren().forEach(attr -> {
 			if (attr instanceof TextField) {
@@ -165,7 +163,6 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 			}
 		});
 	}
-
 	/**
 	 * Set all TextFields in the UMLClassSymbol to non-editable.
 	 */
@@ -184,7 +181,6 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 			}
 		});
 	}
-	
 	/**
 	 * Get a list of all existing fields within a UMLClassSymbol
 	 * @return An iterable list of the fields contained within the class
@@ -204,7 +200,6 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		});
 		return fields;
 	}
-
 	/**
 	 * Defines how this object can be written out to a file
 	 * @param out the Object output stream used to write the object out to a file
@@ -227,15 +222,12 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		out.writeObject(attr);
 		
 		List<String> ops = new ArrayList<String>();
-		
 		operations.getChildren().forEach(op -> {
-			
 				ops.add(((TextField)op).textProperty().getValue());
 		});
 		
 		out.writeObject(ops);	
 	}
-	
 	/**
 	 * Defines how the object will be read in from a file
 	 * @param in the input stream that will read the object in from a file
@@ -254,21 +246,10 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		
 		@SuppressWarnings("unchecked")
 		ArrayList<String> attr = (ArrayList<String>)in.readObject();
-		System.out.println("Loaded in attr array, size: " + attr.size());
-		System.out.println("Attributes: ");
-		for(String s : attr){
-			System.out.println(s);
-		}
 		setAttributes(attr);
 		
 		@SuppressWarnings("unchecked")
 		ArrayList<String> ops = (ArrayList<String>)in.readObject();
-		System.out.println("Loaded in ops array, size: " + ops.size());
-		System.out.println("Operations: ");
-		for(String op : ops){
-			System.out.println(op);
-		}
-		setOperations(ops);
-		
+		setOperations(ops);	
 	}
 }

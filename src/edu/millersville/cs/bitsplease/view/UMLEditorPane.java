@@ -9,9 +9,7 @@
 
 package edu.millersville.cs.bitsplease.view;
 
-import java.awt.Robot;
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -54,14 +52,9 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
 import edu.millersville.cs.bitsplease.PUMLBuilder;
-import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
-import edu.millersville.cs.bitsplease.model.UMLInterfaceSymbol;
-import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
-import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
-import edu.millersville.cs.bitsplease.model.UMLSymbol;
-import edu.millersville.cs.bitsplease.model.UMLUseCaseSymbol;
-import edu.millersville.cs.bitsplease.model.UMLUserSymbol;
+import edu.millersville.cs.bitsplease.model.*;
 
 /***
  * Primary GUI component where all user interact occurs. All other view

@@ -111,6 +111,7 @@ public class UMLUseCaseSymbol extends UMLObjectSymbol {
 	 */
 	public void setEditableUMLUseCaseSymbol() {
 		useCaseText.setMouseTransparent(false);
+		useCaseText.requestFocus();
 	}
 
 	/**

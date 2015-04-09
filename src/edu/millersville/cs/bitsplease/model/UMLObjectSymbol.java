@@ -32,24 +32,6 @@ public abstract class UMLObjectSymbol extends UMLSymbol {
 		super();
 		setOrigin(origin);
 	}
-	
-	/**
-	 * UMLObjectSymbol Constructor that specifies an identifer only
-	 * @param name the text to set the UMLObject identifer
-	 */
-	public UMLObjectSymbol(String name){
-		this.identifier.setValue(name);
-	}
-	/** 
-	 * Construct a UMLObjectSymbol with user-defined height, width
-	 * @param double prefHeight height of the UMLObjectSymbol 
-	 * @param double prefWidth  width of the UMLObjectSymbol
-	 */
-	public UMLObjectSymbol(double prefHeight, double prefWidth){
-		super();
-		this.prefHeight(prefHeight);
-		this.prefWidth(prefWidth);
-	}
 	/**
 	 * General Constructor for UMLObjectSymbol
 	 * @param origin Coordinates of the UMLObjectSymbol origin 
@@ -62,17 +44,6 @@ public abstract class UMLObjectSymbol extends UMLSymbol {
 		this.prefHeight(prefHeight);
 		this.prefWidth(prefWidth);
 	}
-	
-	/**
-	 * Method to handle event propagation through a chain of UMLSymbol objects
-	 * @return the processed event or null if the event has been fully propagated
-	 */
-	public Event dispatchEvent(Event event, EventDispatchChain tail){
-		
-		return event;
-		
-	}
-	
 	/************************
 	 *Class Accessor methods*
 	 ************************/
