@@ -9,6 +9,9 @@
 
 package edu.millersville.cs.bitsplease.view;
 
+import java.awt.Robot;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,6 +20,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
+
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.print.PageLayout;
@@ -26,6 +32,7 @@ import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ContextMenu;
@@ -34,6 +41,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -131,7 +139,10 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		});
 		print.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
 		
-		MenuItem exportAs = new MenuItem("Export As...");
+		MenuItem export = new MenuItem("Export...");
+		export.setOnAction(ex ->{
+			exportDocument(documentViewPane);
+		});
 		
 		MenuItem exit = new MenuItem("Exit");
 		exit.setOnAction(event ->{ System.exit(0); });
@@ -140,7 +151,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		
 		fileMenu.getItems().addAll(newDoc,new SeparatorMenuItem(), open,save, 
 				saveAs,new SeparatorMenuItem(),print, new SeparatorMenuItem(),
-				exportAs, new SeparatorMenuItem(), exit);
+				export, new SeparatorMenuItem(), exit);
 		
 		Menu editMenu = new Menu("Edit");
 		Menu helpMenu = new Menu("Help");
@@ -486,22 +497,17 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 	 * @author Kevin Fisher
 	 * @param node the node to be printed
 	 */
-	private void print(final DocumentViewPane node){
+	private void print(DocumentViewPane node){
+	
 		Printer printer = Printer.getDefaultPrinter();
-		PageLayout pageLayout = printer.createPageLayout(Paper.NA_LETTER,
-				PageOrientation.LANDSCAPE, Printer.MarginType.DEFAULT);
-		double scaleX = pageLayout.getPrintableWidth() /
-				node.getBoundsInParent().getWidth();
-		double scaleY = pageLayout.getPrintableHeight() /
-				node.getBoundsInParent().getHeight();
-		node.getTransforms().add(new Scale(scaleX, scaleY));
+		
 		
 		PrinterJob job = PrinterJob.createPrinterJob(printer);
 		if(job == null){
 			Alert noPrinterFound = new Alert(AlertType.ERROR);
-			noPrinterFound.setTitle("Printer Exception");
+			noPrinterFound.setTitle("Printer Error");
 			noPrinterFound.setHeaderText("No Printer Found");
-			noPrinterFound.setContentText("Penultimate UML Builder was unable to detect a printer.");
+			noPrinterFound.setContentText("Hold on let me just mail it to you or something.");
 			noPrinterFound.setGraphic(new ImageView(this.getClass().getResource("img/printer.png").toString()));
 			noPrinterFound.showAndWait();
 		}else{
@@ -509,12 +515,68 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			boolean showDialog = job.showPrintDialog(getScene().getWindow());
 			
 			if(showDialog){
+				node.setSelectedUMLSymbol(null);
+				//PageLayout pageLayout = printer.createPageLayout(Paper.NA_LETTER,
+					//	PageOrientation.LANDSCAPE, Printer.MarginType.DEFAULT);
+				//double scaleX = pageLayout.getPrintableWidth() /
+						//node.getBoundsInParent().getWidth();
+				//double scaleY = pageLayout.getPrintableHeight() /
+						//node.getBoundsInParent().getHeight();
+				node.getTransforms().add(new Scale(0.5, 0.5));
 				if(job.printPage(node)){
 					
 					job.endJob();
+					//node.getTransforms().removeAll();
+				
 				}
 			}
 		}
+		System.out.println("Print method reached this");
+		
+	}
+	
+	private void exportDocument(DocumentViewPane document){
+		
+		WritableImage image = document.snapshot(new SnapshotParameters(), null);
+		FileChooser fileHandler = new FileChooser();
+		fileHandler.setTitle("Export Document");
+		fileHandler.getExtensionFilters().addAll(new ExtensionFilter("PNG Image", "*.png"),
+				new ExtensionFilter("JPEG Image", "*.jpg"), new ExtensionFilter("PDF Image", "*.pdf"));
+		File exportDoc = fileHandler.showSaveDialog(getScene().getWindow());
+		
+		if(exportDoc != null){
+			
+			switch(fileHandler.getSelectedExtensionFilter().getDescription()){
+			case "PNG Image":
+				if(!exportDoc.getPath().endsWith(".png")){
+					exportDoc = new File(exportDoc.getPath()+ ".png");
+					System.out.println(exportDoc.getPath());
+					try{
+						ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", exportDoc);
+					}catch(IOException ioe){
+						
+					}
+				}
+					
+				break;
+			case "JPEG Image":
+				System.out.println("Selected extension filter is jpeg");
+				if(!exportDoc.getPath().endsWith(".jpg")){
+					exportDoc = new File(exportDoc.getPath()+".jpg");
+	
+				}	
+				break;
+			case "PDF Image":
+				if(!exportDoc.getPath().endsWith(".pdf")){
+					exportDoc = new File(exportDoc.getPath() + ".pdf");
+					System.out.println(exportDoc.getPath());
+				}
+				break;
+			default:
+				break;
+			}
+		}
+		
 	}
 	
 	/**
