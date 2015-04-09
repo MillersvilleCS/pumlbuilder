@@ -46,7 +46,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 	// View Components
 	private Polyline rLine;
 	private Shape rSymbol;
-	private TextField rText;
+	private TextField rText, sourceCardinality, targetCardinality;
 	
 	/**
 	 * Default constructor for externalization
@@ -59,7 +59,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 		this.rLine = new Polyline();
 		this.getChildren().add(rLine);
 		
-		initializeTextField();
+		initializeTextFields();
 	}
 	
 	/**
@@ -88,7 +88,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 		getChildren().add(rLine);
 		refreshLine();
 		
-		initializeTextField();
+		initializeTextFields();
 		refreshTextLayout();
 		
 		// create and position relation head symbol
@@ -96,9 +96,9 @@ public class UMLRelationSymbol extends UMLSymbol {
 	}
 
 	/**
-	 * Initializes the label of the relation
+	 * Initializes the label and cardinality of the relation
 	 */
-	private void initializeTextField() {
+	private void initializeTextFields() {
 		// create and add identifier field
 		rText = new TextField();
 		rText.textProperty().bindBidirectional(identifier);
@@ -106,6 +106,18 @@ public class UMLRelationSymbol extends UMLSymbol {
 		rText.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
 		rText.setPrefWidth(150);
 		getChildren().add(rText);
+		
+		sourceCardinality = new TextField("0..*");
+		sourceCardinality.setFocusTraversable(false);
+		sourceCardinality.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
+		sourceCardinality.setPrefWidth(40);
+		getChildren().add(sourceCardinality);
+		
+		targetCardinality = new TextField("1..*");
+		targetCardinality.setFocusTraversable(false);
+		targetCardinality.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
+		targetCardinality.setPrefWidth(40);
+		getChildren().add(targetCardinality);
 	}
 	
 	/**
@@ -406,15 +418,52 @@ public class UMLRelationSymbol extends UMLSymbol {
 	}
 	
 	/***
-	 * Computes the layout for the label text.
+	 * Computes the layout for the label and cardinality text.
 	 */
 	private void refreshTextLayout() {
+		//cardinality textFields
+		int offset = 25;
+		double width = sourceCardinality.getPrefWidth();
+		
+		//slope of the line
+		double m = (getEndPoint().getY() - getStartPoint().getY()) / (getEndPoint().getX() - getStartPoint().getX());
+		
+		if (getEndPoint().getX() - getStartPoint().getX() >= 0){
+			sourceCardinality.setLayoutX(getStartPoint().getX());
+			sourceCardinality.setLayoutY(m * offset + getStartPoint().getY());
+			
+			targetCardinality.setLayoutX(getEndPoint().getX() - width);
+			targetCardinality.setLayoutY(m * (getEndPoint().getX() - width - getStartPoint().getX()) + getStartPoint().getY());
+		} else {
+			sourceCardinality.setLayoutX(getStartPoint().getX() - width);
+			sourceCardinality.setLayoutY(-m * offset + getStartPoint().getY());
+			
+			targetCardinality.setLayoutX(getEndPoint().getX() + 5);
+			targetCardinality.setLayoutY(m * (getEndPoint().getX() + width - getStartPoint().getX()) + getStartPoint().getY());
+		}
+		
+		//used when slope is undefined
+		if (Math.abs(m) > .5){
+			if (getStartPoint().getY() < getEndPoint().getY()){
+				sourceCardinality.setLayoutY(getStartPoint().getY());
+				targetCardinality.setLayoutY(getEndPoint().getY() - offset);
+			} else {
+				sourceCardinality.setLayoutY(getStartPoint().getY() - offset);
+				targetCardinality.setLayoutY(getEndPoint().getY());
+			}
+		}
+		
+		// relation textField
 		if (sourceObject != targetObject) {
 			rText.setLayoutX((getStartPoint().getX() + getEndPoint().getX()) / 2 );
 			rText.setLayoutY((getStartPoint().getY() + getEndPoint().getY()) / 2 );
 		} else {
 			rText.setLayoutX(rLine.getLayoutBounds().getMinX() + (rLine.getLayoutBounds().getWidth())/2);
 			rText.setLayoutY(rLine.getLayoutBounds().getMaxY());
+			
+			//sets cardinality textFields for self relation
+			sourceCardinality.setLayoutY(getStartPoint().getY());
+			targetCardinality.setLayoutX(getEndPoint().getX() - targetCardinality.getPrefWidth());
 		}
 	}
 	
