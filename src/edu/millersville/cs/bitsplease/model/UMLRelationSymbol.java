@@ -45,6 +45,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 	
 	// View Components
 	private Polyline rLine;
+	private Polyline backgroundLine;
 	private Shape rSymbol;
 	private TextField rText, sourceCardinality, targetCardinality;
 	
@@ -57,7 +58,11 @@ public class UMLRelationSymbol extends UMLSymbol {
 		this.setPickOnBounds(false);
 		
 		this.rLine = new Polyline();
+		this.backgroundLine = new Polyline();
+		backgroundLine.setStrokeWidth(8);
+		backgroundLine.setStyle("-fx-stroke: transparent");
 		this.getChildren().add(rLine);
+		this.getChildren().add(backgroundLine);
 		
 		initializeTextFields();
 	}
@@ -86,7 +91,13 @@ public class UMLRelationSymbol extends UMLSymbol {
 		// create, add, and update line
 		this.rLine = new Polyline();
 		getChildren().add(rLine);
+		
+		this.backgroundLine = new Polyline();
+		backgroundLine.setStrokeWidth(8);
+		backgroundLine.setStyle("-fx-stroke: transparent");
+		getChildren().add(backgroundLine);
 		refreshLine();
+		
 		
 		initializeTextFields();
 		refreshTextLayout();
@@ -219,6 +230,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 	private void refreshLine() {
 		
 		rLine.getPoints().clear();
+		backgroundLine.getPoints().clear();
 		
 		if (sourceObject != targetObject) {
 			// the following computes the edge center pair between the two objects
@@ -288,6 +300,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 					endPoint.getY()
 			});
 		}
+		backgroundLine.getPoints().addAll(rLine.getPoints());
 	}
 	
 	/**
