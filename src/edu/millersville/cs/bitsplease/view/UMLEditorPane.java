@@ -129,28 +129,28 @@ ContextMenu editingContextMenu = new ContextMenu();
 		//create contextMenu items
 		MenuItem createClass = new MenuItem("Create Class");
 		createClass.setOnAction(event -> {
-			UMLClassSymbol c = new UMLClassSymbol(new Point2D(e.getX(),e.getY()), 100, 100);
+			UMLClassSymbol c = new UMLClassSymbol(new Point2D(e.getX()-85,e.getY()-60), 100, 100);
 			documentViewPane.addUMLSymbol(c);
 			documentViewPane.setSelectedUMLSymbol(c);
 		});
 		
 		MenuItem createInterface = new MenuItem("Create Interface");
 		createInterface.setOnAction(event -> {
-			UMLInterfaceSymbol i = new UMLInterfaceSymbol(new Point2D(e.getX() -85, e.getY() -40));
+			UMLInterfaceSymbol i = new UMLInterfaceSymbol(new Point2D(e.getX()-85, e.getY()-30));
 			documentViewPane.addUMLSymbol(i);
 			documentViewPane.setSelectedUMLSymbol(i);
 		});
 		
 		MenuItem createUseCase = new MenuItem("Create Use Case");
 		createUseCase.setOnAction(event -> {
-			UMLUseCaseSymbol use = new UMLUseCaseSymbol(new Point2D(e.getX(), e.getY()));
+			UMLUseCaseSymbol use = new UMLUseCaseSymbol(new Point2D(e.getX()-85, e.getY()-30));
 			documentViewPane.addUMLSymbol(use);
 			documentViewPane.setSelectedUMLSymbol(use);
 		});
 		
 		MenuItem createUser = new MenuItem("Create User");
 		createUser.setOnAction(event -> {
-			UMLUserSymbol u = new UMLUserSymbol(new Point2D(e.getX(),e.getY()));
+			UMLUserSymbol u = new UMLUserSymbol(new Point2D(e.getX()-45,e.getY()-15));
 			documentViewPane.addUMLSymbol(u);
 			documentViewPane.setSelectedUMLSymbol(u);
 		});
@@ -203,7 +203,7 @@ ContextMenu editingContextMenu = new ContextMenu();
 			case CREATE_CLASS:
 				
 				if (e.getButton().equals(e.getButton().PRIMARY)) {
-					UMLClassSymbol c = new UMLClassSymbol(new Point2D(e.getX(),e.getY()), 100, 100);
+					UMLClassSymbol c = new UMLClassSymbol(new Point2D(e.getX()-85,e.getY()-60), 100, 100);
 					documentViewPane.addUMLSymbol(c);
 					documentViewPane.setSelectedUMLSymbol(c);
 				} else {
@@ -272,7 +272,7 @@ ContextMenu editingContextMenu = new ContextMenu();
 			case CREATE_USER:
 				
 				if (e.getButton().equals(e.getButton().PRIMARY)) {
-					UMLUserSymbol u = new UMLUserSymbol(new Point2D(e.getX(),e.getY()));
+					UMLUserSymbol u = new UMLUserSymbol(new Point2D(e.getX()-50,e.getY()-20));
 					documentViewPane.addUMLSymbol(u);
 					documentViewPane.setSelectedUMLSymbol(u);
 				} else {
@@ -283,7 +283,7 @@ ContextMenu editingContextMenu = new ContextMenu();
 			case CREATE_USE_CASE:
 			
 				if (e.getButton().equals(e.getButton().PRIMARY)) {
-					UMLUseCaseSymbol use = new UMLUseCaseSymbol(new Point2D(e.getX(), e.getY()));
+					UMLUseCaseSymbol use = new UMLUseCaseSymbol(new Point2D(e.getX()-85, e.getY()-30));
 					documentViewPane.addUMLSymbol(use);
 					documentViewPane.setSelectedUMLSymbol(use);
 				} else {
