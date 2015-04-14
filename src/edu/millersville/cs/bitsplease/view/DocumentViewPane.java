@@ -45,8 +45,6 @@ public class DocumentViewPane extends Pane {
 	public void addUMLSymbol(UMLSymbol symbol) {
 		this.getChildren().add(symbol);
 		entityList.add(symbol);
-		System.out.println("Adding object with ID: " +symbol);
-		System.out.println("Entity Added! Total entities: " + entityList.size());
 	}
 	
 	/**
@@ -73,9 +71,7 @@ public class DocumentViewPane extends Pane {
 			
 			
 			Object[] relations = getChildren().filtered(referencesUMLObject((UMLObjectSymbol)toDelete)).toArray();
-			System.out.println(relations.toString() + " reference deleted object");
 			for( Object relation: relations){
-				System.out.println("Deleting relation "+ relation);
 				getChildren().remove(relation);
 				entityList.remove(relation);
 			}
@@ -84,8 +80,6 @@ public class DocumentViewPane extends Pane {
 		
 		getChildren().remove(toDelete);
 		entityList.remove(toDelete);
-		System.out.println("Removed " + toDelete);
-		System.out.println("Total entities: " + entityList.size());
 	}
 	
 	/**
@@ -94,8 +88,6 @@ public class DocumentViewPane extends Pane {
 	public void removeAllSymbols(){
 		this.getChildren().removeAll(this.getChildren());
 		entityList = new ArrayList<UMLSymbol>();
-		
-		System.out.println("Total entities: " + entityList.size());
 	};
 		
 	
