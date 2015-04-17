@@ -149,16 +149,19 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	 */
 	public void setEditableUMLClassSymbol() {
 		name.setMouseTransparent(false);
+		name.setFocusTraversable(true);
 		
 		attributes.getChildren().forEach(attr -> {
 			if (attr instanceof TextField) {
 				attr.setMouseTransparent(false);
+				attr.setFocusTraversable(true);
 			}
 		});
 		
 		operations.getChildren().forEach(oper -> {
 			if (oper instanceof TextField) {
 				oper.setMouseTransparent(false);
+				oper.setFocusTraversable(true);
 			}
 		});
 	}
@@ -167,16 +170,19 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 	 */
 	public void setNonEditableUMLClassSymbol() {
 		name.setMouseTransparent(true);
+		name.setFocusTraversable(false);
 			
 		attributes.getChildren().forEach(attr -> {
 			if (attr instanceof TextField) {
 				attr.setMouseTransparent(true);
+				attr.setFocusTraversable(false);
 			}
 		});
 			
 		operations.getChildren().forEach(oper -> {
 			if (oper instanceof TextField) {
 				oper.setMouseTransparent(true);
+				oper.setFocusTraversable(false);
 			}
 		});
 	}

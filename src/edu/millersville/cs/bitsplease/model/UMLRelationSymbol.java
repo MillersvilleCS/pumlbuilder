@@ -59,7 +59,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 		
 		this.rLine = new Polyline();
 		this.backgroundLine = new Polyline();
-		backgroundLine.setStrokeWidth(8);
+		backgroundLine.setStrokeWidth(10);
 		backgroundLine.setStyle("-fx-stroke: transparent");
 		this.getChildren().add(rLine);
 		this.getChildren().add(backgroundLine);
@@ -93,7 +93,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 		getChildren().add(rLine);
 		
 		this.backgroundLine = new Polyline();
-		backgroundLine.setStrokeWidth(8);
+		backgroundLine.setStrokeWidth(10);
 		backgroundLine.setStyle("-fx-stroke: transparent");
 		getChildren().add(backgroundLine);
 		refreshLine();
@@ -114,7 +114,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 		rText = new TextField();
 		rText.textProperty().bindBidirectional(identifier);
 		rText.setFocusTraversable(false);
-		rText.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
+		rText.setStyle("-fx-border-color: transparent; -fx-background-color: transparent; -fx-alignment: center;");
 		rText.setPrefWidth(150);
 		getChildren().add(rText);
 		
@@ -469,7 +469,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 		
 		// relation textField
 		if (sourceObject != targetObject) {
-			rText.setLayoutX((getStartPoint().getX() + getEndPoint().getX()) / 2 );
+			rText.setLayoutX((getStartPoint().getX() + getEndPoint().getX() - rText.getPrefWidth())/ 2 );
 			rText.setLayoutY((getStartPoint().getY() + getEndPoint().getY()) / 2 );
 		} else {
 			rText.setLayoutX(rLine.getLayoutBounds().getMinX() + (rLine.getLayoutBounds().getWidth())/2);
