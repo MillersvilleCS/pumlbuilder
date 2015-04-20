@@ -13,48 +13,53 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-
-import edu.millersville.cs.bitsplease.PUMLBuilder;
-import edu.millersville.cs.bitsplease.model.UMLSymbol;
+import javafx.beans.binding.Bindings;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.transform.Scale;
-import javafx.scene.transform.Transform;
-import javafx.scene.transform.Translate;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.FileChooser.ExtensionFilter;
+
+import javax.imageio.ImageIO;
+
+import org.fxmisc.undo.UndoManager;
+
+import edu.millersville.cs.bitsplease.PUMLBuilder;
+import edu.millersville.cs.bitsplease.model.UMLSymbol;
 
 public class UMLMenu extends MenuBar {
 	
 	private DocumentViewPane document;
+	private UndoManager undoManager;
+	private MenuItem undo, redo;
 	
 	public UMLMenu(){
 		super();
+		
 		this.setUseSystemMenuBar(true);
 		
 		Menu fileMenu = new Menu("File");
 		
 		MenuItem newDoc = new MenuItem("New");
-		newDoc.setOnAction(newAction ->{
+		newDoc.setOnAction(newAction -> {
 			document.removeAllSymbols();
 		});
 		
@@ -90,6 +95,17 @@ public class UMLMenu extends MenuBar {
 				export, new SeparatorMenuItem(), exit);
 		
 		Menu editMenu = new Menu("Edit");
+
+		undo = new MenuItem("Undo");
+		undo.setDisable(true);
+		undo.setOnAction(event -> { undoManager.undo(); });
+		
+		redo = new MenuItem("Redo");
+		redo.setDisable(true);
+		redo.setOnAction(event -> { undoManager.redo(); });
+		
+		editMenu.getItems().addAll(undo,redo);
+		
 		Menu helpMenu = new Menu("Help");
 		
 		MenuItem about = new MenuItem("About");
@@ -115,6 +131,27 @@ public class UMLMenu extends MenuBar {
 		this.document = doc;
 		
 	}
+	/**
+	 * @return the undoManager
+	 */
+	public UndoManager getUndoManager() {
+		return undoManager;
+	}
+
+	/**
+	 * @param undoManager the undoManager to set
+	 */
+	public void setUndoManager(UndoManager undoManager) {
+		this.undoManager = undoManager;
+		if (this.undoManager != null) {
+			undo.disableProperty().bind(Bindings.not(this.undoManager.undoAvailableProperty()));
+			redo.disableProperty().bind(Bindings.not(this.undoManager.redoAvailableProperty()));
+		} else {
+			undo.setDisable(false);
+			redo.setDisable(false);
+		}
+	}
+
 	/**
 	 * Handles the creation of the About webview
 	 */

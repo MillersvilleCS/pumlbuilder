@@ -21,7 +21,19 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
-import edu.millersville.cs.bitsplease.model.*;
+import org.fxmisc.undo.UndoManager;
+import org.fxmisc.undo.UndoManagerFactory;
+import org.reactfx.Change;
+import org.reactfx.EventStream;
+import org.reactfx.EventStreams;
+
+import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
+import edu.millersville.cs.bitsplease.model.UMLInterfaceSymbol;
+import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
+import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
+import edu.millersville.cs.bitsplease.model.UMLSymbol;
+import edu.millersville.cs.bitsplease.model.UMLUseCaseSymbol;
+import edu.millersville.cs.bitsplease.model.UMLUserSymbol;
 
 /***
  * Primary GUI component where all user interact occurs. All other view
@@ -33,6 +45,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 	private ToolbarPane toolbarPane;
 	private DocumentViewPane documentViewPane;
 	private PropertiesPane propertiesPane;
+	private UndoManager undoManager;
 	
 	// Drag State Variables
 	private Boolean isMoving = false;
@@ -55,9 +68,18 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		documentViewPane.addEventHandler(MouseEvent.MOUSE_DRAGGED, this);
 		documentViewPane.addEventHandler(MouseEvent.MOUSE_RELEASED, this);
 		
+		// track changes of selected UMLSymbol
+		EventStream<Change<UMLSymbol>> selectedStream = EventStreams.changesOf(documentViewPane.getSelectedUMLSymbol());
+		undoManager = UndoManagerFactory.unlimitedHistoryUndoManager(
+				selectedStream,
+				c -> documentViewPane.setSelectedUMLSymbol(c.getNewValue()),
+				c -> documentViewPane.setSelectedUMLSymbol(c.getOldValue())
+				);
+		
 		// create and add Menu
 		UMLMenu pumlMenu = new UMLMenu();
 		pumlMenu.setDocument(documentViewPane);
+		pumlMenu.setUndoManager(undoManager);
 		this.setTop(pumlMenu);
 		
 		// create and add Toolbar Pane
