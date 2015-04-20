@@ -45,6 +45,7 @@ public class DocumentViewPane extends Pane {
 	public void addUMLSymbol(UMLSymbol symbol) {
 		this.getChildren().add(symbol);
 		entityList.add(symbol);
+		setSelectedUMLSymbol(symbol);
 	}
 	
 	/**
@@ -65,19 +66,13 @@ public class DocumentViewPane extends Pane {
 		
 		// remove all relation symbols that references an object being removed
 		if (toDelete instanceof UMLObjectSymbol) {
-			/*getChildren().removeIf(
-					referencesUMLObject((UMLObjectSymbol) toDelete));
-			*/
-			
-			
-			Object[] relations = getChildren().filtered(referencesUMLObject((UMLObjectSymbol)toDelete)).toArray();
-			for( Object relation: relations){
-				getChildren().remove(relation);
-				entityList.remove(relation);
-			}
-			
+						
+			getChildren().filtered(referencesUMLObject((UMLObjectSymbol)toDelete)).forEach(r -> {
+				removeUMLSymbol((UMLSymbol) r);
+			});
 		}
 		
+		if (toDelete.isSelected()) { setSelectedUMLSymbol(null); }
 		getChildren().remove(toDelete);
 		entityList.remove(toDelete);
 	}
@@ -85,7 +80,7 @@ public class DocumentViewPane extends Pane {
 	/**
 	 * Handle removing all entities from the entity list as well as the Scene
 	 */
-	public void removeAllSymbols(){
+	public void removeAllSymbols() {
 		this.getChildren().removeAll(this.getChildren());
 		entityList = new ArrayList<UMLSymbol>();
 	};

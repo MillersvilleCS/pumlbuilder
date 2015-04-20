@@ -10,6 +10,7 @@
 package edu.millersville.cs.bitsplease.view;
 
 
+import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -23,10 +24,12 @@ import javafx.scene.layout.BorderPane;
 
 import org.fxmisc.undo.UndoManager;
 import org.fxmisc.undo.UndoManagerFactory;
-import org.reactfx.Change;
 import org.reactfx.EventStream;
 import org.reactfx.EventStreams;
 
+import edu.millersville.cs.bitsplease.change.SelectedSymbolChange;
+import edu.millersville.cs.bitsplease.change.SymbolListChange;
+import edu.millersville.cs.bitsplease.change.UMLDocumentChange;
 import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
 import edu.millersville.cs.bitsplease.model.UMLInterfaceSymbol;
 import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
@@ -68,12 +71,30 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		documentViewPane.addEventHandler(MouseEvent.MOUSE_DRAGGED, this);
 		documentViewPane.addEventHandler(MouseEvent.MOUSE_RELEASED, this);
 		
+		// change stream for undoManger
+		EventStream<UMLDocumentChange<?>> changes;
+		
 		// track changes of selected UMLSymbol
-		EventStream<Change<UMLSymbol>> selectedStream = EventStreams.changesOf(documentViewPane.getSelectedUMLSymbol());
+		EventStream<SelectedSymbolChange> selectedSymbolChanges =
+				EventStreams.changesOf(documentViewPane.getSelectedUMLSymbol()).map(
+				c -> new SelectedSymbolChange(c, documentViewPane)
+				);
+		
+		// change stream for symbol creation
+		EventStream<SymbolListChange> symbolListChanges = 
+				EventStreams.changesOf(documentViewPane.getChildren()).map(
+				c -> {
+					c.next();
+					return new SymbolListChange((ListChangeListener.Change<UMLSymbol>) c, documentViewPane);
+				});
+		
+		changes = EventStreams.merge(selectedSymbolChanges, symbolListChanges);
+		
 		undoManager = UndoManagerFactory.unlimitedHistoryUndoManager(
-				selectedStream,
-				c -> documentViewPane.setSelectedUMLSymbol(c.getNewValue()),
-				c -> documentViewPane.setSelectedUMLSymbol(c.getOldValue())
+				changes,
+				c -> c.redo(),
+				c -> c.undo(),
+				(c1, c2) -> c1.mergeWith(c2)
 				);
 		
 		// create and add Menu
@@ -153,28 +174,24 @@ ContextMenu editingContextMenu = new ContextMenu();
 		createClass.setOnAction(event -> {
 			UMLClassSymbol c = new UMLClassSymbol(new Point2D(e.getX()-85,e.getY()-60), 100, 100);
 			documentViewPane.addUMLSymbol(c);
-			documentViewPane.setSelectedUMLSymbol(c);
 		});
 		
 		MenuItem createInterface = new MenuItem("Create Interface");
 		createInterface.setOnAction(event -> {
 			UMLInterfaceSymbol i = new UMLInterfaceSymbol(new Point2D(e.getX()-85, e.getY()-30));
 			documentViewPane.addUMLSymbol(i);
-			documentViewPane.setSelectedUMLSymbol(i);
 		});
 		
 		MenuItem createUseCase = new MenuItem("Create Use Case");
 		createUseCase.setOnAction(event -> {
 			UMLUseCaseSymbol use = new UMLUseCaseSymbol(new Point2D(e.getX()-85, e.getY()-30));
 			documentViewPane.addUMLSymbol(use);
-			documentViewPane.setSelectedUMLSymbol(use);
 		});
 		
 		MenuItem createUser = new MenuItem("Create User");
 		createUser.setOnAction(event -> {
 			UMLUserSymbol u = new UMLUserSymbol(new Point2D(e.getX()-45,e.getY()-15));
 			documentViewPane.addUMLSymbol(u);
-			documentViewPane.setSelectedUMLSymbol(u);
 		});
 		
 		MenuItem exit = new MenuItem("Exit");
@@ -227,7 +244,6 @@ ContextMenu editingContextMenu = new ContextMenu();
 				if (e.getButton().equals(e.getButton().PRIMARY)) {
 					UMLClassSymbol c = new UMLClassSymbol(new Point2D(e.getX()-85,e.getY()-60), 100, 100);
 					documentViewPane.addUMLSymbol(c);
-					documentViewPane.setSelectedUMLSymbol(c);
 				} else {
 					createObjsContextMenu.show(documentViewPane, e.getScreenX(), e.getScreenY());
 				}
@@ -285,7 +301,6 @@ ContextMenu editingContextMenu = new ContextMenu();
 				if (e.getButton().equals(e.getButton().PRIMARY)) {
 					UMLInterfaceSymbol i = new UMLInterfaceSymbol(new Point2D(e.getX() -85, e.getY() -40));
 					documentViewPane.addUMLSymbol(i);
-					documentViewPane.setSelectedUMLSymbol(i);
 				} else {
 					createObjsContextMenu.show(documentViewPane, e.getScreenX(), e.getScreenY());
 				}
@@ -296,7 +311,6 @@ ContextMenu editingContextMenu = new ContextMenu();
 				if (e.getButton().equals(e.getButton().PRIMARY)) {
 					UMLUserSymbol u = new UMLUserSymbol(new Point2D(e.getX()-50,e.getY()-20));
 					documentViewPane.addUMLSymbol(u);
-					documentViewPane.setSelectedUMLSymbol(u);
 				} else {
 					createObjsContextMenu.show(documentViewPane, e.getScreenX(), e.getScreenY());
 				}
@@ -307,7 +321,6 @@ ContextMenu editingContextMenu = new ContextMenu();
 				if (e.getButton().equals(e.getButton().PRIMARY)) {
 					UMLUseCaseSymbol use = new UMLUseCaseSymbol(new Point2D(e.getX()-85, e.getY()-30));
 					documentViewPane.addUMLSymbol(use);
-					documentViewPane.setSelectedUMLSymbol(use);
 				} else {
 					createObjsContextMenu.show(documentViewPane, e.getScreenX(), e.getScreenY());
 				}
@@ -319,7 +332,6 @@ ContextMenu editingContextMenu = new ContextMenu();
 				if (toDelete != null) {
 					if (e.getButton().equals(e.getButton().PRIMARY)) {
 						documentViewPane.removeUMLSymbol(toDelete);
-						documentViewPane.getChildren().remove(toDelete);
 					}
 					
 					// destroy event, since target object is now removed
