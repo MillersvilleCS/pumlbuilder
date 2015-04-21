@@ -66,10 +66,13 @@ public class DocumentViewPane extends Pane {
 		
 		// remove all relation symbols that references an object being removed
 		if (toDelete instanceof UMLObjectSymbol) {
-						
-			getChildren().filtered(referencesUMLObject((UMLObjectSymbol)toDelete)).forEach(r -> {
+			
+			UMLRelationSymbol[] associatedRelations = 
+					getChildren().filtered(referencesUMLObject((UMLObjectSymbol)toDelete)).toArray(new UMLRelationSymbol[0]);
+			
+			for (UMLRelationSymbol r : associatedRelations)	{
 				removeUMLSymbol((UMLSymbol) r);
-			});
+			};
 		}
 		
 		if (toDelete.isSelected()) { setSelectedUMLSymbol(null); }
