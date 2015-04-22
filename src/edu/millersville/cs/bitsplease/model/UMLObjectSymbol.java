@@ -8,8 +8,6 @@ package edu.millersville.cs.bitsplease.model;
 
 import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventDispatchChain;
 import javafx.geometry.Point2D;
 
 /*

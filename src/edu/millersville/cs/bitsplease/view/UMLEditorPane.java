@@ -10,7 +10,6 @@
 package edu.millersville.cs.bitsplease.view;
 
 
-import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -24,19 +23,8 @@ import javafx.scene.layout.BorderPane;
 
 import org.fxmisc.undo.UndoManager;
 import org.fxmisc.undo.UndoManagerFactory;
-import org.reactfx.EventStream;
-import org.reactfx.EventStreams;
 
-import edu.millersville.cs.bitsplease.change.SelectedSymbolChange;
-import edu.millersville.cs.bitsplease.change.SymbolListChange;
-import edu.millersville.cs.bitsplease.change.UMLDocumentChange;
-import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
-import edu.millersville.cs.bitsplease.model.UMLInterfaceSymbol;
-import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
-import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
-import edu.millersville.cs.bitsplease.model.UMLSymbol;
-import edu.millersville.cs.bitsplease.model.UMLUseCaseSymbol;
-import edu.millersville.cs.bitsplease.model.UMLUserSymbol;
+import edu.millersville.cs.bitsplease.model.*;
 
 /***
  * Primary GUI component where all user interact occurs. All other view
@@ -71,31 +59,12 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		documentViewPane.addEventHandler(MouseEvent.MOUSE_DRAGGED, this);
 		documentViewPane.addEventHandler(MouseEvent.MOUSE_RELEASED, this);
 		
-		// change stream for undoManger
-		EventStream<UMLDocumentChange<?>> changes;
-		
-		// track changes of selected UMLSymbol
-		EventStream<SelectedSymbolChange> selectedSymbolChanges =
-				EventStreams.changesOf(documentViewPane.getSelectedUMLSymbol()).map(
-				c -> new SelectedSymbolChange(c, documentViewPane)
-				);
-		
-		// change stream for symbol creation
-		EventStream<SymbolListChange> symbolListChanges = 
-				EventStreams.changesOf(documentViewPane.getChildren()).map(
-				c -> {
-					c.next();
-					return new SymbolListChange((ListChangeListener.Change<UMLSymbol>) c, documentViewPane);
-				});
-		
-		changes = EventStreams.merge(selectedSymbolChanges, symbolListChanges);
-		
 		undoManager = UndoManagerFactory.unlimitedHistoryUndoManager(
-				changes,
-				c -> c.redo(),
-				c -> c.undo(),
-				(c1, c2) -> c1.mergeWith(c2)
-				);
+			documentViewPane.getDocumentChanges(),
+			c -> c.redo(),
+			c -> c.undo(),
+			(c1, c2) -> c1.mergeWith(c2)
+			);
 		
 		// create and add Menu
 		UMLMenu pumlMenu = new UMLMenu();

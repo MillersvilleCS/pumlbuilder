@@ -10,10 +10,19 @@ package edu.millersville.cs.bitsplease.view;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
+import org.reactfx.EventStream;
+import org.reactfx.EventStreams;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import edu.millersville.cs.bitsplease.change.ObjectXChange;
+import edu.millersville.cs.bitsplease.change.ObjectYChange;
+import edu.millersville.cs.bitsplease.change.SelectedSymbolChange;
+import edu.millersville.cs.bitsplease.change.SymbolListChange;
+import edu.millersville.cs.bitsplease.change.UMLDocumentChange;
 import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
 import edu.millersville.cs.bitsplease.model.UMLInterfaceSymbol;
 import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
@@ -30,12 +39,29 @@ public class DocumentViewPane extends Pane {
 	// State Variables
 	private ObjectProperty<UMLSymbol> selectedUMLSymbol = new SimpleObjectProperty<UMLSymbol>();
 	private ArrayList<UMLSymbol> entityList = new ArrayList<UMLSymbol>();
+	private EventStream<UMLDocumentChange<?>> documentChanges;
 	
 	/**
 	 * Default Constructor
 	 */
 	public DocumentViewPane() {
 		super();
+		
+		// track changes of selected UMLSymbol
+		EventStream<SelectedSymbolChange> selectedSymbolChanges =
+			EventStreams.changesOf(getSelectedUMLSymbol()).map(
+			c -> new SelectedSymbolChange(c, this)
+			);
+		
+		// change stream for symbol addition and deletion
+		EventStream<SymbolListChange> symbolListChanges = 
+			EventStreams.changesOf(getChildren()).map(
+			c -> {
+				c.next();
+				return new SymbolListChange((ListChangeListener.Change<UMLSymbol>) c, this);
+			});
+		
+		documentChanges = EventStreams.merge(selectedSymbolChanges, symbolListChanges);	
 	}
 	
 	/**
@@ -46,6 +72,23 @@ public class DocumentViewPane extends Pane {
 		this.getChildren().add(symbol);
 		entityList.add(symbol);
 		setSelectedUMLSymbol(symbol);
+		
+		if (symbol instanceof UMLObjectSymbol) {
+			System.out.println("Streaming X-Y");
+			// X Changes
+			EventStream<ObjectXChange> objectXChanges = 
+				EventStreams.changesOf(symbol.layoutXProperty()).map(
+					c -> new ObjectXChange(c, (UMLObjectSymbol) symbol) 
+					);
+
+			// Y Changes
+			EventStream<ObjectYChange> objectYChanges = 
+				EventStreams.changesOf(symbol.layoutYProperty()).map(
+					c -> new ObjectYChange(c, (UMLObjectSymbol) symbol) 
+					);
+			
+			documentChanges = EventStreams.merge(documentChanges, objectXChanges, objectYChanges);
+		}
 	}
 	
 	/**
@@ -66,7 +109,7 @@ public class DocumentViewPane extends Pane {
 		
 		// remove all relation symbols that references an object being removed
 		if (toDelete instanceof UMLObjectSymbol) {
-			
+
 			UMLRelationSymbol[] associatedRelations = 
 					getChildren().filtered(referencesUMLObject((UMLObjectSymbol)toDelete)).toArray(new UMLRelationSymbol[0]);
 			
@@ -144,5 +187,12 @@ public class DocumentViewPane extends Pane {
 			umlSymbol.setSelected(true);
 		}
 		this.selectedUMLSymbol.setValue(umlSymbol);
+	}
+
+	/**
+	 * @return the documentChanges
+	 */
+	public EventStream<UMLDocumentChange<?>> getDocumentChanges() {
+		return documentChanges;
 	}
 }
