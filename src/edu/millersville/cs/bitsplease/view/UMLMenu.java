@@ -99,10 +99,12 @@ public class UMLMenu extends MenuBar {
 		undo = new MenuItem("Undo");
 		undo.setDisable(true);
 		undo.setOnAction(event -> { undoManager.undo(); });
+		undo.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
 		
 		redo = new MenuItem("Redo");
 		redo.setDisable(true);
 		redo.setOnAction(event -> { undoManager.redo(); });
+		redo.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.SHORTCUT_DOWN));
 		
 		editMenu.getItems().addAll(undo,redo);
 		

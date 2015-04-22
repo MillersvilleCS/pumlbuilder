@@ -63,6 +63,13 @@ public abstract class UMLObjectSymbol extends UMLSymbol {
 	}
 	
 	/**
+	 * @return the point at the origin (top left) of the UMLObjectSymbol
+	 */
+	public Point2D getOrigin() {
+		return new Point2D(getX(), getY());
+	}
+	
+	/**
 	 * @return the point at the center of the UMLObjectSymbol
 	 */
 	public Point2D getCenter() {

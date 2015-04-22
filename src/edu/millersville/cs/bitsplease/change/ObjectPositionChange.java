@@ -6,24 +6,16 @@ package edu.millersville.cs.bitsplease.change;
 import java.util.Optional;
 
 import javafx.geometry.Point2D;
-
-import org.reactfx.Change;
-
 import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
 
 /**
  * @author Mervin
  *
  */
-public class ObjectYChange extends UMLDocumentChange<Number> {
+public class ObjectPositionChange extends UMLDocumentChange<Point2D> {
 	final private UMLObjectSymbol umlObject;
 	
-	public ObjectYChange(Change<Number> c, UMLObjectSymbol umlObject) {
-		super(c.getOldValue(), c.getNewValue());
-		this.umlObject = umlObject;
-	}
-	
-	public ObjectYChange(double oldValue, double newValue, UMLObjectSymbol umlObject) {
+	public ObjectPositionChange(Point2D oldValue, Point2D newValue, UMLObjectSymbol umlObject) {
 		super(oldValue, newValue);
 		this.umlObject = umlObject;
 	}
@@ -33,7 +25,7 @@ public class ObjectYChange extends UMLDocumentChange<Number> {
 	 */
 	@Override
 	public void redo() {
-		umlObject.setLayoutY((double) newValue);
+		umlObject.setOrigin(newValue);
 	}
 
 	/* (non-Javadoc)
@@ -41,19 +33,14 @@ public class ObjectYChange extends UMLDocumentChange<Number> {
 	 */
 	@Override
 	public void undo() {
-		umlObject.setLayoutY((double) oldValue);
+		umlObject.setOrigin(oldValue);
 	}
 	
 	@Override
 	public Optional<UMLDocumentChange<?>> mergeWith(UMLDocumentChange<?> other) {
 		if (other instanceof ObjectPositionChange) {
 			if (umlObject == ((ObjectPositionChange) other).getUMLObject()) {
-				return Optional.of(
-						new ObjectPositionChange(
-								new Point2D(((Point2D) other.oldValue).getX(), (double) this.oldValue),
-								(Point2D) other.newValue,
-								umlObject)
-						);
+				return Optional.of(new ObjectPositionChange(this.oldValue, (Point2D) other.newValue, umlObject));
 			} else {
 				return super.mergeWith(other);
 			}
@@ -61,8 +48,8 @@ public class ObjectYChange extends UMLDocumentChange<Number> {
 			if (umlObject == ((ObjectXChange) other).getUMLObject()) {
 				return Optional.of(
 						new ObjectPositionChange(
-								new Point2D((double) other.oldValue, (double) this.oldValue), 
-								new Point2D((double) other.newValue, (double) this.newValue), 
+								this.oldValue, 
+								new Point2D((double) other.newValue, this.newValue.getY()), 
 								umlObject)
 						);
 			} else {
@@ -71,7 +58,10 @@ public class ObjectYChange extends UMLDocumentChange<Number> {
 		} else if (other instanceof ObjectYChange) {
 			if (umlObject == ((ObjectYChange) other).getUMLObject()) {
 				return Optional.of(
-						new ObjectYChange((double) this.oldValue, (double) other.newValue, umlObject)
+						new ObjectPositionChange(
+								this.oldValue, 
+								new Point2D(this.newValue.getX(), (double) other.newValue), 
+								umlObject)
 						);
 			} else {
 				return super.mergeWith(other);
@@ -87,5 +77,4 @@ public class ObjectYChange extends UMLDocumentChange<Number> {
 	public UMLObjectSymbol getUMLObject() {
 		return umlObject;
 	}
-
 }

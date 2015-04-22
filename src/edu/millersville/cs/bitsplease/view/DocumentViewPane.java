@@ -10,6 +10,8 @@ package edu.millersville.cs.bitsplease.view;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
+import org.reactfx.ConnectableEventSource;
+import org.reactfx.ConnectableEventStream;
 import org.reactfx.EventStream;
 import org.reactfx.EventStreams;
 
@@ -40,6 +42,8 @@ public class DocumentViewPane extends Pane {
 	private ObjectProperty<UMLSymbol> selectedUMLSymbol = new SimpleObjectProperty<UMLSymbol>();
 	private ArrayList<UMLSymbol> entityList = new ArrayList<UMLSymbol>();
 	private EventStream<UMLDocumentChange<?>> documentChanges;
+	private ConnectableEventStream<UMLDocumentChange<?>> symbolPropertyChanges = new ConnectableEventSource<>();
+	
 	
 	/**
 	 * Default Constructor
@@ -60,8 +64,8 @@ public class DocumentViewPane extends Pane {
 				c.next();
 				return new SymbolListChange((ListChangeListener.Change<UMLSymbol>) c, this);
 			});
-		
-		documentChanges = EventStreams.merge(selectedSymbolChanges, symbolListChanges);	
+				
+		documentChanges = EventStreams.merge(selectedSymbolChanges, symbolListChanges, symbolPropertyChanges);	
 	}
 	
 	/**
@@ -74,20 +78,20 @@ public class DocumentViewPane extends Pane {
 		setSelectedUMLSymbol(symbol);
 		
 		if (symbol instanceof UMLObjectSymbol) {
-			System.out.println("Streaming X-Y");
+			
 			// X Changes
 			EventStream<ObjectXChange> objectXChanges = 
 				EventStreams.changesOf(symbol.layoutXProperty()).map(
 					c -> new ObjectXChange(c, (UMLObjectSymbol) symbol) 
 					);
+			symbolPropertyChanges.connectTo(objectXChanges);
 
 			// Y Changes
 			EventStream<ObjectYChange> objectYChanges = 
 				EventStreams.changesOf(symbol.layoutYProperty()).map(
 					c -> new ObjectYChange(c, (UMLObjectSymbol) symbol) 
 					);
-			
-			documentChanges = EventStreams.merge(documentChanges, objectXChanges, objectYChanges);
+			symbolPropertyChanges.connectTo(objectYChanges);
 		}
 	}
 	
