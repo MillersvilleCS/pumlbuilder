@@ -80,35 +80,35 @@ public abstract class UMLObjectSymbol extends UMLSymbol {
 	 * @return the point at the center of the UMLObjectSymbol
 	 */
 	public Point2D getCenter() {
-		return new Point2D(getX() + getWidth()/2, getY() + getHeight()/2);
+		return new Point2D(getX() + getLayoutBounds().getWidth()/2, getY() + getLayoutBounds().getHeight()/2);
 	}
 	
 	/**
 	 * @return the point at the center of the top of the UMLObjectSymbol
 	 */
 	public Point2D getTopCenter() {
-		return new Point2D(getX() + getWidth()/2, getY());
+		return new Point2D(getX() + getLayoutBounds().getWidth()/2, getY());
 	}
 	
 	/**
 	 * @return the point at the center of the left side of the UMLObjectSymbol
 	 */
 	public Point2D getMiddleLeft() {
-		return new Point2D(getX(), getY() + getHeight()/2);
+		return new Point2D(getX(), getY() + getLayoutBounds().getHeight()/2);
 	}
 	
 	/**
 	 * @return the point at the center of the right sie of the UMLObjectSymbol
 	 */
 	public Point2D getMiddleRight() {
-		return new Point2D(getX() + getWidth(), getY() + getHeight()/2);
+		return new Point2D(getX() + getLayoutBounds().getWidth(), getY() + getLayoutBounds().getHeight()/2);
 	}
 	
 	/**
 	 * @return the point at the center of the bottom of the UMLObjectSymbol
 	 */
 	public Point2D getBottomCenter() {
-		return new Point2D(getX() + getWidth()/2, getY() + getHeight());
+		return new Point2D(getX() + getLayoutBounds().getWidth()/2, getY() + getLayoutBounds().getHeight());
 	}
 	
 	/**

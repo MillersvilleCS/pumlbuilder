@@ -84,7 +84,6 @@ public class UMLRelationSymbol extends UMLSymbol {
 		this.relationType.addListener(v->{
 			initSymbol();
 			refresh();
-			
 		});
 		
 		// set default string to relation type
@@ -233,6 +232,126 @@ public class UMLRelationSymbol extends UMLSymbol {
 		}
 	}
 	
+	/**
+	 * @return the enum value representing the relation type
+	 */
+	public ObjectProperty<UMLRelationType> getUMLRelationTypeProperty() {
+		return this.relationType;
+	}
+	
+	public UMLRelationType getUMLRelationType(){
+		return this.relationType.getValue();
+	}
+	
+	/**
+	 * @return the source UMLObjectSymbol
+	 */
+	public UMLObjectSymbol getSourceObject() {
+		return this.sourceObject;
+	}
+	
+	/**
+	 * @return the target UMLObjectSymbol
+	 */
+	public UMLObjectSymbol getTargetObject() {
+		return this.targetObject;
+	}
+	
+	/***
+	 * This method provides a means for displaying editable fields in the
+	 * Properties Pane.
+	 * @return a list of all bindable fields of the UML Relation Symbol
+	 */
+	@Override
+	public ObservableList<Property<? extends Object>> getFields() {
+		ObservableList<Property<? extends Object>> fields = super.getFields();
+		fields.add(sourceObject.getIdentifierProperty());
+		fields.add(targetObject.getIdentifierProperty());
+		fields.add(sourceCardinality.textProperty());
+		fields.add(targetCardinality.textProperty());
+		fields.add(getUMLRelationTypeProperty());
+		return fields;
+	}
+
+	/**
+	 * @param relType enum value representing the type of relation to create
+	 */
+	public void setUMLRelationType(UMLRelationType relType) {
+		this.relationType.setValue(relType);
+	}
+	
+	/**
+	 * Sets the source object to a new UMLObjectSymbol
+	 * @param source UMLObjectSymbol to be set as sourceObject
+	 */
+	public void setSourceObject(UMLObjectSymbol source) {
+		this.sourceObject = source;
+		this.sourceObject.layoutXProperty().addListener(v -> refresh());
+		this.sourceObject.layoutYProperty().addListener(v -> refresh());
+		this.sourceObject.layoutBoundsProperty().addListener(v -> { refresh(); });
+	}
+	
+	/**
+	 * Sets the target object to a new UMLObjectSymbol
+	 * @param target the object to relate to
+	 */
+	public void setTargetObject(UMLObjectSymbol target) {
+		this.targetObject = target;
+		this.targetObject.layoutXProperty().addListener(v -> refresh());
+		this.targetObject.layoutYProperty().addListener(v -> refresh());
+		this.targetObject.layoutBoundsProperty().addListener(v -> refresh());
+	}
+
+	/**
+	 * makes the textField visible and editable to the user
+	 */
+	public void editText(){
+		rText.setMouseTransparent(false);
+		rText.setVisible(true);
+		
+	}
+	
+	/**
+	 * prevents the textField from being edited
+	 */
+	public void stopEdit(){
+		rText.setMouseTransparent(true);
+	}
+	
+	/**
+	 * resets the contents of the textField and makes it invisible to the user
+	 */
+	public void deleteText(){
+		rText.setText("");
+		rText.setMouseTransparent(true);
+		rText.setVisible(false);
+	}
+	
+	/**
+	 * calls all of the related functions to update the relation line and symbols
+	 */
+	public void refresh() {
+		refreshLine();
+		
+		// refresh symbol head
+		switch (this.relationType.getValue()) {
+		case ASSOCIATION:
+		case DEPENDENCY:
+		case GENERALIZATION:
+			refreshArrow();
+			break;
+		case AGGREGATION:
+		case COMPOSITION:
+			refreshDiamond();
+			break;
+		default:
+			break;
+		}
+		
+		// refresh text position
+		refreshTextLayout();
+	}
+	
 	/***
 	 * Refreshes the line component of the relation
 	 */
@@ -311,127 +430,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 		}
 		backgroundLine.getPoints().addAll(rLine.getPoints());
 	}
-	
-	/**
-	 * @return the enum value representing the relation type
-	 */
-	public ObjectProperty<UMLRelationType> getUMLRelationTypeProperty() {
-		return this.relationType;
-	}
-	
-	public UMLRelationType getUMLRelationType(){
-		return this.relationType.getValue();
-	}
-	
-	/**
-	 * @return the source UMLObjectSymbol
-	 */
-	public UMLObjectSymbol getSourceObject() {
-		return this.sourceObject;
-	}
-	
-	/**
-	 * @return the target UMLObjectSymbol
-	 */
-	public UMLObjectSymbol getTargetObject() {
-		return this.targetObject;
-	}
-	
-	/**
-	 * @param relType enum value representing the type of relation to create
-	 */
-	public void setUMLRelationType(UMLRelationType relType) {
-		this.relationType.setValue(relType);
-	}
-	
-	/**
-	 * Sets the source object to a new UMLObjectSymbol
-	 * @param source UMLObjectSymbol to be set as sourceObject
-	 */
-	public void setSourceObject(UMLObjectSymbol source) {
-		this.sourceObject = source;
-		this.sourceObject.layoutXProperty().addListener(v -> refresh());
-		this.sourceObject.layoutYProperty().addListener(v -> refresh());
-	}
-	
-	/**
-	 * Sets the target object to a new UMLObjectSymbol
-	 * @param target the object to relate to
-	 */
-	public void setTargetObject(UMLObjectSymbol target) {
-		this.targetObject = target;
-		this.targetObject.layoutXProperty().addListener(v -> refresh());
-		this.targetObject.layoutYProperty().addListener(v -> refresh());
-	}
 
-	/**
-	 * resets the position of the arrowhead based off of the line's position
-	 */
-	private void refreshArrow(){
-		rSymbol.setRotate(Math.toDegrees(getEndOrientation()));
-		rSymbol.setTranslateX(getEndPoint().getX() - 0.5*ARROW_SIZE*Math.cos(getEndOrientation()));
-		rSymbol.setTranslateY(getEndPoint().getY() - 0.5*ARROW_SIZE*Math.sin(getEndOrientation()));
-	}
-	
-	/**
-	 * resets the position for the AGGREGATION and COMPOSITION relation types
-	 */
-	private void refreshDiamond(){
-		rSymbol.setRotate(Math.toDegrees(getEndOrientation()));
-		rSymbol.setTranslateX(getEndPoint().getX() - DIAMOND_SIZE*Math.cos(getEndOrientation()));
-		rSymbol.setTranslateY(getEndPoint().getY() - DIAMOND_SIZE*Math.sin(getEndOrientation()));
-	}
-	
-	/**
-	 * makes the textField visible and editable to the user
-	 */
-	public void editText(){
-		rText.setMouseTransparent(false);
-		rText.setVisible(true);
-		
-	}
-	
-	/**
-	 * prevents the textField from being edited
-	 */
-	public void stopEdit(){
-		rText.setMouseTransparent(true);
-	}
-	
-	/**
-	 * resets the contents of the textField and makes it invisible to the user
-	 */
-	public void deleteText(){
-		rText.setText("");
-		rText.setMouseTransparent(true);
-		rText.setVisible(false);
-	}
-	
-	/**
-	 * calls all of the related functions to update the relation line and symbols
-	 */
-	public void refresh() {
-		refreshLine();
-		
-		// refresh symbol head
-		switch (this.relationType.getValue()) {
-		case ASSOCIATION:
-		case DEPENDENCY:
-		case GENERALIZATION:
-			refreshArrow();
-			break;
-		case AGGREGATION:
-		case COMPOSITION:
-			refreshDiamond();
-			break;
-		default:
-			break;
-		}
-		
-		// refresh text position
-		refreshTextLayout();
-	}
-	
 	/***
 	 * Computes the layout for the label and cardinality text.
 	 */
@@ -482,22 +481,24 @@ public class UMLRelationSymbol extends UMLSymbol {
 		}
 	}
 	
-	/***
-	 * This method provides a means for displaying editable fields in the
-	 * Properties Pane.
-	 * @return a list of all bindable fields of the UML Relation Symbol
+	/**
+	 * resets the position of the arrowhead based off of the line's position
 	 */
-	@Override
-	public ObservableList<Property<? extends Object>> getFields() {
-		ObservableList<Property<? extends Object>> fields = super.getFields();
-		fields.add(sourceObject.getIdentifierProperty());
-		fields.add(targetObject.getIdentifierProperty());
-		fields.add(sourceCardinality.textProperty());
-		fields.add(targetCardinality.textProperty());
-		fields.add(getUMLRelationTypeProperty());
-		return fields;
+	private void refreshArrow(){
+		rSymbol.setRotate(Math.toDegrees(getEndOrientation()));
+		rSymbol.setTranslateX(getEndPoint().getX() - 0.5*ARROW_SIZE*Math.cos(getEndOrientation()));
+		rSymbol.setTranslateY(getEndPoint().getY() - 0.5*ARROW_SIZE*Math.sin(getEndOrientation()));
 	}
-	
+
+	/**
+	 * resets the position for the AGGREGATION and COMPOSITION relation types
+	 */
+	private void refreshDiamond(){
+		rSymbol.setRotate(Math.toDegrees(getEndOrientation()));
+		rSymbol.setTranslateX(getEndPoint().getX() - DIAMOND_SIZE*Math.cos(getEndOrientation()));
+		rSymbol.setTranslateY(getEndPoint().getY() - DIAMOND_SIZE*Math.sin(getEndOrientation()));
+	}
+
 	/** 
 	 * Provides a means for saving this class to file
 	 * @param ObjectOuput out an object stream to write to
@@ -529,7 +530,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 		setSourceObject((UMLObjectSymbol)in.readObject());
 		setTargetObject((UMLObjectSymbol)in.readObject());
 		setUMLRelationType((UMLRelationType)in.readObject());
-		this.relationType.addListener(v->{
+		this.relationType.addListener(v-> {
 			initSymbol();
 			refresh();
 			});

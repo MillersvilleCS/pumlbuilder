@@ -8,25 +8,21 @@
 
 package edu.millersville.cs.bitsplease.view;
 
-import java.util.ArrayList;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.VBox;
 import javafx.util.converter.NumberStringConverter;
-import edu.millersville.cs.bitsplease.model.UMLSymbol;
 import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
 import edu.millersville.cs.bitsplease.model.UMLRelationType;
+import edu.millersville.cs.bitsplease.model.UMLSymbol;
 /**
  * Properties Pane GUI Component
  * This component provides a field editing interface the fields of the 
