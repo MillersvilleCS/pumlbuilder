@@ -14,7 +14,9 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.List;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.scene.control.TextField;
@@ -36,7 +38,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 	final double SELF_RELATION_SIZE = 60d;
 	
 	// Model Components
-	private	UMLRelationType relationType;
+	private	ObjectProperty<UMLRelationType> relationType = new SimpleObjectProperty<UMLRelationType>();
 	private UMLObjectSymbol sourceObject;
 	private UMLObjectSymbol targetObject;
 	
@@ -77,10 +79,16 @@ public class UMLRelationSymbol extends UMLSymbol {
 		
 		this.setSourceObject(sourceObject);
 		this.setTargetObject(targetObject);
-		this.relationType = relationType;
+		this.relationType.setValue(relationType);
+		
+		this.relationType.addListener(v->{
+			initSymbol();
+			refresh();
+			
+		});
 		
 		// set default string to relation type
-		identifier.setValue(relationType.toString());
+		identifier.setValue("Untitled " + relationType.toString().toLowerCase());
 		
 		// clicks should NOT be captured based on bounding box
 		this.setPickOnBounds(false);
@@ -100,7 +108,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 		refreshTextLayout();
 		
 		// create and position relation head symbol
-		initSymbol(this.relationType);
+		initSymbol();
 	}
 
 	/**
@@ -132,8 +140,12 @@ public class UMLRelationSymbol extends UMLSymbol {
 	 * Create the appropriate symbol head for the given UMLRelationType
 	 * @param relType Type of relation to draw
 	 */
-	private void initSymbol(UMLRelationType relType){
-		switch (this.relationType) {
+	private void initSymbol(){
+		
+		if( rSymbol != null){
+			this.getChildren().remove(rSymbol);
+		}
+		switch (this.relationType.getValue()) {
 		case ASSOCIATION:
 			rSymbol = new Polyline(-0.5*ARROW_SIZE, ARROW_SIZE,
 									0.5*ARROW_SIZE, 0d, 
@@ -303,8 +315,12 @@ public class UMLRelationSymbol extends UMLSymbol {
 	/**
 	 * @return the enum value representing the relation type
 	 */
-	public UMLRelationType getUMLRelationType() {
+	public ObjectProperty<UMLRelationType> getUMLRelationTypeProperty() {
 		return this.relationType;
+	}
+	
+	public UMLRelationType getUMLRelationType(){
+		return this.relationType.getValue();
 	}
 	
 	/**
@@ -325,7 +341,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 	 * @param relType enum value representing the type of relation to create
 	 */
 	public void setUMLRelationType(UMLRelationType relType) {
-		this.relationType = relType;
+		this.relationType.setValue(relType);
 	}
 	
 	/**
@@ -398,7 +414,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 		refreshLine();
 		
 		// refresh symbol head
-		switch (this.relationType) {
+		switch (this.relationType.getValue()) {
 		case ASSOCIATION:
 		case DEPENDENCY:
 		case GENERALIZATION:
@@ -478,6 +494,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 		fields.add(targetObject.getIdentifierProperty());
 		fields.add(sourceCardinality.textProperty());
 		fields.add(targetCardinality.textProperty());
+		fields.add(getUMLRelationTypeProperty());
 		return fields;
 	}
 	
@@ -510,10 +527,13 @@ public class UMLRelationSymbol extends UMLSymbol {
 		setSourceObject((UMLObjectSymbol)in.readObject());
 		setTargetObject((UMLObjectSymbol)in.readObject());
 		setUMLRelationType((UMLRelationType)in.readObject());
-		
+		this.relationType.addListener(v->{
+			initSymbol();
+			refresh();
+			});
 		refreshLine();
 		refreshTextLayout();
-		initSymbol(relationType);
+		initSymbol();
 	}
 }
 

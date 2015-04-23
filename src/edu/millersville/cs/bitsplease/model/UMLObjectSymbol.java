@@ -137,6 +137,7 @@ public abstract class UMLObjectSymbol extends UMLSymbol {
 	@Override
 	public ObservableList<Property<? extends Object>> getFields() {
 		ObservableList<Property<? extends Object>> fields = super.getFields();
+		
 		fields.add(this.layoutXProperty());
 		fields.add(this.layoutYProperty());
 		return fields;
