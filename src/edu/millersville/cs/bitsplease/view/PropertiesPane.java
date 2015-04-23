@@ -62,6 +62,9 @@ public class PropertiesPane extends VBox implements ChangeListener<UMLSymbol> {
 			UMLSymbol oldValue, UMLSymbol newValue) {
 		if (oldValue != newValue) {
 			this.getChildren().retainAll(paneTitle);
+			if(oldValue instanceof UMLRelationSymbol){
+				((UMLRelationSymbol) oldValue).getUMLRelationTypeProperty().unbindBidirectional(relDropDown.valueProperty());
+			}
 		}
 		if (newValue != null) {
 			newValue.getFields().forEach(p -> {
@@ -76,6 +79,7 @@ public class PropertiesPane extends VBox implements ChangeListener<UMLSymbol> {
 						return c;
 					}));
 				}else if(p instanceof ObjectProperty<?>){
+					
 					Bindings.bindBidirectional(relDropDown.valueProperty(), (ObjectProperty)p);
 				}
 				
