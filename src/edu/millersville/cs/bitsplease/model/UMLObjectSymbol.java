@@ -112,7 +112,7 @@ public abstract class UMLObjectSymbol extends UMLSymbol {
 	 * 
 	 * @param Point2D newPoint updated Point2D origin for UMLObjectSymbol instance 
 	 */
-	public void setOrigin(Point2D newPoint){
+	public void setOrigin(Point2D newPoint) {
 		this.setLayoutX(newPoint.getX());
 		this.setLayoutY(newPoint.getY());
 	}

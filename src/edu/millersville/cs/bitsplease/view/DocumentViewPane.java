@@ -44,7 +44,6 @@ public class DocumentViewPane extends Pane {
 	private EventStream<UMLDocumentChange<?>> documentChanges;
 	private ConnectableEventStream<UMLDocumentChange<?>> symbolPropertyChanges = new ConnectableEventSource<>();
 	
-	
 	/**
 	 * Default Constructor
 	 */
@@ -133,14 +132,13 @@ public class DocumentViewPane extends Pane {
 	public void removeAllSymbols() {
 		this.getChildren().removeAll(this.getChildren());
 		entityList = new ArrayList<UMLSymbol>();
-	};
-		
+	}
 	
 	/**
 	 * Return a list of all entities held by the Document
 	 * @return list of all UMLSymbols held within the Document View Pane
 	 */
-	public ArrayList<UMLSymbol> getEntities(){
+	public ArrayList<UMLSymbol> getEntities() {
 		return this.entityList;
 	}
 	
@@ -149,7 +147,7 @@ public class DocumentViewPane extends Pane {
 	 * within the list is added to the Document view.
 	 * @param _entityList List of entities to set on the Document.
 	 */
-	public void setEntities(ArrayList<UMLSymbol> _entityList){
+	public void setEntities(ArrayList<UMLSymbol> _entityList) {
 		_entityList.forEach( uml -> addUMLSymbol(uml));
 	}
 	

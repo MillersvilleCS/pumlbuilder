@@ -15,10 +15,7 @@ import java.io.ObjectOutput;
 import java.util.List;
 
 import javafx.beans.property.Property;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
@@ -78,8 +75,8 @@ public class UMLRelationSymbol extends UMLSymbol {
 			UMLObjectSymbol targetObject, UMLRelationType relationType){
 		super();
 		
-		this.sourceObject = sourceObject;
-		this.targetObject = targetObject;
+		this.setSourceObject(sourceObject);
+		this.setTargetObject(targetObject);
 		this.relationType = relationType;
 		
 		// set default string to relation type
@@ -337,14 +334,8 @@ public class UMLRelationSymbol extends UMLSymbol {
 	 */
 	public void setSourceObject(UMLObjectSymbol source) {
 		this.sourceObject = source;
-		this.sourceObject.layoutBoundsProperty().addListener(new ChangeListener<Bounds>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Bounds> observable,
-					Bounds oldValue, Bounds newValue) {
-				refresh();
-			}
-		});
+		this.sourceObject.layoutXProperty().addListener(v -> refresh());
+		this.sourceObject.layoutYProperty().addListener(v -> refresh());
 	}
 	
 	/**
@@ -353,14 +344,8 @@ public class UMLRelationSymbol extends UMLSymbol {
 	 */
 	public void setTargetObject(UMLObjectSymbol target) {
 		this.targetObject = target;
-		this.targetObject.layoutBoundsProperty().addListener(new ChangeListener<Bounds>() {
-			
-			@Override
-			public void changed(ObservableValue<? extends Bounds> observable,
-					Bounds oldValue, Bounds newValue) {
-				refresh();
-			}
-		});
+		this.targetObject.layoutXProperty().addListener(v -> refresh());
+		this.targetObject.layoutYProperty().addListener(v -> refresh());
 	}
 
 	/**

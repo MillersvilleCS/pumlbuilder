@@ -330,8 +330,6 @@ ContextMenu editingContextMenu = new ContextMenu();
 				} else {
 					dragTarget.setLayoutX(e.getX() + dragOffsetX);
 					dragTarget.setLayoutY(e.getY() + dragOffsetY);
-					//TODO: this could be made automatic with binding
-					documentViewPane.refreshRelations((UMLObjectSymbol) documentViewPane.getSelectedUMLSymbol().getValue());
 				}
 				break;
 			case CREATE_ASSOCIATION:
