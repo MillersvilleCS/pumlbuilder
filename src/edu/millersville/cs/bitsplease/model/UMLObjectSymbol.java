@@ -10,6 +10,13 @@ import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 
+import org.reactfx.EventStream;
+import org.reactfx.EventStreams;
+
+import edu.millersville.cs.bitsplease.change.ObjectXChange;
+import edu.millersville.cs.bitsplease.change.ObjectYChange;
+import edu.millersville.cs.bitsplease.change.UMLDocumentChange;
+
 /*
  * A class model to represent a UML Object symbol
  */
@@ -133,6 +140,25 @@ public abstract class UMLObjectSymbol extends UMLSymbol {
 		fields.add(this.layoutXProperty());
 		fields.add(this.layoutYProperty());
 		return fields;
+	}
+	
+	@Override
+	public EventStream<UMLDocumentChange<?>> getChangeStream() {
+		// X Changes
+		EventStream<ObjectXChange> xChanges = 
+			EventStreams.changesOf(this.layoutXProperty()).map(
+				c -> new ObjectXChange(c, this) 
+				);
+		//symbolPropertyChanges.connectTo(objectXChanges);
+		
+		// Y Changes
+		EventStream<ObjectYChange> yChanges = 
+			EventStreams.changesOf(this.layoutYProperty()).map(
+				c -> new ObjectYChange(c, this) 
+				);
+		//symbolPropertyChanges.connectTo(objectYChanges);
+		
+		return EventStreams.merge(super.getChangeStream(), xChanges, yChanges);
 	}
 
 }

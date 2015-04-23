@@ -7,6 +7,11 @@ package edu.millersville.cs.bitsplease.model;
 
 import java.io.Externalizable;
 
+import org.reactfx.EventStream;
+import org.reactfx.EventStreams;
+
+import edu.millersville.cs.bitsplease.change.SymbolIdentifierChange;
+import edu.millersville.cs.bitsplease.change.UMLDocumentChange;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -33,6 +38,12 @@ public abstract class UMLSymbol extends Region implements Externalizable{
 		ObservableList<Property<? extends Object>> fields = FXCollections.observableArrayList();
 		fields.add(identifier);
 		return fields;
+	}
+	
+	public EventStream<UMLDocumentChange<?>> getChangeStream() {
+		return EventStreams.changesOf(this.identifier).map(
+				c -> new SymbolIdentifierChange(c, this)
+				);
 	}
 	
 	/**

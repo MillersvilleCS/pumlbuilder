@@ -10,18 +10,17 @@ package edu.millersville.cs.bitsplease.view;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
-import org.reactfx.ConnectableEventSource;
-import org.reactfx.ConnectableEventStream;
-import org.reactfx.EventStream;
-import org.reactfx.EventStreams;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
-import edu.millersville.cs.bitsplease.change.ObjectXChange;
-import edu.millersville.cs.bitsplease.change.ObjectYChange;
+
+import org.reactfx.ConnectableEventSource;
+import org.reactfx.ConnectableEventStream;
+import org.reactfx.EventStream;
+import org.reactfx.EventStreams;
+
 import edu.millersville.cs.bitsplease.change.SelectedSymbolChange;
 import edu.millersville.cs.bitsplease.change.SymbolListChange;
 import edu.millersville.cs.bitsplease.change.UMLDocumentChange;
@@ -37,7 +36,7 @@ import edu.millersville.cs.bitsplease.model.UMLUseCaseSymbol;
  * This component provides the main view of the current UML document.
  */
 public class DocumentViewPane extends Pane {
-
+	
 	// State Variables
 	private ObjectProperty<UMLSymbol> selectedUMLSymbol = new SimpleObjectProperty<UMLSymbol>();
 	private ArrayList<UMLSymbol> entityList = new ArrayList<UMLSymbol>();
@@ -63,7 +62,7 @@ public class DocumentViewPane extends Pane {
 				c.next();
 				return new SymbolListChange((ListChangeListener.Change<UMLSymbol>) c, this);
 			});
-				
+		
 		documentChanges = EventStreams.merge(selectedSymbolChanges, symbolListChanges, symbolPropertyChanges);	
 	}
 	
@@ -76,22 +75,7 @@ public class DocumentViewPane extends Pane {
 		entityList.add(symbol);
 		setSelectedUMLSymbol(symbol);
 		
-		if (symbol instanceof UMLObjectSymbol) {
-			
-			// X Changes
-			EventStream<ObjectXChange> objectXChanges = 
-				EventStreams.changesOf(symbol.layoutXProperty()).map(
-					c -> new ObjectXChange(c, (UMLObjectSymbol) symbol) 
-					);
-			symbolPropertyChanges.connectTo(objectXChanges);
-
-			// Y Changes
-			EventStream<ObjectYChange> objectYChanges = 
-				EventStreams.changesOf(symbol.layoutYProperty()).map(
-					c -> new ObjectYChange(c, (UMLObjectSymbol) symbol) 
-					);
-			symbolPropertyChanges.connectTo(objectYChanges);
-		}
+		symbolPropertyChanges.connectTo(symbol.getChangeStream());
 	}
 	
 	/**
@@ -112,7 +96,7 @@ public class DocumentViewPane extends Pane {
 		
 		// remove all relation symbols that references an object being removed
 		if (toDelete instanceof UMLObjectSymbol) {
-
+			
 			UMLRelationSymbol[] associatedRelations = 
 					getChildren().filtered(referencesUMLObject((UMLObjectSymbol)toDelete)).toArray(new UMLRelationSymbol[0]);
 			
@@ -161,14 +145,14 @@ public class DocumentViewPane extends Pane {
 				(((UMLRelationSymbol)n).getSourceObject() == obj ||
 				((UMLRelationSymbol)n).getTargetObject() == obj);
 	}
-
+	
 	/**
 	 * @return the selectedUMLSymbol
 	 */
 	public ObjectProperty<UMLSymbol> getSelectedUMLSymbol() {
 		return selectedUMLSymbol;
 	}
-
+	
 	/**
 	 * @param selectedUMLSymbol the selectedUMLSymbol to set
 	 */
@@ -190,7 +174,7 @@ public class DocumentViewPane extends Pane {
 		}
 		this.selectedUMLSymbol.setValue(umlSymbol);
 	}
-
+	
 	/**
 	 * @return the documentChanges
 	 */
