@@ -76,13 +76,13 @@ public class UMLMenu extends MenuBar {
 		
 		MenuItem print = new MenuItem("Print");
 		print.setOnAction(event ->{ 
-			print(document);		
+			print();		
 		});
 		print.setAccelerator(new KeyCodeCombination(KeyCode.P, KeyCombination.SHORTCUT_DOWN));
 		
 		MenuItem export = new MenuItem("Export...");
 		export.setOnAction(ex ->{
-			exportDocument(document);
+			exportDocument();
 		});
 		
 		MenuItem exit = new MenuItem("Exit");
@@ -181,9 +181,8 @@ public class UMLMenu extends MenuBar {
 	/**
 	 * Handles creation and execution of printing job to print Document
 	 * @author Kevin Fisher
-	 * @param node the node to be printed
 	 */
-	private void print(DocumentViewPane node){
+	private void print(){
 	
 		Printer printer = Printer.getDefaultPrinter();
 		
@@ -201,14 +200,14 @@ public class UMLMenu extends MenuBar {
 			boolean showDialog = job.showPrintDialog(getScene().getWindow());
 			
 			if(showDialog){
-				node.setSelectedUMLSymbol(null);
-				node.getTransforms().add(new Scale(0.5, 0.5));
-				if(job.printPage(node)){
+				document.setSelectedUMLSymbol(null);
+				document.getTransforms().add(new Scale(0.5, 0.5));
+				if(job.printPage(document)){
 					job.endJob();
 				}
 			}
 		}
-		node.getTransforms().clear();
+		document.getTransforms().clear();
 		System.out.println("Print method reached this");
 		
 	}
@@ -241,6 +240,9 @@ public class UMLMenu extends MenuBar {
 		}	
 	}
 	
+	/**
+	 * 
+	 */
 	private void loadDocument(){
 		FileChooser fileHandler = new FileChooser();
 		fileHandler.getExtensionFilters().addAll(new ExtensionFilter("UML Document", "*.uml"),
@@ -276,7 +278,11 @@ public class UMLMenu extends MenuBar {
 		}
 	}
 	
-	private void exportDocument(DocumentViewPane document){
+	
+	/**
+	 * 
+	 */
+	private void exportDocument(){
 		
 		WritableImage image = document.snapshot(new SnapshotParameters(), null);
 		FileChooser fileHandler = new FileChooser();
@@ -292,12 +298,12 @@ public class UMLMenu extends MenuBar {
 				if(!exportDoc.getPath().endsWith(".png")){
 					exportDoc = new File(exportDoc.getPath()+ ".png");
 					System.out.println(exportDoc.getPath());
+				}
 					try{
 						ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", exportDoc);
 					}catch(IOException ioe){
 						
 					}
-				}
 					
 				break;
 			case "JPEG Image":
