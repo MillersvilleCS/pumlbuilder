@@ -505,13 +505,13 @@ public class UMLRelationSymbol extends UMLSymbol {
 	 */
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
-		
 		out.writeObject(identifier.getValue());
+		out.writeObject(sourceCardinality.getText());
+		out.writeObject(targetCardinality.getText());
 		
 		out.writeObject(getSourceObject());
 		out.writeObject(getTargetObject());
 		out.writeObject(getUMLRelationType());
-		
 	}
 
 	/**
@@ -523,6 +523,8 @@ public class UMLRelationSymbol extends UMLSymbol {
 	public void readExternal(ObjectInput in) throws IOException,
 			ClassNotFoundException {
 		identifier.setValue((String)in.readObject());
+		sourceCardinality.setText((String) in.readObject());
+		targetCardinality.setText((String) in.readObject());
 		
 		setSourceObject((UMLObjectSymbol)in.readObject());
 		setTargetObject((UMLObjectSymbol)in.readObject());
