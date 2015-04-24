@@ -30,6 +30,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -55,7 +56,6 @@ public class UMLMenu extends MenuBar {
 		super();
 		
 		this.setUseSystemMenuBar(true);
-		
 		Menu fileMenu = new Menu("File");
 		
 		MenuItem newDoc = new MenuItem("New");
@@ -287,40 +287,20 @@ public class UMLMenu extends MenuBar {
 		WritableImage image = document.snapshot(new SnapshotParameters(), null);
 		FileChooser fileHandler = new FileChooser();
 		fileHandler.setTitle("Export Document");
-		fileHandler.getExtensionFilters().addAll(new ExtensionFilter("PNG Image", "*.png"),
-				new ExtensionFilter("JPEG Image", "*.jpg"), new ExtensionFilter("PDF Image", "*.pdf"));
+		fileHandler.getExtensionFilters().add(new ExtensionFilter("PNG Image", "*.png"));
+		
 		File exportDoc = fileHandler.showSaveDialog(getScene().getWindow());
 		
 		if(exportDoc != null){
 			
-			switch(fileHandler.getSelectedExtensionFilter().getDescription()){
-			case "PNG Image":
 				if(!exportDoc.getPath().endsWith(".png")){
 					exportDoc = new File(exportDoc.getPath()+ ".png");
-					System.out.println(exportDoc.getPath());
 				}
 					try{
 						ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", exportDoc);
 					}catch(IOException ioe){
 						
 					}
-					
-				break;
-			case "JPEG Image":
-				System.out.println("Selected extension filter is jpeg");
-				if(!exportDoc.getPath().endsWith(".jpg")){
-					exportDoc = new File(exportDoc.getPath()+".jpg");
-				}	
-				break;
-			case "PDF Image":
-				if(!exportDoc.getPath().endsWith(".pdf")){
-					exportDoc = new File(exportDoc.getPath() + ".pdf");
-					System.out.println(exportDoc.getPath());
-				}
-				break;
-			default:
-				break;
-			}
 		}
 	}
 }

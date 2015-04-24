@@ -2,11 +2,12 @@
  * @author Merv Fansler	
  * @author Kevin Fisher
  * @since  February 24, 2015
- * @version 0.2.0
+ * @version 0.2.5
  * 
  */
 
 package edu.millersville.cs.bitsplease.view;
+
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -53,6 +54,7 @@ public class PropertiesPane extends VBox implements ChangeListener<UMLSymbol> {
 	 * object.
 	 * @see javafx.beans.value.ChangeListener#changed(javafx.beans.value.ObservableValue, java.lang.Object, java.lang.Object)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void changed(ObservableValue<? extends UMLSymbol> observable,
 			UMLSymbol oldValue, UMLSymbol newValue) {
@@ -67,6 +69,7 @@ public class PropertiesPane extends VBox implements ChangeListener<UMLSymbol> {
 				TextField tf = new TextField();
 				if (p instanceof StringProperty) {
 					Bindings.bindBidirectional(tf.textProperty(), (StringProperty) p);
+					this.getChildren().add(tf);
 				
 				} else if (p instanceof DoubleProperty) {
 					Bindings.bindBidirectional(tf.textProperty(), (DoubleProperty) p, new NumberStringConverter());
@@ -74,14 +77,12 @@ public class PropertiesPane extends VBox implements ChangeListener<UMLSymbol> {
 						c.setText(c.getText().replaceAll("[^\\d]", ""));
 						return c;
 					}));
-				}else if(p instanceof ObjectProperty<?>){
 					
-					Bindings.bindBidirectional(relDropDown.valueProperty(), (ObjectProperty)p);
+					this.getChildren().add(tf);
+				}else if(p instanceof ObjectProperty<?>){
+				
+					Bindings.bindBidirectional(relDropDown.valueProperty(), (ObjectProperty<UMLRelationType>)p);
 				}
-				
-				this.getChildren().add(tf);
-				
-		
 			});
 			
 			if(newValue instanceof UMLRelationSymbol){
