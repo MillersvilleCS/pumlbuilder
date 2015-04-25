@@ -150,14 +150,12 @@ public abstract class UMLObjectSymbol extends UMLSymbol {
 			EventStreams.changesOf(this.layoutXProperty()).map(
 				c -> new ObjectXChange(c, this) 
 				);
-		//symbolPropertyChanges.connectTo(objectXChanges);
 		
 		// Y Changes
 		EventStream<ObjectYChange> yChanges = 
 			EventStreams.changesOf(this.layoutYProperty()).map(
 				c -> new ObjectYChange(c, this) 
 				);
-		//symbolPropertyChanges.connectTo(objectYChanges);
 		
 		return EventStreams.merge(super.getChangeStream(), xChanges, yChanges);
 	}

@@ -25,6 +25,12 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Shape;
 
+import org.reactfx.EventStream;
+import org.reactfx.EventStreams;
+
+import edu.millersville.cs.bitsplease.change.RelationTypeChange;
+import edu.millersville.cs.bitsplease.change.UMLDocumentChange;
+
 /**
  * A model-view representation of a UML relation symbol.
  * A UMLRelationSymbol object can be represented as any major
@@ -271,6 +277,17 @@ public class UMLRelationSymbol extends UMLSymbol {
 		fields.add(targetCardinality.textProperty());
 		fields.add(getUMLRelationTypeProperty());
 		return fields;
+	}
+	
+	/***
+	 * @return a EventStream of changes in the UMLRelationSymbol
+	 */
+	@Override
+	public EventStream<UMLDocumentChange<?>> getChangeStream() {
+		EventStream<RelationTypeChange> relationTypeChanges = EventStreams.changesOf(this.relationType).map(
+			c -> new RelationTypeChange(c, this)
+			);
+		return EventStreams.merge(super.getChangeStream(), relationTypeChanges);
 	}
 
 	/**

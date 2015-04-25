@@ -52,6 +52,7 @@ public abstract class UMLSymbol extends Region implements Externalizable{
 	public boolean isSelected() {
 		return isSelected;
 	}
+	
 	/**
 	 * @param isSelected the isSelected to set
 	 */
@@ -63,12 +64,14 @@ public abstract class UMLSymbol extends Region implements Externalizable{
 		}
 		this.isSelected = isSelected;
 	}
+	
 	/**
 	 * @return a StringProperty of the identifier
 	 */
 	public StringProperty getIdentifierProperty() {
 		return identifier;
 	}
+	
 	/**
 	 * @return the identifier
 	 */
@@ -81,6 +84,4 @@ public abstract class UMLSymbol extends Region implements Externalizable{
 	public void setIdentifier(String identifier) {
 		this.identifier.setValue(identifier);
 	}
-	
-	
 }
