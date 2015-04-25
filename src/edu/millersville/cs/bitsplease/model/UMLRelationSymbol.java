@@ -29,6 +29,7 @@ import org.reactfx.EventStream;
 import org.reactfx.EventStreams;
 
 import edu.millersville.cs.bitsplease.change.RelationTypeChange;
+import edu.millersville.cs.bitsplease.change.StringPropertyChange;
 import edu.millersville.cs.bitsplease.change.UMLDocumentChange;
 
 /**
@@ -284,10 +285,15 @@ public class UMLRelationSymbol extends UMLSymbol {
 	 */
 	@Override
 	public EventStream<UMLDocumentChange<?>> getChangeStream() {
-		EventStream<RelationTypeChange> relationTypeChanges = EventStreams.changesOf(this.relationType).map(
-			c -> new RelationTypeChange(c, this)
-			);
-		return EventStreams.merge(super.getChangeStream(), relationTypeChanges);
+		EventStream<RelationTypeChange> relationTypeChanges = 
+			EventStreams.changesOf(this.relationType).map(
+				c -> new RelationTypeChange(c, this)
+				);
+			
+		return EventStreams.merge(super.getChangeStream(),
+								  relationTypeChanges,
+								  StringPropertyChange.toEventStream(sourceCardinality),
+								  StringPropertyChange.toEventStream(targetCardinality));
 	}
 
 	/**
