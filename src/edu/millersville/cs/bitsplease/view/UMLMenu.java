@@ -60,6 +60,7 @@ public class UMLMenu extends MenuBar {
 		
 		MenuItem newDoc = new MenuItem("New");
 		newDoc.setOnAction(newAction -> {
+			document.setSelectedUMLSymbol(null);
 			document.removeAllSymbols();
 		});
 		

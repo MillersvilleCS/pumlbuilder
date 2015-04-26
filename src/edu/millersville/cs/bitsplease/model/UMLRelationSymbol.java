@@ -148,6 +148,7 @@ public class UMLRelationSymbol extends UMLSymbol {
 	 */
 	private void initSymbol(){
 		
+		rLine.getStrokeDashArray().clear();
 		if( rSymbol != null){
 			this.getChildren().remove(rSymbol);
 		}

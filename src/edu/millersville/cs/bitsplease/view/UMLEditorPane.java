@@ -3,12 +3,15 @@
  * @author Kevin Fisher
  * @author Mike Sims
  * @author Josh Wakefield
+ * @author Joe Martello
  * @since February 19, 2015
  * @version 0.2.0
  */
 
 package edu.millersville.cs.bitsplease.view;
 
+
+import java.util.Iterator;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -220,6 +223,7 @@ ContextMenu editingContextMenu = new ContextMenu();
 				break;
 			case SELECT: // selecting items
 				ContextMenu editingContextMenu = createEditingContextMenu();
+				//documentViewPane.setSelectedUMLSymbol(null);
 				documentViewPane.setSelectedUMLSymbol(resolveUMLSymbolParent((Node) e.getTarget()));
 				
 				if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLClassSymbol) {
@@ -359,6 +363,17 @@ ContextMenu editingContextMenu = new ContextMenu();
 				if (isRelating) {
 					UMLObjectSymbol dragRelease = resolveUMLObjectSymbolParent((Node)e.getPickResult().getIntersectedNode());
 					if (dragRelease != null) {
+						for (Iterator<UMLSymbol> i = documentViewPane.getEntities().iterator(); i.hasNext(); ){
+							UMLSymbol p = i.next();
+							if (p instanceof UMLRelationSymbol) {
+								if (((UMLRelationSymbol) p).getSourceObject() == dragTarget && ((UMLRelationSymbol) p).getTargetObject() == dragRelease
+										|| ((UMLRelationSymbol) p).getSourceObject() == dragRelease && ((UMLRelationSymbol) p).getTargetObject() == dragTarget){
+									documentViewPane.removeUMLSymbol(p);
+									break;
+								}
+							}
+						}
+						
 						documentViewPane.addUMLSymbol(
 								new UMLRelationSymbol(dragTarget, 
 										dragRelease, 
