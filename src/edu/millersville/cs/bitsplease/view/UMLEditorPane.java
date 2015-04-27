@@ -19,8 +19,6 @@ import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -28,7 +26,13 @@ import javafx.scene.layout.BorderPane;
 import org.fxmisc.undo.UndoManager;
 import org.fxmisc.undo.UndoManagerFactory;
 
-import edu.millersville.cs.bitsplease.model.*;
+import edu.millersville.cs.bitsplease.model.UMLClassSymbol;
+import edu.millersville.cs.bitsplease.model.UMLInterfaceSymbol;
+import edu.millersville.cs.bitsplease.model.UMLObjectSymbol;
+import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
+import edu.millersville.cs.bitsplease.model.UMLSymbol;
+import edu.millersville.cs.bitsplease.model.UMLUseCaseSymbol;
+import edu.millersville.cs.bitsplease.model.UMLUserSymbol;
 
 /***
  * Primary GUI component where all user interact occurs. All other view
@@ -47,8 +51,11 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 	private UMLObjectSymbol dragTarget;
 	private double dragOffsetX = 0.0;
 	private double dragOffsetY = 0.0;
-
 	private boolean isRelating = false;
+
+	// Context Menu State
+	private ContextMenu currentMenu;
+	
 	
 	/**
 	 * Default Construct for UMLEditor Pane
@@ -98,10 +105,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		delete.setOnAction(event -> { 
 			documentViewPane.removeUMLSymbol(documentViewPane.getSelectedUMLSymbol().getValue());
 		});
-		
-		MenuItem exit = new MenuItem("Exit");
-		exit.setOnAction(event -> editingContextMenu.hide());
-		exit.setAccelerator(new KeyCodeCombination(KeyCode.ESCAPE));
+		editingContextMenu.getItems().add(delete);
 		
 		//Used to determine if the selected object is a UMLCLassSymbol and if it is then
 		//adds the menu options that are specific to a UMLClassSymbol to the context menu
@@ -111,27 +115,26 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			UMLClassSymbol targetObj = (UMLClassSymbol) documentViewPane.getSelectedUMLSymbol().getValue();
 			
 			MenuItem addAttr = new MenuItem("Add Attribute");
-			addAttr.setOnAction(event -> { targetObj.addAttribute("+attribute:type"); });
+			addAttr.setOnAction(event -> targetObj.addAttribute("+attribute:type"));
 			
 			MenuItem deleteAttr = new MenuItem("Delete Attribute");
-			deleteAttr.setOnAction(event -> { targetObj.deleteAttribute(); });
+			deleteAttr.setOnAction(event -> targetObj.deleteAttribute());
 			
 			MenuItem addOper = new MenuItem("Add Operation");
-			addOper.setOnAction(event -> { targetObj.addOperation("-operation():type"); });
+			addOper.setOnAction(event -> targetObj.addOperation("-operation():type"));
 			
 			MenuItem deleteOper = new MenuItem("Delete Operation");
-			deleteOper.setOnAction(event -> { targetObj.deleteOperation(); });
+			deleteOper.setOnAction(event -> targetObj.deleteOperation());
 			
 			//add all items to the contextMenu for a UMLClassSymbol
-			editingContextMenu.getItems().addAll(delete, new SeparatorMenuItem(), addAttr, deleteAttr, new SeparatorMenuItem(),
-					addOper, deleteOper, new SeparatorMenuItem(), exit);
+			editingContextMenu.getItems().addAll(new SeparatorMenuItem(), addAttr, deleteAttr, new SeparatorMenuItem(),
+					addOper, deleteOper);
 		
-		} else {
-		
-			//add all items to the contextMenu for non-UMLClassSymbol's
-			editingContextMenu.getItems().addAll(delete, new SeparatorMenuItem(), exit);
-			
 		}
+		
+		// keep only one context menu open at a time
+		if (currentMenu != null) { currentMenu.hide(); }
+		currentMenu = editingContextMenu;
 		
 		return editingContextMenu;
 	}
@@ -164,13 +167,13 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			documentViewPane.addUMLSymbol(u);
 		});
 		
-		MenuItem exit = new MenuItem("Exit");
-		exit.setOnAction(event -> { createObjContextMenu.hide(); });
-		exit.setAccelerator(new KeyCodeCombination(KeyCode.ESCAPE));
-		
 		createObjContextMenu.getItems().addAll(createClass, new SeparatorMenuItem(),
 				createInterface, new SeparatorMenuItem(), createUseCase, 
-				new SeparatorMenuItem(), createUser, new SeparatorMenuItem(), exit);
+				new SeparatorMenuItem(), createUser);
+		
+		// keep only one context menu open at a time
+		if (currentMenu != null) { currentMenu.hide(); }
+		currentMenu = createObjContextMenu;
 		
 		return createObjContextMenu;
 	}
@@ -203,15 +206,15 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 	@SuppressWarnings("static-access")
 	@Override
 	public void handle(MouseEvent e) {
-		
-		ContextMenu createObjsContextMenu = createObjsContextMenu(e);
-		
+				
 		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+			
+			ContextMenu createObjsContextMenu = createObjsContextMenu(e);
 			
 			switch (toolbarPane.getCurrentEditorMode().getValue()) {
 			case CREATE_CLASS:
 				
-				if (e.getButton().equals(e.getButton().PRIMARY)) {
+				if (e.getButton().equals(MouseButton.PRIMARY)) {
 					UMLClassSymbol c = new UMLClassSymbol(new Point2D(e.getX()-85,e.getY()-60), 100, 100);
 					documentViewPane.addUMLSymbol(c);
 				} else {
@@ -221,7 +224,6 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 				break;
 			case SELECT: // selecting items
 				documentViewPane.setSelectedUMLSymbol(resolveUMLSymbolParent((Node) e.getTarget()));
-				ContextMenu editingContextMenu = createEditingContextMenu();
 				
 				if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLClassSymbol) {
 					UMLClassSymbol toEdit = (UMLClassSymbol) resolveUMLSymbolParent((Node) e.getTarget());
@@ -230,8 +232,8 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 						if (e.getClickCount() == 2) {
 							toEdit.setEditableUMLClassSymbol();
 						}
-						if (e.getButton().equals(e.getButton().SECONDARY)) {
-							editingContextMenu.show(toEdit, e.getScreenX(), e.getScreenY());
+						if (e.getButton().equals(MouseButton.SECONDARY)) {
+							createEditingContextMenu().show(toEdit, e.getScreenX(), e.getScreenY());
 						}
 					}
 				} else if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLInterfaceSymbol) {
@@ -241,8 +243,8 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 						if (e.getClickCount() == 2) {
 							toEdit.setEditableUMLInterfaceSymbol();
 						}
-						if (e.getButton().equals(e.getButton().SECONDARY)) {
-							editingContextMenu.show(toEdit, e.getScreenX(), e.getScreenY());
+						if (e.getButton().equals(MouseButton.SECONDARY)) {
+							createEditingContextMenu().show(toEdit, e.getScreenX(), e.getScreenY());
 						}
 					}
 				} else if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLUseCaseSymbol) {
@@ -252,23 +254,23 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 						if (e.getClickCount() == 2) {
 							toEdit.setEditableUMLUseCaseSymbol();
 						}
-						if (e.getButton().equals(e.getButton().SECONDARY)) {
-							editingContextMenu.show(toEdit, e.getScreenX(), e.getScreenY());
+						if (e.getButton().equals(MouseButton.SECONDARY)) {
+							createEditingContextMenu().show(toEdit, e.getScreenX(), e.getScreenY());
 						}
 					}
 				} else if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLUserSymbol) {
-					if (e.getButton().equals(e.getButton().SECONDARY)) {
-						editingContextMenu.show(documentViewPane.getSelectedUMLSymbol().getValue(), e.getScreenX(), e.getScreenY());
+					if (e.getButton().equals(MouseButton.SECONDARY)) {
+						createEditingContextMenu().show(documentViewPane.getSelectedUMLSymbol().getValue(), e.getScreenX(), e.getScreenY());
 					}
 				} else if (e.getTarget().equals(documentViewPane)) {
-					if (e.getButton().equals(e.getButton().SECONDARY)) {
+					if (e.getButton().equals(MouseButton.SECONDARY)) {
 						createObjsContextMenu.show(documentViewPane, e.getScreenX(), e.getScreenY());
 					}
 				}
 				break;
 			case CREATE_INTERFACE:
 				
-				if (e.getButton().equals(e.getButton().PRIMARY)) {
+				if (e.getButton().equals(MouseButton.PRIMARY)) {
 					UMLInterfaceSymbol i = new UMLInterfaceSymbol(new Point2D(e.getX() -85, e.getY() -40));
 					documentViewPane.addUMLSymbol(i);
 				} else {
@@ -278,7 +280,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 				break;
 			case CREATE_USER:
 				
-				if (e.getButton().equals(e.getButton().PRIMARY)) {
+				if (e.getButton().equals(MouseButton.PRIMARY)) {
 					UMLUserSymbol u = new UMLUserSymbol(new Point2D(e.getX()-50,e.getY()-20));
 					documentViewPane.addUMLSymbol(u);
 				} else {
@@ -300,7 +302,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 				documentViewPane.setSelectedUMLSymbol(null);
 				UMLSymbol toDelete = resolveUMLSymbolParent((Node)e.getTarget());
 				if (toDelete != null) {
-					if (e.getButton().equals(e.getButton().PRIMARY)) {
+					if (e.getButton().equals(MouseButton.PRIMARY)) {
 						documentViewPane.removeUMLSymbol(toDelete);
 					}
 					
@@ -316,7 +318,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			case SELECT:
 				if (!isMoving) {
 					dragTarget = resolveUMLObjectSymbolParent((Node)e.getTarget());
-					if (e.getButton().equals(e.getButton().PRIMARY)) {
+					if (e.getButton().equals(MouseButton.PRIMARY)) {
 						if (dragTarget != null) { // begin dragging object
 							documentViewPane.setSelectedUMLSymbol(dragTarget);
 							
@@ -339,7 +341,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 			case CREATE_GENERALIZATION:
 			case CREATE_DEPENDENCY:
 				if (!isRelating) {
-					if (e.getButton().equals(e.getButton().PRIMARY)) {
+					if (e.getButton().equals(MouseButton.PRIMARY)) {
 						dragTarget = resolveUMLObjectSymbolParent((Node)e.getTarget());
 						isRelating  = (dragTarget != null);
 					}
