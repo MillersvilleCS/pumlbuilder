@@ -563,4 +563,3 @@ public class UMLRelationSymbol extends UMLSymbol {
 		initSymbol();
 	}
 }
-

@@ -52,6 +52,9 @@ public class UMLMenu extends MenuBar {
 	private UndoManager undoManager;
 	private MenuItem undo, redo;
 	
+	/**
+	 * Creates an instance of a UMLMenu bar for the PUMLBuilder application
+	 */
 	public UMLMenu(){
 		super();
 		
@@ -119,7 +122,6 @@ public class UMLMenu extends MenuBar {
 	}
 	
 	/**
-	 * 
 	 * @return The document that the menu performs operations on
 	 */
 	public DocumentViewPane getDocument(){
@@ -127,7 +129,6 @@ public class UMLMenu extends MenuBar {
 	}
 	
 	/**
-	 * 
 	 * @param doc The document the menu will perform operations on
 	 */
 	public void setDocument(DocumentViewPane doc) {
@@ -209,7 +210,7 @@ public class UMLMenu extends MenuBar {
 			}
 		}
 		document.getTransforms().clear();
-		System.out.println("Print method reached this");
+		
 		
 	}
 	
@@ -242,7 +243,7 @@ public class UMLMenu extends MenuBar {
 	}
 	
 	/**
-	 * 
+	 * Handles loading a .uml document in from a file
 	 */
 	private void loadDocument(){
 		FileChooser fileHandler = new FileChooser();
@@ -281,7 +282,7 @@ public class UMLMenu extends MenuBar {
 	
 	
 	/**
-	 * 
+	 * exports a DocumentViewPane node to a .png file 
 	 */
 	private void exportDocument(){
 		
@@ -294,14 +295,14 @@ public class UMLMenu extends MenuBar {
 		
 		if(exportDoc != null){
 			
-				if(!exportDoc.getPath().endsWith(".png")){
-					exportDoc = new File(exportDoc.getPath()+ ".png");
-				}
-					try{
-						ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", exportDoc);
-					}catch(IOException ioe){
+			if(!exportDoc.getPath().endsWith(".png")){
+				exportDoc = new File(exportDoc.getPath()+ ".png");
+			}
+			try{
+				ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", exportDoc);
+			}catch(IOException ioe){
 						
-					}
+			}
 		}
 	}
 }
