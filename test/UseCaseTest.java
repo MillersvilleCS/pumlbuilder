@@ -11,7 +11,7 @@ import edu.millersville.cs.bitsplease.model.UMLUseCaseSymbol;
 
 import org.junit.*;
 
-public class UseCaseInitTest {
+public class UseCaseTest {
 
 	@Rule
 	public JavaFXThreadingRule javafxrule = new JavaFXThreadingRule();
