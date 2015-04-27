@@ -16,9 +16,7 @@ import edu.millersville.cs.bitsplease.model.UMLRelationType;
 
 public class UMLRelationTextTest {
 	@Rule
-	public JavaFXThreadingRule jfxRule = new 
-
-JavaFXThreadingRule();
+	public JavaFXThreadingRule jfxRule = new JavaFXThreadingRule();
 	
 	UMLRelationSymbol depen, depenEdit,
 					  assoc, assocEdit,
