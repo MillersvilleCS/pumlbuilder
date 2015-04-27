@@ -30,7 +30,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -213,7 +212,7 @@ public class UMLMenu extends MenuBar {
 	}
 	
 	/**
-	 * Handles saving a UML document through FleChooser
+	 * Handles saving a UML document through FileChooser
 	 * @author Kevin Fisher
 	 */
 	private void saveDocument(){
