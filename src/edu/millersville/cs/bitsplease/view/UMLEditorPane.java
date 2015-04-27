@@ -21,6 +21,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
@@ -90,19 +91,16 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 	 */
 	private ContextMenu createEditingContextMenu() {
 		
-ContextMenu editingContextMenu = new ContextMenu();
+		ContextMenu editingContextMenu = new ContextMenu();
 		
 		//create generic contextMenu items
-		//MenuItem cut = new MenuItem("Cut");
-		//MenuItem copy = new MenuItem("Copy");
-		//MenuItem paste = new MenuItem("Paste");
 		MenuItem delete = new MenuItem("Delete");
 		delete.setOnAction(event -> { 
 			documentViewPane.removeUMLSymbol(documentViewPane.getSelectedUMLSymbol().getValue());
 		});
 		
 		MenuItem exit = new MenuItem("Exit");
-		exit.setOnAction(event -> { editingContextMenu.hide(); });
+		exit.setOnAction(event -> editingContextMenu.hide());
 		exit.setAccelerator(new KeyCodeCombination(KeyCode.ESCAPE));
 		
 		//Used to determine if the selected object is a UMLCLassSymbol and if it is then
@@ -222,9 +220,8 @@ ContextMenu editingContextMenu = new ContextMenu();
 				
 				break;
 			case SELECT: // selecting items
-				ContextMenu editingContextMenu = createEditingContextMenu();
-				//documentViewPane.setSelectedUMLSymbol(null);
 				documentViewPane.setSelectedUMLSymbol(resolveUMLSymbolParent((Node) e.getTarget()));
+				ContextMenu editingContextMenu = createEditingContextMenu();
 				
 				if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLClassSymbol) {
 					UMLClassSymbol toEdit = (UMLClassSymbol) resolveUMLSymbolParent((Node) e.getTarget());
@@ -291,7 +288,7 @@ ContextMenu editingContextMenu = new ContextMenu();
 				break;
 			case CREATE_USE_CASE:
 			
-				if (e.getButton().equals(e.getButton().PRIMARY)) {
+				if (e.getButton().equals(MouseButton.PRIMARY)) {
 					UMLUseCaseSymbol use = new UMLUseCaseSymbol(new Point2D(e.getX()-85, e.getY()-30));
 					documentViewPane.addUMLSymbol(use);
 				} else {
