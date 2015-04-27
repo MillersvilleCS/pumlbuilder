@@ -72,11 +72,9 @@ public class UMLMenu extends MenuBar {
 		open.setAccelerator(new KeyCodeCombination(KeyCode.O, 
 				KeyCombination.SHORTCUT_DOWN));
 		
-		MenuItem save = new MenuItem("Save");
+		MenuItem save = new MenuItem("Save As");
 		save.setOnAction(event-> { saveDocument();});
 		save.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN));
-		
-		MenuItem saveAs = new MenuItem("Save As");
 		
 		MenuItem print = new MenuItem("Print");
 		print.setOnAction(event ->{ 
@@ -95,7 +93,7 @@ public class UMLMenu extends MenuBar {
 					KeyCombination.SHIFT_DOWN ));
 		
 		fileMenu.getItems().addAll(newDoc,new SeparatorMenuItem(), open,save, 
-				saveAs,new SeparatorMenuItem(),print, new SeparatorMenuItem(),
+				new SeparatorMenuItem(),print, new SeparatorMenuItem(),
 				export, new SeparatorMenuItem(), exit);
 		
 		Menu editMenu = new Menu("Edit");
