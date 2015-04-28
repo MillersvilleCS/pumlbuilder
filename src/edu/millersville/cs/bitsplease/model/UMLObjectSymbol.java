@@ -1,7 +1,7 @@
 /**
  * @author Kevin Fisher
  * @since February 19, 2015
- * @version 0.2.0
+ * @version 0.3.0
  */
 
 package edu.millersville.cs.bitsplease.model;
@@ -143,6 +143,9 @@ public abstract class UMLObjectSymbol extends UMLSymbol {
 		return fields;
 	}
 	
+	/**
+	 * provides an EventStream for changes that the object can undergo
+	 */
 	@Override
 	public EventStream<UMLDocumentChange<?>> getChangeStream() {
 		// X Changes
@@ -159,5 +162,4 @@ public abstract class UMLObjectSymbol extends UMLSymbol {
 		
 		return EventStreams.merge(super.getChangeStream(), xChanges, yChanges);
 	}
-
 }

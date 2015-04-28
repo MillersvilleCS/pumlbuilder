@@ -2,7 +2,7 @@
  * @author Kevin Fisher
  * @author Josh Wakefield
  * @since  March 30, 2015
- * @version 0.2.0
+ * @version 0.3.0
  */
 		
 package edu.millersville.cs.bitsplease.model;
@@ -143,9 +143,6 @@ public class UMLInterfaceSymbol extends UMLObjectSymbol{
 		out.writeObject(identifier.getValue());
 		out.writeDouble(getX());
 		out.writeDouble(getY());
-	
-		
-		
 	}
 
 	/**
@@ -159,8 +156,6 @@ public class UMLInterfaceSymbol extends UMLObjectSymbol{
 		
 		identifier.setValue((String)in.readObject());
 		setOrigin(new Point2D(in.readDouble(), in.readDouble()));
-		
-		
 	}
 
 }

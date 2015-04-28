@@ -1,7 +1,7 @@
 /**
  * @author Merv Fansler
  * @since March 30, 2015
- * @version 0.2.0
+ * @version 0.3.0
  */
 package edu.millersville.cs.bitsplease.model;
 
@@ -80,6 +80,8 @@ public class UMLUserSymbol extends UMLObjectSymbol {
 		userIcon = new Group();
 		
 		Circle head = new Circle(0d, -0.5*ICON_SIZE, 0.25*ICON_SIZE);
+		
+		// this is much more recognizable when it renders!
 		Polyline body = new Polyline(0d, -0.5*ICON_SIZE,
 									 0d, 0d,
 									 -0.5*ICON_SIZE, 0.5*ICON_SIZE,

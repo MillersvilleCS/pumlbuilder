@@ -4,7 +4,7 @@
  * @author Merv Fansler
  * @author Josh Wakefield
  * @since February 25, 2015
- * @version 0.2.0
+ * @version 0.3.0
  */
 
 package edu.millersville.cs.bitsplease.model;
@@ -219,6 +219,10 @@ public class UMLClassSymbol extends UMLObjectSymbol {
 		return fields;
 	}
 	
+	/**
+	 * retrieves an EventStream of change events
+	 * used by the UndoManager for change tracking
+	 */
 	@Override
 	public EventStream<UMLDocumentChange<?>> getChangeStream() {
 		EventStream<TextFieldListChange> attributesListChanges = 

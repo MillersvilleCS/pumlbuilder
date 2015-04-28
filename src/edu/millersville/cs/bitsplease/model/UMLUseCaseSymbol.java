@@ -1,3 +1,7 @@
+/**
+ * @author Kevin Fisher
+ * @version 0.3.0
+ */
 package edu.millersville.cs.bitsplease.model;
 
 import java.io.IOException;
@@ -12,6 +16,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 
+/**
+ * Implements UML symbol for Use Cases
+ */
 public class UMLUseCaseSymbol extends UMLObjectSymbol {
 	
 	private StackPane useCase;
@@ -133,8 +140,6 @@ public class UMLUseCaseSymbol extends UMLObjectSymbol {
 		
 		out.writeDouble(getX());
 		out.writeDouble(getY());
-		
-		
 	}
 	
 	/**
