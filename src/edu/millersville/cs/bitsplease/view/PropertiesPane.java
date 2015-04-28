@@ -8,7 +8,6 @@
 
 package edu.millersville.cs.bitsplease.view;
 
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -24,6 +23,7 @@ import javafx.util.converter.NumberStringConverter;
 import edu.millersville.cs.bitsplease.model.UMLRelationSymbol;
 import edu.millersville.cs.bitsplease.model.UMLRelationType;
 import edu.millersville.cs.bitsplease.model.UMLSymbol;
+
 /**
  * Properties Pane GUI Component
  * This component provides a field editing interface the fields of the 
@@ -66,12 +66,12 @@ public class PropertiesPane extends VBox implements ChangeListener<UMLSymbol> {
 		}
 		if (newValue != null) {
 			newValue.getFields().forEach(p -> {
-				TextField tf = new TextField();
 				if (p instanceof StringProperty) {
+					TextField tf = new TextField();
 					Bindings.bindBidirectional(tf.textProperty(), (StringProperty) p);
 					this.getChildren().add(tf);
-				
 				} else if (p instanceof DoubleProperty) {
+					TextField tf = new TextField();
 					Bindings.bindBidirectional(tf.textProperty(), (DoubleProperty) p, new NumberStringConverter());
 					tf.setTextFormatter(new TextFormatter<String>(c -> {
 						c.setText(c.getText().replaceAll("[^\\d]", ""));
@@ -80,7 +80,7 @@ public class PropertiesPane extends VBox implements ChangeListener<UMLSymbol> {
 					
 					this.getChildren().add(tf);
 				}else if(p instanceof ObjectProperty<?>){
-				
+					
 					Bindings.bindBidirectional(relDropDown.valueProperty(), (ObjectProperty<UMLRelationType>)p);
 				}
 			});
