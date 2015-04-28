@@ -201,7 +201,6 @@ public class UMLMenu extends MenuBar {
 			noPrinterFound.setTitle("Printer Error");
 			noPrinterFound.setHeaderText("No Printer Found");
 			noPrinterFound.setContentText("Hold on let me just mail it to you or something.");
-			noPrinterFound.setGraphic(new ImageView(this.getClass().getResource("img/printer.png").toString()));
 			noPrinterFound.showAndWait();
 		}else{
 			
