@@ -1,5 +1,7 @@
 /**
- * 
+ * @author Merv Fansler
+ * @since April 14, 2015
+ * @version 0.3.0
  */
 package edu.millersville.cs.bitsplease.change;
 
@@ -10,19 +12,26 @@ import javafx.scene.Node;
 import javafx.scene.control.TextField;
 
 /**
- * @author Mervin
- *
+ * Data structure for changes in a list of TextFields
  */
 public class TextFieldListChange extends UMLDocumentChange<TextField[]> {
 	final private List<Node> textFieldList;
-	private boolean isAddition;
+	final private boolean isAddition;
 	
+	/**
+	 * Constructor for the change in a list
+	 * @param c change that list underwent
+	 * @param textFieldList reference to the list that underwent change
+	 */
 	public TextFieldListChange(Change<TextField> c, List<Node> textFieldList) {
 		super(c.getRemoved().toArray(new TextField[0]), c.getAddedSubList().toArray(new TextField[0]));
 		isAddition = c.wasAdded();
 		this.textFieldList = textFieldList;
 	}
 
+	/**
+	 * method to redo list change
+	 */
 	@Override
 	public void redo() {
 		if (isAddition) {
@@ -36,6 +45,9 @@ public class TextFieldListChange extends UMLDocumentChange<TextField[]> {
 		}
 	}
 
+	/**
+	 * method to undo list change
+	 */
 	@Override
 	public void undo() {
 		if (isAddition) {
