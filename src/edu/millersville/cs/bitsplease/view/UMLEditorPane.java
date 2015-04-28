@@ -396,5 +396,4 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		
 		return result;
 	}
-	
 }
