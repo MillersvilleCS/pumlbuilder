@@ -11,8 +11,6 @@
 package edu.millersville.cs.bitsplease.view;
 
 
-import java.util.Iterator;
-
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -203,115 +201,80 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 	 * Provides MouseEvent handling for all subcomponent panes
 	 * @see javafx.event.EventHandler#handle(javafx.event.Event)
 	 */
-	@SuppressWarnings("static-access")
 	@Override
 	public void handle(MouseEvent e) {
 				
 		if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
 			
-			ContextMenu createObjsContextMenu = createObjsContextMenu(e);
+			if (e.getButton().equals(MouseButton.SECONDARY)) {
+				UMLSymbol targetSymbol = resolveUMLSymbolParent((Node) e.getTarget());
+				documentViewPane.setSelectedUMLSymbol(targetSymbol);
+				if (targetSymbol != null) {
+					createEditingContextMenu().show(targetSymbol, e.getScreenX(), e.getScreenY());
+				} else {
+					createObjsContextMenu(e).show(documentViewPane, e.getScreenX(), e.getScreenY());
+				}
+			} else {
 			
-			switch (toolbarPane.getCurrentEditorMode().getValue()) {
-			case CREATE_CLASS:
-				
-				if (e.getButton().equals(MouseButton.PRIMARY)) {
+				switch (toolbarPane.getCurrentEditorMode().getValue()) {
+				case SELECT: // selecting items
+					documentViewPane.setSelectedUMLSymbol(resolveUMLSymbolParent((Node) e.getTarget()));
+					
+					if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLClassSymbol) {
+						UMLClassSymbol toEdit = (UMLClassSymbol) resolveUMLSymbolParent((Node) e.getTarget());
+						documentViewPane.setSelectedUMLSymbol(toEdit);
+						if (toEdit.isSelected()) {
+							if (e.getClickCount() == 2) {
+								toEdit.setEditableUMLClassSymbol();
+							}
+						}
+					} else if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLInterfaceSymbol) {
+						UMLInterfaceSymbol toEdit = (UMLInterfaceSymbol) resolveUMLSymbolParent((Node) e.getTarget());
+						documentViewPane.setSelectedUMLSymbol(toEdit);
+						if (toEdit.isSelected()) {
+							if (e.getClickCount() == 2) {
+								toEdit.setEditableUMLInterfaceSymbol();
+							}
+						}
+					} else if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLUseCaseSymbol) {
+						UMLUseCaseSymbol toEdit = (UMLUseCaseSymbol) resolveUMLSymbolParent((Node) e.getTarget());
+						documentViewPane.setSelectedUMLSymbol(toEdit);
+						if (toEdit.isSelected()) {
+							if (e.getClickCount() == 2) {
+								toEdit.setEditableUMLUseCaseSymbol();
+							}
+						}
+					}
+					break;
+				case CREATE_CLASS:
 					UMLClassSymbol c = new UMLClassSymbol(new Point2D(e.getX()-85,e.getY()-60), 100, 100);
 					documentViewPane.addUMLSymbol(c);
-				} else {
-					createObjsContextMenu.show(documentViewPane, e.getScreenX(), e.getScreenY());
-				}
-				
-				break;
-			case SELECT: // selecting items
-				documentViewPane.setSelectedUMLSymbol(resolveUMLSymbolParent((Node) e.getTarget()));
-				
-				if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLClassSymbol) {
-					UMLClassSymbol toEdit = (UMLClassSymbol) resolveUMLSymbolParent((Node) e.getTarget());
-					documentViewPane.setSelectedUMLSymbol(toEdit);
-					if (toEdit.isSelected()) {
-						if (e.getClickCount() == 2) {
-							toEdit.setEditableUMLClassSymbol();
-						}
-						if (e.getButton().equals(MouseButton.SECONDARY)) {
-							createEditingContextMenu().show(toEdit, e.getScreenX(), e.getScreenY());
-						}
-					}
-				} else if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLInterfaceSymbol) {
-					UMLInterfaceSymbol toEdit = (UMLInterfaceSymbol) resolveUMLSymbolParent((Node) e.getTarget());
-					documentViewPane.setSelectedUMLSymbol(toEdit);
-					if (toEdit.isSelected()) {
-						if (e.getClickCount() == 2) {
-							toEdit.setEditableUMLInterfaceSymbol();
-						}
-						if (e.getButton().equals(MouseButton.SECONDARY)) {
-							createEditingContextMenu().show(toEdit, e.getScreenX(), e.getScreenY());
-						}
-					}
-				} else if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLUseCaseSymbol) {
-					UMLUseCaseSymbol toEdit = (UMLUseCaseSymbol) resolveUMLSymbolParent((Node) e.getTarget());
-					documentViewPane.setSelectedUMLSymbol(toEdit);
-					if (toEdit.isSelected()) {
-						if (e.getClickCount() == 2) {
-							toEdit.setEditableUMLUseCaseSymbol();
-						}
-						if (e.getButton().equals(MouseButton.SECONDARY)) {
-							createEditingContextMenu().show(toEdit, e.getScreenX(), e.getScreenY());
-						}
-					}
-				} else if (documentViewPane.getSelectedUMLSymbol().getValue() instanceof UMLUserSymbol) {
-					if (e.getButton().equals(MouseButton.SECONDARY)) {
-						createEditingContextMenu().show(documentViewPane.getSelectedUMLSymbol().getValue(), e.getScreenX(), e.getScreenY());
-					}
-				} else if (e.getTarget().equals(documentViewPane)) {
-					if (e.getButton().equals(MouseButton.SECONDARY)) {
-						createObjsContextMenu.show(documentViewPane, e.getScreenX(), e.getScreenY());
-					}
-				}
-				break;
-			case CREATE_INTERFACE:
-				
-				if (e.getButton().equals(MouseButton.PRIMARY)) {
+					break;
+				case CREATE_INTERFACE:
 					UMLInterfaceSymbol i = new UMLInterfaceSymbol(new Point2D(e.getX() -85, e.getY() -40));
-					documentViewPane.addUMLSymbol(i);
-				} else {
-					createObjsContextMenu.show(documentViewPane, e.getScreenX(), e.getScreenY());
-				}
-				
-				break;
-			case CREATE_USER:
-				
-				if (e.getButton().equals(MouseButton.PRIMARY)) {
+					documentViewPane.addUMLSymbol(i);				
+					break;
+				case CREATE_USER:
 					UMLUserSymbol u = new UMLUserSymbol(new Point2D(e.getX()-50,e.getY()-20));
 					documentViewPane.addUMLSymbol(u);
-				} else {
-					createObjsContextMenu.show(documentViewPane, e.getScreenX(), e.getScreenY());
-				}
-				
-				break;
-			case CREATE_USE_CASE:
-			
-				if (e.getButton().equals(MouseButton.PRIMARY)) {
+					break;
+				case CREATE_USE_CASE:
 					UMLUseCaseSymbol use = new UMLUseCaseSymbol(new Point2D(e.getX()-85, e.getY()-30));
 					documentViewPane.addUMLSymbol(use);
-				} else {
-					createObjsContextMenu.show(documentViewPane, e.getScreenX(), e.getScreenY());
-				}
-				
-				break;
-			case DELETE:
-				documentViewPane.setSelectedUMLSymbol(null);
-				UMLSymbol toDelete = resolveUMLSymbolParent((Node)e.getTarget());
-				if (toDelete != null) {
-					if (e.getButton().equals(MouseButton.PRIMARY)) {
+					break;
+				case DELETE:
+					documentViewPane.setSelectedUMLSymbol(null);
+					UMLSymbol toDelete = resolveUMLSymbolParent((Node)e.getTarget());
+					if (toDelete != null) {
 						documentViewPane.removeUMLSymbol(toDelete);
+						
+						// destroy event, since target object is now removed
+						e.consume();
 					}
-					
-					// destroy event, since target object is now removed
-					e.consume();
+					break;
+				default:
+					break;
 				}
-				break;
-			default:
-				break;
 			}
 		} else if (e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
 			switch (toolbarPane.getCurrentEditorMode().getValue()) {
@@ -362,14 +325,11 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 				if (isRelating) {
 					UMLObjectSymbol dragRelease = resolveUMLObjectSymbolParent((Node)e.getPickResult().getIntersectedNode());
 					if (dragRelease != null) {
-						for (Iterator<UMLSymbol> i = documentViewPane.getEntities().iterator(); i.hasNext(); ){
-							UMLSymbol p = i.next();
-							if (p instanceof UMLRelationSymbol) {
-								if (((UMLRelationSymbol) p).getSourceObject() == dragTarget && ((UMLRelationSymbol) p).getTargetObject() == dragRelease
-										|| ((UMLRelationSymbol) p).getSourceObject() == dragRelease && ((UMLRelationSymbol) p).getTargetObject() == dragTarget){
-									documentViewPane.removeUMLSymbol(p);
-									break;
-								}
+						for (UMLRelationSymbol r : documentViewPane.getChildren().filtered(n -> n instanceof UMLRelationSymbol).toArray(new UMLRelationSymbol[0])){
+							if ((r.getSourceObject() == dragTarget && r.getTargetObject() == dragRelease)
+								|| (r.getSourceObject() == dragRelease && r.getTargetObject() == dragTarget)){
+								documentViewPane.removeUMLSymbol(r);
+								break;
 							}
 						}
 						
@@ -377,7 +337,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 								new UMLRelationSymbol(dragTarget, 
 										dragRelease, 
 										toolbarPane.getCurrentEditorMode().getValue().getRelationType()));
-					}					
+					}
 				}
 				break;
 			default:
