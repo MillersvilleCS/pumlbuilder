@@ -248,18 +248,22 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 				case CREATE_CLASS:
 					UMLClassSymbol c = new UMLClassSymbol(new Point2D(e.getX()-85,e.getY()-60), 100, 100);
 					documentViewPane.addUMLSymbol(c);
+					toolbarPane.setCurrentEditorMode(UMLEditorMode.SELECT);
 					break;
 				case CREATE_INTERFACE:
 					UMLInterfaceSymbol i = new UMLInterfaceSymbol(new Point2D(e.getX() -85, e.getY() -40));
-					documentViewPane.addUMLSymbol(i);				
+					documentViewPane.addUMLSymbol(i);
+					toolbarPane.setCurrentEditorMode(UMLEditorMode.SELECT);			
 					break;
 				case CREATE_USER:
 					UMLUserSymbol u = new UMLUserSymbol(new Point2D(e.getX()-50,e.getY()-20));
 					documentViewPane.addUMLSymbol(u);
+					toolbarPane.setCurrentEditorMode(UMLEditorMode.SELECT);
 					break;
 				case CREATE_USE_CASE:
 					UMLUseCaseSymbol use = new UMLUseCaseSymbol(new Point2D(e.getX()-85, e.getY()-30));
 					documentViewPane.addUMLSymbol(use);
+					toolbarPane.setCurrentEditorMode(UMLEditorMode.SELECT);
 					break;
 				case DELETE:
 					documentViewPane.setSelectedUMLSymbol(null);
@@ -336,6 +340,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 								new UMLRelationSymbol(dragTarget, 
 										dragRelease, 
 										toolbarPane.getCurrentEditorMode().getValue().getRelationType()));
+						toolbarPane.setCurrentEditorMode(UMLEditorMode.SELECT);
 					}
 				}
 				break;
