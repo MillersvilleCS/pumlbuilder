@@ -31,7 +31,7 @@ public class UMLRelationTests {
 
 	@Test
 	public void testGetFields() {
-		assertEquals("Relation object has 3 fields", 3, r.getFields().size());
+		assertEquals("Relation object has 6 fields", 6, r.getFields().size());
 	}
 
 	@Test
