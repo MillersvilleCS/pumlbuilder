@@ -5,11 +5,10 @@
  * @author Josh Wakefield
  * @author Joe Martello
  * @since February 19, 2015
- * @version 0.2.0
+ * @version 0.3.0
  */
 
 package edu.millersville.cs.bitsplease.view;
-
 
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -54,7 +53,6 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 	// Context Menu State
 	private ContextMenu currentMenu;
 	
-	
 	/**
 	 * Default Construct for UMLEditor Pane
 	 */
@@ -68,6 +66,7 @@ public class UMLEditorPane extends BorderPane implements EventHandler<MouseEvent
 		documentViewPane.addEventHandler(MouseEvent.MOUSE_DRAGGED, this);
 		documentViewPane.addEventHandler(MouseEvent.MOUSE_RELEASED, this);
 		
+		// UndoManger
 		undoManager = UndoManagerFactory.unlimitedHistoryUndoManager(
 			documentViewPane.getDocumentChanges(),
 			c -> c.redo(),

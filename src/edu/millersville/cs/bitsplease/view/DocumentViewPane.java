@@ -2,7 +2,7 @@
  * @author Merv Fansler
  * @author Josh Wakefield
  * @since February 25, 2015
- * @version 0.2.0
+ * @version 0.3.0
  */
 
 package edu.millersville.cs.bitsplease.view;
@@ -40,8 +40,8 @@ public class DocumentViewPane extends Pane {
 	// State Variables
 	private ObjectProperty<UMLSymbol> selectedUMLSymbol = new SimpleObjectProperty<UMLSymbol>();
 	private ArrayList<UMLSymbol> entityList = new ArrayList<UMLSymbol>();
-	private EventStream<UMLDocumentChange<?>> documentChanges;
-	private ConnectableEventStream<UMLDocumentChange<?>> symbolPropertyChanges = new ConnectableEventSource<>();
+	final private EventStream<UMLDocumentChange<?>> documentChanges;
+	final private ConnectableEventStream<UMLDocumentChange<?>> symbolPropertyChanges = new ConnectableEventSource<>();
 	
 	/**
 	 * Default Constructor

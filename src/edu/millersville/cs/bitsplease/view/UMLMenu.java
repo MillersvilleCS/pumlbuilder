@@ -1,7 +1,8 @@
 /**
  * @author Kevin Fisher
+ * @author Merv Fansler
  * @since  April 9, 2015
- * @version 0.2.5
+ * @version 0.3.0
  */
 package edu.millersville.cs.bitsplease.view;
 
@@ -58,6 +59,9 @@ public class UMLMenu extends MenuBar {
 		super();
 		
 		this.setUseSystemMenuBar(true);
+		
+		/*============== FILE MENU ===============*/
+		
 		Menu fileMenu = new Menu("File");
 		
 		MenuItem newDoc = new MenuItem("New");
@@ -87,7 +91,7 @@ public class UMLMenu extends MenuBar {
 		});
 		
 		MenuItem exit = new MenuItem("Exit");
-		exit.setOnAction(event ->{ System.exit(0); });
+		exit.setOnAction(event -> System.exit(0));
 		exit.setAccelerator(new KeyCodeCombination(KeyCode.W, KeyCombination.SHORTCUT_DOWN,
 					KeyCombination.SHIFT_DOWN ));
 		
@@ -95,26 +99,31 @@ public class UMLMenu extends MenuBar {
 				new SeparatorMenuItem(),print, new SeparatorMenuItem(),
 				export, new SeparatorMenuItem(), exit);
 		
+		/*============== EDIT MENU ===============*/
+		
 		Menu editMenu = new Menu("Edit");
 
 		undo = new MenuItem("Undo");
 		undo.setDisable(true);
-		undo.setOnAction(event -> { undoManager.undo(); });
+		undo.setOnAction(event -> undoManager.undo());
 		undo.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN));
 		
 		redo = new MenuItem("Redo");
 		redo.setDisable(true);
-		redo.setOnAction(event -> { undoManager.redo(); });
+		redo.setOnAction(event -> undoManager.redo());
 		redo.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.SHORTCUT_DOWN));
 		
 		editMenu.getItems().addAll(undo,redo);
 		
+		/*============== HELP MENU ===============*/
+		
 		Menu helpMenu = new Menu("Help");
 		
 		MenuItem about = new MenuItem("About");
-		about.setOnAction(event -> { createAbout(); });
+		about.setOnAction(event -> createAbout());
 		helpMenu.getItems().add(about);
 		
+		// Put 'em all together
 		this.getMenus().addAll(fileMenu, editMenu, helpMenu);
 	}
 	

@@ -2,7 +2,7 @@
  * @author Merv Fansler
  * @author Mike Sims
  * @since February 25, 2015
- * @version 0.2.0
+ * @version 0.3.0
  */
 
 package edu.millersville.cs.bitsplease.view;
