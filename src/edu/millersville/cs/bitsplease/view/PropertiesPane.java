@@ -91,5 +91,4 @@ public class PropertiesPane extends VBox implements ChangeListener<UMLSymbol> {
 			}
 		}
 	}
-
 }
